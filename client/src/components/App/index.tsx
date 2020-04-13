@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import { Route, Switch } from "react-router-dom";
+import Lobby from "../Lobby";
+import Game from "../Game";
 
-import "./App.scss";
-import { SERVER_URL } from "./config";
-
-function Home() {
-  return <p>Home</p>;
-}
+import "./styles.scss";
 
 function PageNotFound() {
   return <p>Page not found.</p>;
@@ -16,7 +12,8 @@ function PageNotFound() {
 function App() {
   return (
     <Switch>
-      <Route path="/" component={Home} exact />
+      <Route path="/" component={Lobby} exact />
+      <Route path="/:game_id" component={Game} exact />
       <Route component={PageNotFound} />
     </Switch>
   );
