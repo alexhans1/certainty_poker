@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Route, Switch } from "react-router-dom";
 
 import "./App.scss";
 import { SERVER_URL } from "./config";
 
-function App() {
-  const [data, setData] = useState("Loading...");
-  useEffect(() => {
-    axios.get(SERVER_URL).then(({ data: res }) => {
-      setData(res?.data ?? "Failed to load.");
-    });
-  }, []);
+function Home() {
+  return <p>Home</p>;
+}
 
-  return <div className="App">{data}</div>;
+function PageNotFound() {
+  return <p>Page not found.</p>;
+}
+
+function App() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} exact />
+      <Route component={PageNotFound} />
+    </Switch>
+  );
 }
 
 export default App;
