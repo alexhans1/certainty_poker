@@ -7,15 +7,33 @@ const styles = { playersContainer: { padding: 10 } };
 
 const query = gql`
   {
-    players {
+    games {
       id
-      name
-      remaining_money
+      questionRounds {
+        question {
+          question
+        }
+        bettingRounds {
+          foldedPlayerIds
+          currentPlayerId
+          lastRaisedPlayerId
+          bets {
+            amount
+            playerId
+          }
+        }
+      }
+      currentQuestionRound
+      players {
+        id
+        money
+      }
+      dealerId
     }
   }
 `;
 
-interface Player {
+interface Game {
   id: string;
   name: string;
   remaining_money: number;
@@ -23,21 +41,21 @@ interface Player {
 
 function App() {
   const { game_id } = useParams();
-  const { data, error, loading } = useQuery<{ players: Player[] }>(query);
+  const { data, error, loading } = useQuery<{ games: any[] }>(query);
   console.log("data", data);
 
   if (loading || !data) return <p>Loading...</p>;
   if (error) return <p>Error: {error?.message}</p>;
 
-  const { players } = data;
+  const { games } = data;
 
   return (
     <div>
       <p>Players:</p>
-      {players.map(({ name, remaining_money }) => (
+      {games.map(({ id, dealerId }) => (
         <div style={styles.playersContainer}>
-          <div>Name: {name}</div>
-          <div>Remaining money: {remaining_money}</div>
+          <div>Name: {id}</div>
+          <div>Remaining money: {dealerId}</div>
         </div>
       ))}
     </div>

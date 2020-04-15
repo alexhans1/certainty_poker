@@ -2,9 +2,33 @@
 
 package model
 
+type Bet struct {
+	PlayerID string `json:"playerId"`
+	Amount   int    `json:"amount"`
+}
+
+type BettingRound struct {
+	FoldedPlayerIds    []string `json:"foldedPlayerIds"`
+	Bets               []*Bet   `json:"bets"`
+	CurrentPlayerID    string   `json:"currentPlayerId"`
+	LastRaisedPlayerID string   `json:"lastRaisedPlayerId"`
+}
+
 type Game struct {
-	ID      string    `json:"id"`
-	Players []*Player `json:"players"`
+	ID                   string           `json:"id"`
+	Players              []*Player        `json:"players"`
+	QuestionRounds       []*QuestionRound `json:"questionRounds"`
+	CurrentQuestionRound int              `json:"currentQuestionRound"`
+	DealerID             string           `json:"dealerId"`
+}
+
+type Guess struct {
+	Guess    float64 `json:"guess"`
+	PlayerID string  `json:"playerId"`
+}
+
+type Hint struct {
+	Hint string `json:"hint"`
 }
 
 type NewPlayer struct {
@@ -12,7 +36,18 @@ type NewPlayer struct {
 }
 
 type Player struct {
-	ID             string  `json:"id"`
-	Name           string  `json:"name"`
-	RemainingMoney float64 `json:"remaining_money"`
+	ID    string `json:"id"`
+	Money int    `json:"money"`
+}
+
+type Question struct {
+	Question string  `json:"question"`
+	Answer   float64 `json:"answer"`
+	Hints    []*Hint `json:"hints"`
+}
+
+type QuestionRound struct {
+	Question      *Question       `json:"question"`
+	Guesses       []*Guess        `json:"guesses"`
+	BettingRounds []*BettingRound `json:"bettingRounds"`
 }

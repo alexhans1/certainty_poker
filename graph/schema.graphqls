@@ -1,22 +1,60 @@
-type Player {
-  id: ID!
-  name: String!
-  remaining_money: Float!
-}
-
+# Types
 type Game {
   id: ID!
   players: [Player!]!
+  questionRounds: [QuestionRound!]!
+  currentQuestionRound: Int!
+  dealerId: ID!
 }
 
+type Player {
+  id: ID!
+  money: Int!
+}
+
+type QuestionRound {
+  question: Question
+  guesses: [Guess!]!
+  bettingRounds: [BettingRound!]!
+}
+
+type Question {
+  question: String!
+  answer: Float!
+  hints: [Hint!]!
+}
+
+type Guess {
+  guess: Float!
+  playerId: ID!
+}
+
+type BettingRound {
+  foldedPlayerIds: [ID!]!
+  bets: [Bet!]!
+  currentPlayerId: ID!
+  lastRaisedPlayerId: ID!
+}
+
+type Bet {
+  playerId: ID!
+  amount: Int!
+}
+
+type Hint {
+  hint: String!
+}
+
+# Queries
 type Query {
-  players: [Player!]!
+  games: [Game!]!
 }
 
+# Mutations
 input NewPlayer {
   name: String!
 }
 
 type Mutation {
-  createPlayer(input: NewPlayer!): Player!
+  createGame: Game!
 }

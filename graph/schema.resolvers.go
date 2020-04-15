@@ -11,18 +11,20 @@ import (
 	"github.com/google/uuid"
 )
 
-func (r *mutationResolver) CreatePlayer(ctx context.Context, input model.NewPlayer) (*model.Player, error) {
-	player := &model.Player{
-		ID:             uuid.New().String(),
-		Name:           input.Name,
-		RemainingMoney: 0,
+func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
+	game := &model.Game{
+		ID:                   uuid.New().String(),
+		QuestionRounds:       make([]*model.QuestionRound, 0),
+		CurrentQuestionRound: -1,
+		DealerID:             "dealerId",
+		Players:              make([]*model.Player, 0),
 	}
-	r.players = append(r.players, player)
-	return player, nil
+	r.games = append(r.games, game)
+	return game, nil
 }
 
-func (r *queryResolver) Players(ctx context.Context) ([]*model.Player, error) {
-	return r.players, nil
+func (r *queryResolver) Games(ctx context.Context) ([]*model.Game, error) {
+	return r.games, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
