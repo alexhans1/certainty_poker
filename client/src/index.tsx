@@ -1,15 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
+import ApolloClient, { gql } from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
 import "./index.scss";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
+import { SERVER_URL } from "./config";
+
+const client = new ApolloClient({
+  uri: "http://localhost:8080/query",
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <ApolloProvider client={client}>
+      <Router>
+        <App />
+      </Router>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

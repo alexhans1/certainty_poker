@@ -1,0 +1,22 @@
+type Player {
+  id: ID!
+  name: String!
+  remaining_money: Float!
+}
+
+type Game {
+  id: ID!
+  players: [Player!]!
+}
+
+type Query {
+  players: [Player!]!
+}
+
+input NewPlayer {
+  name: String!
+}
+
+type Mutation {
+  createPlayer(input: NewPlayer!): Player!
+}
