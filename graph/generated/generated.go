@@ -52,6 +52,7 @@ type ComplexityRoot struct {
 		Bets               func(childComplexity int) int
 		CurrentPlayerID    func(childComplexity int) int
 		FoldedPlayerIds    func(childComplexity int) int
+		ID                 func(childComplexity int) int
 		LastRaisedPlayerID func(childComplexity int) int
 	}
 
@@ -73,7 +74,10 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		AddPlayer  func(childComplexity int, gameID string) int
 		CreateGame func(childComplexity int) int
+		Guess      func(childComplexity int, input model.GuessInput) int
+		PlaceBet   func(childComplexity int, input model.BetInput) int
 	}
 
 	Player struct {
@@ -82,27 +86,34 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Games func(childComplexity int) int
+		Games   func(childComplexity int) int
+		Players func(childComplexity int, gameID string) int
 	}
 
 	Question struct {
 		Answer   func(childComplexity int) int
 		Hints    func(childComplexity int) int
+		ID       func(childComplexity int) int
 		Question func(childComplexity int) int
 	}
 
 	QuestionRound struct {
 		BettingRounds func(childComplexity int) int
 		Guesses       func(childComplexity int) int
+		ID            func(childComplexity int) int
 		Question      func(childComplexity int) int
 	}
 }
 
 type MutationResolver interface {
 	CreateGame(ctx context.Context) (*model.Game, error)
+	AddPlayer(ctx context.Context, gameID string) (*model.Player, error)
+	Guess(ctx context.Context, input model.GuessInput) (*model.Guess, error)
+	PlaceBet(ctx context.Context, input model.BetInput) (*model.Bet, error)
 }
 type QueryResolver interface {
 	Games(ctx context.Context) ([]*model.Game, error)
+	Players(ctx context.Context, gameID string) ([]*model.Player, error)
 }
 
 type executableSchema struct {
@@ -154,6 +165,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BettingRound.FoldedPlayerIds(childComplexity), true
+
+	case "BettingRound.id":
+		if e.complexity.BettingRound.ID == nil {
+			break
+		}
+
+		return e.complexity.BettingRound.ID(childComplexity), true
 
 	case "BettingRound.lastRaisedPlayerId":
 		if e.complexity.BettingRound.LastRaisedPlayerID == nil {
@@ -218,12 +236,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Hint.Hint(childComplexity), true
 
+	case "Mutation.addPlayer":
+		if e.complexity.Mutation.AddPlayer == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addPlayer_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddPlayer(childComplexity, args["gameId"].(string)), true
+
 	case "Mutation.createGame":
 		if e.complexity.Mutation.CreateGame == nil {
 			break
 		}
 
 		return e.complexity.Mutation.CreateGame(childComplexity), true
+
+	case "Mutation.guess":
+		if e.complexity.Mutation.Guess == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_guess_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Guess(childComplexity, args["input"].(model.GuessInput)), true
+
+	case "Mutation.placeBet":
+		if e.complexity.Mutation.PlaceBet == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_placeBet_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.PlaceBet(childComplexity, args["input"].(model.BetInput)), true
 
 	case "Player.id":
 		if e.complexity.Player.ID == nil {
@@ -246,6 +300,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Games(childComplexity), true
 
+	case "Query.players":
+		if e.complexity.Query.Players == nil {
+			break
+		}
+
+		args, err := ec.field_Query_players_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Players(childComplexity, args["gameId"].(string)), true
+
 	case "Question.answer":
 		if e.complexity.Question.Answer == nil {
 			break
@@ -259,6 +325,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Question.Hints(childComplexity), true
+
+	case "Question.id":
+		if e.complexity.Question.ID == nil {
+			break
+		}
+
+		return e.complexity.Question.ID(childComplexity), true
 
 	case "Question.question":
 		if e.complexity.Question.Question == nil {
@@ -280,6 +353,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.QuestionRound.Guesses(childComplexity), true
+
+	case "QuestionRound.id":
+		if e.complexity.QuestionRound.ID == nil {
+			break
+		}
+
+		return e.complexity.QuestionRound.ID(childComplexity), true
 
 	case "QuestionRound.question":
 		if e.complexity.QuestionRound.Question == nil {
@@ -367,12 +447,14 @@ type Player {
 }
 
 type QuestionRound {
+  id: ID!
   question: Question
   guesses: [Guess!]!
   bettingRounds: [BettingRound!]!
 }
 
 type Question {
+  id: ID!
   question: String!
   answer: Float!
   hints: [Hint!]!
@@ -384,6 +466,7 @@ type Guess {
 }
 
 type BettingRound {
+  id: ID!
   foldedPlayerIds: [ID!]!
   bets: [Bet!]!
   currentPlayerId: ID!
@@ -402,15 +485,27 @@ type Hint {
 # Queries
 type Query {
   games: [Game!]!
+  players(gameId: ID!): [Player!]!
 }
 
 # Mutations
-input NewPlayer {
-  name: String!
+input GuessInput {
+  guess: Float!
+  playerId: ID!
+  questionRoundId: ID!
+}
+
+input BetInput {
+  playerId: ID!
+  amount: Int!
+  bettingRoundId: ID!
 }
 
 type Mutation {
   createGame: Game!
+  addPlayer(gameId: ID!): Player!
+  guess(input: GuessInput!): Guess!
+  placeBet(input: BetInput!): Bet!
 }
 `, BuiltIn: false},
 }
@@ -419,6 +514,48 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_addPlayer_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["gameId"]; ok {
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["gameId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_guess_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.GuessInput
+	if tmp, ok := rawArgs["input"]; ok {
+		arg0, err = ec.unmarshalNGuessInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGuessInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_placeBet_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.BetInput
+	if tmp, ok := rawArgs["input"]; ok {
+		arg0, err = ec.unmarshalNBetInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBetInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -431,6 +568,20 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_players_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["gameId"]; ok {
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["gameId"] = arg0
 	return args, nil
 }
 
@@ -536,6 +687,40 @@ func (ec *executionContext) _Bet_amount(ctx context.Context, field graphql.Colle
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BettingRound_id(ctx context.Context, field graphql.CollectedField, obj *model.BettingRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "BettingRound",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BettingRound_foldedPlayerIds(ctx context.Context, field graphql.CollectedField, obj *model.BettingRound) (ret graphql.Marshaler) {
@@ -980,6 +1165,129 @@ func (ec *executionContext) _Mutation_createGame(ctx context.Context, field grap
 	return ec.marshalNGame2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGame(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_addPlayer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_addPlayer_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddPlayer(rctx, args["gameId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Player)
+	fc.Result = res
+	return ec.marshalNPlayer2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐPlayer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_guess(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_guess_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Guess(rctx, args["input"].(model.GuessInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Guess)
+	fc.Result = res
+	return ec.marshalNGuess2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGuess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_placeBet(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_placeBet_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().PlaceBet(rctx, args["input"].(model.BetInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Bet)
+	fc.Result = res
+	return ec.marshalNBet2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBet(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Player_id(ctx context.Context, field graphql.CollectedField, obj *model.Player) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1082,6 +1390,47 @@ func (ec *executionContext) _Query_games(ctx context.Context, field graphql.Coll
 	return ec.marshalNGame2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGameᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_players(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_players_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Players(rctx, args["gameId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Player)
+	fc.Result = res
+	return ec.marshalNPlayer2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐPlayerᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1149,6 +1498,40 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Question_id(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Question",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Question_question(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
@@ -1251,6 +1634,40 @@ func (ec *executionContext) _Question_hints(ctx context.Context, field graphql.C
 	res := resTmp.([]*model.Hint)
 	fc.Result = res
 	return ec.marshalNHint2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐHintᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _QuestionRound_id(ctx context.Context, field graphql.CollectedField, obj *model.QuestionRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "QuestionRound",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _QuestionRound_question(ctx context.Context, field graphql.CollectedField, obj *model.QuestionRound) (ret graphql.Marshaler) {
@@ -2407,15 +2824,57 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputNewPlayer(ctx context.Context, obj interface{}) (model.NewPlayer, error) {
-	var it model.NewPlayer
+func (ec *executionContext) unmarshalInputBetInput(ctx context.Context, obj interface{}) (model.BetInput, error) {
+	var it model.BetInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
 		switch k {
-		case "name":
+		case "playerId":
 			var err error
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			it.PlayerID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "amount":
+			var err error
+			it.Amount, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "bettingRoundId":
+			var err error
+			it.BettingRoundID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputGuessInput(ctx context.Context, obj interface{}) (model.GuessInput, error) {
+	var it model.GuessInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "guess":
+			var err error
+			it.Guess, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "playerId":
+			var err error
+			it.PlayerID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "questionRoundId":
+			var err error
+			it.QuestionRoundID, err = ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -2476,6 +2935,11 @@ func (ec *executionContext) _BettingRound(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("BettingRound")
+		case "id":
+			out.Values[i] = ec._BettingRound_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "foldedPlayerIds":
 			out.Values[i] = ec._BettingRound_foldedPlayerIds(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -2633,6 +3097,21 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "addPlayer":
+			out.Values[i] = ec._Mutation_addPlayer(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "guess":
+			out.Values[i] = ec._Mutation_guess(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "placeBet":
+			out.Values[i] = ec._Mutation_placeBet(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2705,6 +3184,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "players":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_players(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -2731,6 +3224,11 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Question")
+		case "id":
+			out.Values[i] = ec._Question_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "question":
 			out.Values[i] = ec._Question_question(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -2768,6 +3266,11 @@ func (ec *executionContext) _QuestionRound(ctx context.Context, sel ast.Selectio
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("QuestionRound")
+		case "id":
+			out.Values[i] = ec._QuestionRound_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "question":
 			out.Values[i] = ec._QuestionRound_question(ctx, field, obj)
 		case "guesses":
@@ -3087,6 +3590,10 @@ func (ec *executionContext) marshalNBet2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_
 	return ec._Bet(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNBetInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBetInput(ctx context.Context, v interface{}) (model.BetInput, error) {
+	return ec.unmarshalInputBetInput(ctx, v)
+}
+
 func (ec *executionContext) marshalNBettingRound2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBettingRound(ctx context.Context, sel ast.SelectionSet, v model.BettingRound) graphql.Marshaler {
 	return ec._BettingRound(ctx, sel, &v)
 }
@@ -3266,6 +3773,10 @@ func (ec *executionContext) marshalNGuess2ᚖgithubᚗcomᚋalexhans1ᚋcertaint
 		return graphql.Null
 	}
 	return ec._Guess(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNGuessInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGuessInput(ctx context.Context, v interface{}) (model.GuessInput, error) {
+	return ec.unmarshalInputGuessInput(ctx, v)
 }
 
 func (ec *executionContext) marshalNHint2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐHint(ctx context.Context, sel ast.SelectionSet, v model.Hint) graphql.Marshaler {
