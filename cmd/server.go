@@ -21,7 +21,7 @@ func main() {
 		port = defaultPort
 	}
 
-	server := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	server := handler.NewDefaultServer(generated.NewExecutableSchema(graph.NewResolver()))
 
 	mux := http.NewServeMux()
 

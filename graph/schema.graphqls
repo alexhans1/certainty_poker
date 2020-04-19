@@ -67,7 +67,7 @@ input BetInput {
 
 type Mutation {
   createGame: Game!
-  addPlayer(gameId: ID!): Player!
-  addGuess(input: GuessInput!): Guess!
-  placeBet(input: BetInput!): Bet!
+  addPlayer(gameId: ID!): Game!
+  addGuess(input: GuessInput!): Game!
+  placeBet(input: BetInput!): Game!
 }

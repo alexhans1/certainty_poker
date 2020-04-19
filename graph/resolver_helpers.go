@@ -1,44 +1,35 @@
 package graph
 
 import (
+	"errors"
+
 	"github.com/alexhans1/certainty_poker/graph/model"
 	"github.com/google/uuid"
 )
 
-func findGame(slice []*model.Game, id string) (game *model.Game, ok bool) {
-	for i := range slice {
-		if slice[i].ID == id {
-			return slice[i], true
-		}
+func findGame(games map[string]*model.Game, id string) (game *model.Game, err error) {
+	if game, ok := games[id]; ok {
+		return game, nil
 	}
-	return nil, false
+	return nil, errors.New("Game not found")
 }
 
-func findPlayer(slice []*model.Player, id string) (player *model.Player, ok bool) {
+func findQuestionRound(slice []*model.QuestionRound, id string) (questionRound *model.QuestionRound, err error) {
 	for i := range slice {
 		if slice[i].ID == id {
-			return slice[i], true
+			return slice[i], nil
 		}
 	}
-	return nil, false
+	return nil, errors.New("QuestionRound not found")
 }
 
-func findQuestionRound(slice []*model.QuestionRound, id string) (questionRound *model.QuestionRound, ok bool) {
+func findBettingRound(slice []*model.BettingRound, id string) (bettingRound *model.BettingRound, err error) {
 	for i := range slice {
 		if slice[i].ID == id {
-			return slice[i], true
+			return slice[i], nil
 		}
 	}
-	return nil, false
-}
-
-func findBettingRound(slice []*model.BettingRound, id string) (bettingRound *model.BettingRound, ok bool) {
-	for i := range slice {
-		if slice[i].ID == id {
-			return slice[i], true
-		}
-	}
-	return nil, false
+	return nil, errors.New("QuestionRound not found")
 }
 
 func createID() string {

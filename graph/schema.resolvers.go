@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"errors"
 
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
@@ -13,7 +12,7 @@ import (
 
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
 	gameID := createID()
-	game := &model.Game{
+	game := model.Game{
 		ID:                   gameID,
 		QuestionRounds:       createInitialQuestionRounds(),
 		CurrentQuestionRound: -1,
@@ -21,63 +20,70 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 		Players:              make([]*model.Player, 0),
 	}
 
-	r.games = append(r.games, game)
+	r.games[gameID] = &game
 
+	return &game, nil
+}
+
+func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Game, error) {
+	game, err := findGame(r.games, gameID)
+	if err != nil {
+		return nil, err
+	}
+
+	newPlayer := &model.Player{
+		ID:    createID(),
+		Money: 100,
+	}
+	game.Players = append(game.Players, newPlayer)
 	return game, nil
 }
 
-func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Player, error) {
-	if game, ok := findGame(r.games, gameID); ok {
-		newPlayer := &model.Player{
-			ID:    createID(),
-			Money: 100,
-		}
-		game.Players = append(game.Players, newPlayer)
-		return newPlayer, nil
+func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error) {
+	game, err := findGame(r.games, input.GameID)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, errors.New("not found")
+	questionRound, err := findQuestionRound(game.QuestionRounds, input.QuestionRoundID)
+	if err != nil {
+		return nil, err
+	}
+
+	newGuess := &model.Guess{
+		Guess:    input.Guess,
+		PlayerID: input.PlayerID,
+	}
+	questionRound.Guesses = append(questionRound.Guesses, newGuess)
+	return game, nil
 }
 
-func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Guess, error) {
-	if game, ok := findGame(r.games, input.GameID); ok {
-		if questionRound, ok := findQuestionRound(game.QuestionRounds, input.QuestionRoundID); ok {
-			newGuess := &model.Guess{
-				Guess:    input.Guess,
-				PlayerID: input.PlayerID,
-			}
-			questionRound.Guesses = append(questionRound.Guesses, newGuess)
-			return newGuess, nil
-		}
+func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (*model.Game, error) {
+	game, err := findGame(r.games, input.GameID)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, errors.New("not found")
-}
-
-func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (*model.Bet, error) {
-	if game, ok := findGame(r.games, input.GameID); ok {
-		if questionRound, ok := findQuestionRound(game.QuestionRounds, input.QuestionRoundID); ok {
-			if bettingRound, ok := findBettingRound(questionRound.BettingRounds, input.BettingRoundID); ok {
-				newBet := &model.Bet{
-					Amount:   input.Amount,
-					PlayerID: input.PlayerID,
-				}
-				bettingRound.Bets = append(bettingRound.Bets, newBet)
-				return newBet, nil
-			}
-		}
+	questionRound, err := findQuestionRound(game.QuestionRounds, input.QuestionRoundID)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, errors.New("not found")
+	bettingRound, err := findBettingRound(questionRound.BettingRounds, input.BettingRoundID)
+	if err != nil {
+		return nil, err
+	}
+
+	newBet := &model.Bet{
+		Amount:   input.Amount,
+		PlayerID: input.PlayerID,
+	}
+	bettingRound.Bets = append(bettingRound.Bets, newBet)
+	return game, nil
 }
 
 func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, error) {
-	for _, game := range r.games {
-		if game.ID == gameID {
-			return game, nil
-		}
-	}
-	return nil, errors.New("not found")
+	return findGame(r.games, gameID)
 }
 
 // Mutation returns generated.MutationResolver implementation.

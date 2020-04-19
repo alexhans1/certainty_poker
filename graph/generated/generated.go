@@ -102,9 +102,9 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateGame(ctx context.Context) (*model.Game, error)
-	AddPlayer(ctx context.Context, gameID string) (*model.Player, error)
-	AddGuess(ctx context.Context, input model.GuessInput) (*model.Guess, error)
-	PlaceBet(ctx context.Context, input model.BetInput) (*model.Bet, error)
+	AddPlayer(ctx context.Context, gameID string) (*model.Game, error)
+	AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error)
+	PlaceBet(ctx context.Context, input model.BetInput) (*model.Game, error)
 }
 type QueryResolver interface {
 	Game(ctx context.Context, gameID string) (*model.Game, error)
@@ -481,9 +481,9 @@ input BetInput {
 
 type Mutation {
   createGame: Game!
-  addPlayer(gameId: ID!): Player!
-  addGuess(input: GuessInput!): Guess!
-  placeBet(input: BetInput!): Bet!
+  addPlayer(gameId: ID!): Game!
+  addGuess(input: GuessInput!): Game!
+  placeBet(input: BetInput!): Game!
 }
 `, BuiltIn: false},
 }
@@ -1145,9 +1145,9 @@ func (ec *executionContext) _Mutation_addPlayer(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Player)
+	res := resTmp.(*model.Game)
 	fc.Result = res
-	return ec.marshalNPlayer2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐPlayer(ctx, field.Selections, res)
+	return ec.marshalNGame2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGame(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_addGuess(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1186,9 +1186,9 @@ func (ec *executionContext) _Mutation_addGuess(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Guess)
+	res := resTmp.(*model.Game)
 	fc.Result = res
-	return ec.marshalNGuess2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGuess(ctx, field.Selections, res)
+	return ec.marshalNGame2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGame(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_placeBet(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1227,9 +1227,9 @@ func (ec *executionContext) _Mutation_placeBet(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Bet)
+	res := resTmp.(*model.Game)
 	fc.Result = res
-	return ec.marshalNBet2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBet(ctx, field.Selections, res)
+	return ec.marshalNGame2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGame(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Player_id(ctx context.Context, field graphql.CollectedField, obj *model.Player) (ret graphql.Marshaler) {
