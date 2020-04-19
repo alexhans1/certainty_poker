@@ -7,7 +7,7 @@ import (
 )
 
 func createQuestionRound(index int) model.QuestionRound {
-	return model.QuestionRound{
+	questionRound := model.QuestionRound{
 		ID: createID(),
 		Question: &model.Question{
 			ID:       createID(),
@@ -18,6 +18,9 @@ func createQuestionRound(index int) model.QuestionRound {
 		Guesses:       make([]*model.Guess, 0),
 		BettingRounds: make([]*model.BettingRound, 0),
 	}
+
+	questionRound.BettingRounds = createBettingRounds(len(questionRound.Question.Hints) + 1)
+	return questionRound
 }
 
 func createHints(index int) []string {
@@ -27,6 +30,21 @@ func createHints(index int) []string {
 		hints = append(hints, "Test Hint "+strconv.Itoa(i+1)+" for Question "+strconv.Itoa(index+1))
 	}
 	return hints
+}
+
+func createBettingRounds(length int) []*model.BettingRound {
+	bettingRounds := make([]*model.BettingRound, 0)
+
+	for i := 0; i < length; i++ {
+		bettingRounds = append(bettingRounds, &model.BettingRound{
+			ID:                 createID(),
+			FoldedPlayerIds:    make([]string, 0),
+			Bets:               make([]*model.Bet, 0),
+			CurrentPlayerID:    "not started",
+			LastRaisedPlayerID: "not started",
+		})
+	}
+	return bettingRounds
 }
 
 func createInitialQuestionRounds() []*model.QuestionRound {
