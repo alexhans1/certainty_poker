@@ -21,18 +21,18 @@ func createQuestionRound(index int) model.QuestionRound {
 }
 
 func createHints(index int) []string {
-	hints := make([]string, 3)
+	hints := make([]string, 0)
 
-	for i := range hints {
+	for i := 0; i < 3; i++ {
 		hints = append(hints, "Test Hint "+strconv.Itoa(i+1)+" for Question "+strconv.Itoa(index+1))
 	}
 	return hints
 }
 
 func createInitialQuestionRounds() []*model.QuestionRound {
-	questionRounds := make([]*model.QuestionRound, 10)
+	questionRounds := make([]*model.QuestionRound, 0)
 
-	for i := range questionRounds {
+	for i := 0; i < 10; i++ {
 		questionRound := createQuestionRound(i)
 		questionRounds = append(questionRounds, &questionRound)
 	}
