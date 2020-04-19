@@ -23,7 +23,7 @@ type Question {
   id: ID!
   question: String!
   answer: Float!
-  hints: [Hint!]!
+  hints: [String!]!
 }
 
 type Guess {
@@ -44,10 +44,6 @@ type Bet {
   amount: Int!
 }
 
-type Hint {
-  hint: String!
-}
-
 # Queries
 type Query {
   game(gameId: ID!): Game!
@@ -55,20 +51,23 @@ type Query {
 
 # Mutations
 input GuessInput {
-  guess: Float!
-  playerId: ID!
+  gameId: ID!
   questionRoundId: ID!
+  playerId: ID!
+  guess: Float!
 }
 
 input BetInput {
+  gameId: ID!
+  questionRoundId: ID!
+  bettingRoundId: ID!
   playerId: ID!
   amount: Int!
-  bettingRoundId: ID!
 }
 
 type Mutation {
   createGame: Game!
   addPlayer(gameId: ID!): Player!
-  guess(input: GuessInput!): Guess!
+  addGuess(input: GuessInput!): Guess!
   placeBet(input: BetInput!): Bet!
 }

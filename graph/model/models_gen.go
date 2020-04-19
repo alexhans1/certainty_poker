@@ -8,9 +8,11 @@ type Bet struct {
 }
 
 type BetInput struct {
-	PlayerID       string `json:"playerId"`
-	Amount         int    `json:"amount"`
-	BettingRoundID string `json:"bettingRoundId"`
+	GameID          string `json:"gameId"`
+	QuestionRoundID string `json:"questionRoundId"`
+	BettingRoundID  string `json:"bettingRoundId"`
+	PlayerID        string `json:"playerId"`
+	Amount          int    `json:"amount"`
 }
 
 type BettingRound struct {
@@ -35,13 +37,10 @@ type Guess struct {
 }
 
 type GuessInput struct {
-	Guess           float64 `json:"guess"`
-	PlayerID        string  `json:"playerId"`
+	GameID          string  `json:"gameId"`
 	QuestionRoundID string  `json:"questionRoundId"`
-}
-
-type Hint struct {
-	Hint string `json:"hint"`
+	PlayerID        string  `json:"playerId"`
+	Guess           float64 `json:"guess"`
 }
 
 type Player struct {
@@ -50,10 +49,10 @@ type Player struct {
 }
 
 type Question struct {
-	ID       string  `json:"id"`
-	Question string  `json:"question"`
-	Answer   float64 `json:"answer"`
-	Hints    []*Hint `json:"hints"`
+	ID       string   `json:"id"`
+	Question string   `json:"question"`
+	Answer   float64  `json:"answer"`
+	Hints    []string `json:"hints"`
 }
 
 type QuestionRound struct {
