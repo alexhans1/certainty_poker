@@ -5,16 +5,12 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
-	"github.com/google/uuid"
 )
-
-func createID() string {
-	return uuid.New().String()
-}
 
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
 	gameID := createID()
@@ -25,7 +21,9 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 		DealerID:             "dealerId",
 		Players:              make([]*model.Player, 0),
 	}
-	r.games[gameID] = game
+
+	r.games = append(r.games, game)
+
 	return game, nil
 }
 
@@ -36,6 +34,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 		Money: 100,
 	}
 
+	return player, nil
 }
 
 func (r *mutationResolver) Guess(ctx context.Context, input model.GuessInput) (*model.Guess, error) {
@@ -46,12 +45,13 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Games(ctx context.Context) ([]*model.Game, error) {
-	return r.games, nil
-}
-
-func (r *queryResolver) Players(ctx context.Context, gameID string) ([]*model.Player, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, error) {
+	for _, game := range r.games {
+		if game.ID == gameID {
+			return game, nil
+		}
+	}
+	return nil, errors.New("not found")
 }
 
 // Mutation returns generated.MutationResolver implementation.

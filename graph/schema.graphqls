@@ -50,8 +50,7 @@ type Hint {
 
 # Queries
 type Query {
-  games: [Game!]!
-  players(gameId: ID!): [Player!]!
+  game(gameId: ID!): Game!
 }
 
 # Mutations
