@@ -56,8 +56,9 @@ type Question struct {
 }
 
 type QuestionRound struct {
-	ID            string          `json:"id"`
-	Question      *Question       `json:"question"`
-	Guesses       []*Guess        `json:"guesses"`
-	BettingRounds []*BettingRound `json:"bettingRounds"`
+	ID                  string          `json:"id"`
+	Question            *Question       `json:"question"`
+	Guesses             []*Guess        `json:"guesses"`
+	BettingRounds       []*BettingRound `json:"bettingRounds"`
+	CurrentBettingRound int             `json:"currentBettingRound"`
 }

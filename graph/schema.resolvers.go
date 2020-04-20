@@ -5,7 +5,9 @@ package graph
 
 import (
 	"context"
+	"errors"
 
+	"github.com/alexhans1/certainty_poker/gamelogic"
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
 )
@@ -23,6 +25,29 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 	r.games[gameID] = &game
 
 	return &game, nil
+}
+
+func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model.Game, error) {
+	game, err := findGame(r.games, gameID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(game.Players) < 2 {
+		return nil, errors.New("not enough players to start the game")
+	}
+
+	shufflePlayers(game.Players)
+	game.DealerID = game.Players[0].ID
+	game.CurrentQuestionRound = 0
+	game.QuestionRounds[0].CurrentBettingRound = 0
+
+	startBettingRoundErr := gamelogic.StartBettingRound(game)
+	if startBettingRoundErr != nil {
+		return nil, startBettingRoundErr
+	}
+
+	return game, nil
 }
 
 func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Game, error) {

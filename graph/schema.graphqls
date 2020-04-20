@@ -17,6 +17,7 @@ type QuestionRound {
   question: Question
   guesses: [Guess!]!
   bettingRounds: [BettingRound!]!
+  currentBettingRound: Int!
 }
 
 type Question {
@@ -67,6 +68,7 @@ input BetInput {
 
 type Mutation {
   createGame: Game!
+  startGame(gameId: ID!): Game!
   addPlayer(gameId: ID!): Game!
   addGuess(input: GuessInput!): Game!
   placeBet(input: BetInput!): Game!

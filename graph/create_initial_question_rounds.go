@@ -15,8 +15,9 @@ func createQuestionRound(index int) model.QuestionRound {
 			Answer:   44,
 			Hints:    createHints(index),
 		},
-		Guesses:       make([]*model.Guess, 0),
-		BettingRounds: make([]*model.BettingRound, 0),
+		Guesses:             make([]*model.Guess, 0),
+		BettingRounds:       make([]*model.BettingRound, 0),
+		CurrentBettingRound: -1,
 	}
 
 	questionRound.BettingRounds = createBettingRounds(len(questionRound.Question.Hints) + 1)
