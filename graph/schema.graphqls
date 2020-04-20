@@ -18,6 +18,7 @@ type QuestionRound {
   guesses: [Guess!]!
   bettingRounds: [BettingRound!]!
   currentBettingRound: Int!
+  foldedPlayerIds: [ID!]!
 }
 
 type Question {
@@ -34,7 +35,6 @@ type Guess {
 
 type BettingRound {
   id: ID!
-  foldedPlayerIds: [ID!]!
   bets: [Bet!]!
   currentPlayerId: ID!
   lastRaisedPlayerId: ID!

@@ -11,7 +11,7 @@ import (
 // Returns an error if something fails.
 func StartBettingRound(game *model.Game) error {
 	// TODO: what if there are less than three players left?
-	// TODO: filter out players who have no money left
+	// TODO: filter out players who have no money left or who have folded yet
 	for i, player := range game.Players {
 		if player.ID == game.DealerID {
 			questionRound := game.QuestionRounds[game.CurrentQuestionRound]

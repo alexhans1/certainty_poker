@@ -17,6 +17,7 @@ func createQuestionRound(index int) model.QuestionRound {
 		},
 		Guesses:             make([]*model.Guess, 0),
 		BettingRounds:       make([]*model.BettingRound, 0),
+		FoldedPlayerIds:     make([]string, 0),
 		CurrentBettingRound: -1,
 	}
 
@@ -39,7 +40,6 @@ func createBettingRounds(length int) []*model.BettingRound {
 	for i := 0; i < length; i++ {
 		bettingRounds = append(bettingRounds, &model.BettingRound{
 			ID:                 createID(),
-			FoldedPlayerIds:    make([]string, 0),
 			Bets:               make([]*model.Bet, 0),
 			CurrentPlayerID:    "not started",
 			LastRaisedPlayerID: "not started",
