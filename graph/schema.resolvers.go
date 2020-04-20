@@ -33,6 +33,10 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 		return nil, err
 	}
 
+	if game.CurrentQuestionRound >= 0 {
+		return nil, errors.New("cannot start game that is already in progress")
+	}
+
 	if len(game.Players) < 2 {
 		return nil, errors.New("not enough players to start the game")
 	}
