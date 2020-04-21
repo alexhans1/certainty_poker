@@ -30,7 +30,7 @@ func findBettingRound(slice []*model.BettingRound, id string) (bettingRound *mod
 			return slice[i], nil
 		}
 	}
-	return nil, errors.New("QuestionRound not found")
+	return nil, errors.New("BettingRound not found")
 }
 
 func createID() string {
