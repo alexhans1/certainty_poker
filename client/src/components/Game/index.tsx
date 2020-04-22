@@ -1,65 +1,132 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { useLazyQuery, useMutation } from "@apollo/react-hooks";
+import { GET_GAME_BY_ID, CREATE_PLAYER, START_GAME } from "../../api/queries";
+import { Game, Player } from "../../interfaces";
+import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
 
-const styles = { playersContainer: { padding: 10 } };
+function GameComponent() {
+  const [playerId, setPlayerId] = useState<string | undefined>(undefined);
+  const [game, setGame] = useState<Game | undefined>(undefined);
+  const { game_id: gameId } = useParams();
 
-const query = gql`
-  {
-    games {
-      id
-      questionRounds {
-        question {
-          question
-        }
-        bettingRounds {
-          foldedPlayerIds
-          currentPlayerId
-          lastRaisedPlayerId
-          bets {
-            amount
-            playerId
-          }
-        }
+  const [
+    fetchGame,
+    { data: fetchGameData, loading: fetchGameLoading, error: fetchGameError },
+  ] = useLazyQuery<{ game: Game }>(GET_GAME_BY_ID, {
+    fetchPolicy: "cache-and-network",
+  });
+
+  const [
+    createPlayer,
+    { data: newPlayerData, loading: addPlayerLoading, error: addPlayerError },
+  ] = useMutation<{ addPlayer: Player }>(CREATE_PLAYER);
+
+  const [
+    startGame,
+    { data: startGameData, loading: startGameLoading, error: startGameError },
+  ] = useMutation<{ startGame: Game }>(START_GAME);
+
+  useEffect(() => {
+    if (gameId) {
+      const storedPlayerId = getPlayerIdFromStorage(gameId);
+      const newPlayerId = newPlayerData?.addPlayer?.id;
+
+      if (storedPlayerId) {
+        setPlayerId(storedPlayerId);
       }
-      currentQuestionRound
-      players {
-        id
-        money
+
+      if (newPlayerId) {
+        setPlayerIdToStorage(gameId, newPlayerId);
+        setPlayerId(newPlayerId);
       }
-      dealerId
+
+      if (!storedPlayerId && !newPlayerId) {
+        createPlayer({
+          variables: { gameId },
+        });
+      }
+      fetchGame({
+        variables: { gameId },
+      });
     }
+
+    setGame(fetchGameData?.game || startGameData?.startGame);
+  }, [
+    gameId,
+    playerId,
+    newPlayerData,
+    createPlayer,
+    fetchGame,
+    fetchGameData,
+    startGameData,
+  ]);
+
+  if (fetchGameError || addPlayerError || startGameError) {
+    console.error(fetchGameError || addPlayerError || startGameError);
+    return <p>A technical error occurred. Try to refresh the page</p>;
   }
-`;
 
-interface Game {
-  id: string;
-  name: string;
-  remaining_money: number;
-}
-
-function App() {
-  const { game_id } = useParams();
-  const { data, error, loading } = useQuery<{ games: any[] }>(query);
-  console.log("data", data);
-
-  if (loading || !data) return <p>Loading...</p>;
-  if (error) return <p>Error: {error?.message}</p>;
-
-  const { games } = data;
-
+  const currentQuestionRound = game?.questionRounds[game.currentQuestionRound];
+  const currentBettingRound =
+    currentQuestionRound?.bettingRounds[
+      currentQuestionRound?.currentBettingRound
+    ];
   return (
-    <div>
-      <p>Players:</p>
-      {games.map(({ id, dealerId }) => (
-        <div style={styles.playersContainer}>
-          <div>Name: {id}</div>
-          <div>Remaining money: {dealerId}</div>
+    <div className="container">
+      {(fetchGameLoading || addPlayerLoading || startGameLoading) && (
+        <p>Loading...</p>
+      )}
+      <button
+        className="btn btn-primary m-3"
+        disabled={(game?.currentQuestionRound ?? -1) > -1}
+        onClick={() => {
+          startGame({
+            variables: { gameId },
+          });
+        }}
+      >
+        Start Game
+      </button>
+      <button
+        className="btn btn-primary"
+        onClick={() => {
+          fetchGame({
+            variables: { gameId },
+          });
+        }}
+      >
+        Refresh
+      </button>
+      <div className="d-flex flex-row">
+        <div>
+          <p>Players:</p>
+          {(game?.players || []).map(({ id, money }, i) => (
+            <div className="ml-3" key={id}>
+              {i !== 0 && <hr />}
+              <div>
+                {id === playerId && <b>👩‍💻</b>}Name: {id}
+              </div>
+              <div>Remaining money: {money}</div>
+            </div>
+          ))}
         </div>
-      ))}
+        {currentQuestionRound && (
+          <div>
+            <p>Question: {currentQuestionRound.question.question}</p>
+            <p>
+              Hint:{" "}
+              {
+                currentQuestionRound.question.hints[
+                  currentQuestionRound.currentBettingRound - 1
+                ]
+              }
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-export default App;
+export default GameComponent;
