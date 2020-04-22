@@ -54,7 +54,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 	return game, nil
 }
 
-func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Game, error) {
+func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Player, error) {
 	game, err := findGame(r.games, gameID)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 		Money: 100,
 	}
 	game.Players = append(game.Players, newPlayer)
-	return game, nil
+	return newPlayer, nil
 }
 
 func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error) {

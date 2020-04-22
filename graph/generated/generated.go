@@ -105,7 +105,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	CreateGame(ctx context.Context) (*model.Game, error)
 	StartGame(ctx context.Context, gameID string) (*model.Game, error)
-	AddPlayer(ctx context.Context, gameID string) (*model.Game, error)
+	AddPlayer(ctx context.Context, gameID string) (*model.Player, error)
 	AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error)
 	PlaceBet(ctx context.Context, input model.BetInput) (*model.Game, error)
 }
@@ -505,7 +505,7 @@ input BetInput {
 type Mutation {
   createGame: Game!
   startGame(gameId: ID!): Game!
-  addPlayer(gameId: ID!): Game!
+  addPlayer(gameId: ID!): Player!
   addGuess(input: GuessInput!): Game!
   placeBet(input: BetInput!): Game!
 }
@@ -1190,9 +1190,9 @@ func (ec *executionContext) _Mutation_addPlayer(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Game)
+	res := resTmp.(*model.Player)
 	fc.Result = res
-	return ec.marshalNGame2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGame(ctx, field.Selections, res)
+	return ec.marshalNPlayer2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐPlayer(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_addGuess(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
