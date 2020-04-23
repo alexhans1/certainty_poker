@@ -4,6 +4,7 @@ import { useLazyQuery, useMutation } from "@apollo/react-hooks";
 import { GET_GAME_BY_ID, CREATE_PLAYER, START_GAME } from "../../api/queries";
 import { Game, Player } from "../../interfaces";
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
+import PlayerTable from "./PlayerTable";
 
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
@@ -99,18 +100,14 @@ function GameComponent() {
         Refresh
       </button>
       <div className="d-flex flex-row">
-        <div>
-          <p>Players:</p>
-          {(game?.players || []).map(({ id, money }, i) => (
-            <div className="ml-3" key={id}>
-              {i !== 0 && <hr />}
-              <div>
-                {id === playerId && <b>👩‍💻</b>}Name: {id}
-              </div>
-              <div>Remaining money: {money}</div>
-            </div>
-          ))}
-        </div>
+        <PlayerTable
+          {...{
+            players: game?.players,
+            playerId,
+            currentQuestionRound,
+            currentBettingRound,
+          }}
+        />
         {currentQuestionRound && (
           <div>
             <p>Question: {currentQuestionRound.question.question}</p>

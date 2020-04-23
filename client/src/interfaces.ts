@@ -20,14 +20,14 @@ interface Bet {
   amount: number;
 }
 
-interface BettingRound {
+export interface BettingRound {
   id: string;
   bets: Bet[];
   currentPlayerId: Player["id"];
   lastRaisedPlayerId: Player["id"];
 }
 
-interface QuestionRound {
+export interface QuestionRound {
   id: string;
   question: Question;
   guesses: Guess[];
