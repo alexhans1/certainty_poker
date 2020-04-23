@@ -9,11 +9,12 @@ import (
 
 	"github.com/alexhans1/certainty_poker/gamelogic"
 	"github.com/alexhans1/certainty_poker/graph/generated"
+	"github.com/alexhans1/certainty_poker/graph/helpers"
 	"github.com/alexhans1/certainty_poker/graph/model"
 )
 
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
-	gameID := createID()
+	gameID := helpers.CreateID()
 	game := model.Game{
 		ID:                   gameID,
 		QuestionRounds:       createInitialQuestionRounds(),
@@ -28,7 +29,7 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 }
 
 func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model.Game, error) {
-	game, err := findGame(r.games, gameID)
+	game, err := helpers.FindGame(r.games, gameID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +42,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 		return nil, errors.New("not enough players to start the game")
 	}
 
-	shufflePlayers(game.Players)
+	helpers.ShufflePlayers(game.Players)
 	game.DealerID = game.Players[0].ID
 	game.CurrentQuestionRound = 0
 	game.QuestionRounds[0].CurrentBettingRound = 0
@@ -55,13 +56,13 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 }
 
 func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Player, error) {
-	game, err := findGame(r.games, gameID)
+	game, err := helpers.FindGame(r.games, gameID)
 	if err != nil {
 		return nil, err
 	}
 
 	newPlayer := &model.Player{
-		ID:    createID(),
+		ID:    helpers.CreateID(),
 		Money: 100,
 	}
 	game.Players = append(game.Players, newPlayer)
@@ -69,12 +70,12 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 }
 
 func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error) {
-	game, err := findGame(r.games, input.GameID)
+	game, err := helpers.FindGame(r.games, input.GameID)
 	if err != nil {
 		return nil, err
 	}
 
-	questionRound, err := findQuestionRound(game.QuestionRounds, input.QuestionRoundID)
+	questionRound, err := helpers.FindQuestionRound(game.QuestionRounds, input.QuestionRoundID)
 	if err != nil {
 		return nil, err
 	}
@@ -88,17 +89,17 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 }
 
 func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (*model.Game, error) {
-	game, err := findGame(r.games, input.GameID)
+	game, err := helpers.FindGame(r.games, input.GameID)
 	if err != nil {
 		return nil, err
 	}
 
-	questionRound, err := findQuestionRound(game.QuestionRounds, input.QuestionRoundID)
+	questionRound, err := helpers.FindQuestionRound(game.QuestionRounds, input.QuestionRoundID)
 	if err != nil {
 		return nil, err
 	}
 
-	bettingRound, err := findBettingRound(questionRound.BettingRounds, input.BettingRoundID)
+	bettingRound, err := helpers.FindBettingRound(questionRound.BettingRounds, input.BettingRoundID)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +113,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 }
 
 func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, error) {
-	return findGame(r.games, gameID)
+	return helpers.FindGame(r.games, gameID)
 }
 
 // Mutation returns generated.MutationResolver implementation.

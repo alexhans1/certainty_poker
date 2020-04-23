@@ -3,14 +3,15 @@ package graph
 import (
 	"strconv"
 
+	"github.com/alexhans1/certainty_poker/graph/helpers"
 	"github.com/alexhans1/certainty_poker/graph/model"
 )
 
 func createQuestionRound(index int) model.QuestionRound {
 	questionRound := model.QuestionRound{
-		ID: createID(),
+		ID: helpers.CreateID(),
 		Question: &model.Question{
-			ID:       createID(),
+			ID:       helpers.CreateID(),
 			Question: "Test Question " + strconv.Itoa(index+1),
 			Answer:   44,
 			Hints:    createHints(index),
@@ -39,7 +40,7 @@ func createBettingRounds(length int) []*model.BettingRound {
 
 	for i := 0; i < length; i++ {
 		bettingRounds = append(bettingRounds, &model.BettingRound{
-			ID:                 createID(),
+			ID:                 helpers.CreateID(),
 			Bets:               make([]*model.Bet, 0),
 			CurrentPlayerID:    "not started",
 			LastRaisedPlayerID: "not started",

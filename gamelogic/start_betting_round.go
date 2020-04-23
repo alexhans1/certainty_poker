@@ -22,8 +22,22 @@ func StartBettingRound(game *model.Game) error {
 			if bettingRound == nil {
 				return errors.New("currentBettingRound round not found")
 			}
+
+			smallBlindPlayer := game.Players[(i+1)%len(game.Players)]
+			bigBlindPlayer := game.Players[(i+2)%len(game.Players)]
+
+			var err error
+			err = ProcessBet(game, model.Bet{PlayerID: smallBlindPlayer.ID, Amount: 5})
+			if err != nil {
+				return err
+			}
+			err = ProcessBet(game, model.Bet{PlayerID: bigBlindPlayer.ID, Amount: 10})
+			if err != nil {
+				return err
+			}
+
 			bettingRound.CurrentPlayerID = game.Players[(i+3)%len(game.Players)].ID
-			bettingRound.LastRaisedPlayerID = game.Players[(i+2)%len(game.Players)].ID
+			bettingRound.LastRaisedPlayerID = bigBlindPlayer.ID
 
 			return nil
 		}
