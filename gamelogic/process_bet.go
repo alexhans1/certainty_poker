@@ -26,6 +26,11 @@ func ProcessBet(game *model.Game, bet model.Bet) error {
 		return errors.New("can only process bets for current player")
 	}
 
+	if bet.Amount == 0 {
+		incrementCurrentPlayer(bettingRound, game.Players)
+		return nil
+	}
+
 	bettingRound.Bets = append(bettingRound.Bets, &bet)
 
 	player, err := helpers.FindPlayer(game.Players, bet.PlayerID)
