@@ -61,6 +61,10 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 		return nil, err
 	}
 
+	if game.CurrentQuestionRound > -1 {
+		return nil, errors.New("cannot join game after it started")
+	}
+
 	newPlayer := &model.Player{
 		ID:    helpers.CreateID(),
 		Money: 100,
