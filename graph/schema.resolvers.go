@@ -94,21 +94,14 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 		return nil, err
 	}
 
-	questionRound, err := helpers.FindQuestionRound(game.QuestionRounds, input.QuestionRoundID)
-	if err != nil {
-		return nil, err
-	}
-
-	bettingRound, err := helpers.FindBettingRound(questionRound.BettingRounds, input.BettingRoundID)
-	if err != nil {
-		return nil, err
-	}
-
-	newBet := &model.Bet{
+	processBetErr := gamelogic.ProcessBet(game, model.Bet{
 		Amount:   input.Amount,
 		PlayerID: input.PlayerID,
+	})
+	if processBetErr != nil {
+		return nil, processBetErr
 	}
-	bettingRound.Bets = append(bettingRound.Bets, newBet)
+
 	return game, nil
 }
 

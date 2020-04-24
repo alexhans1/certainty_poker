@@ -84,3 +84,41 @@ export const START_GAME = gql`
     }
   }
 `;
+
+export const PLACE_BET = gql`
+  mutation placeBet($input: BetInput!) {
+    placeBet(input: $input) {
+      id
+      questionRounds {
+        id
+        question {
+          id
+          hints
+          answer
+          question
+        }
+        foldedPlayerIds
+        currentBettingRound
+        bettingRounds {
+          id
+          currentPlayerId
+          lastRaisedPlayerId
+          bets {
+            amount
+            playerId
+          }
+        }
+        guesses {
+          guess
+          playerId
+        }
+      }
+      currentQuestionRound
+      players {
+        id
+        money
+      }
+      dealerId
+    }
+  }
+`;

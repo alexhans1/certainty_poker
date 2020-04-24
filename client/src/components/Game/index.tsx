@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useLazyQuery, useMutation } from "@apollo/react-hooks";
-import { GET_GAME_BY_ID, CREATE_PLAYER, START_GAME } from "../../api/queries";
+import {
+  GET_GAME_BY_ID,
+  CREATE_PLAYER,
+  START_GAME,
+  PLACE_BET,
+} from "../../api/queries";
 import { Game, Player } from "../../interfaces";
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
 import PlayerTable from "./PlayerTable";
+import ActionButton from "./ActionButton";
+import {
+  getCurrentQuestionRound,
+  getCurrentBettingRound,
+  check,
+  call,
+  raise,
+} from "./helpers";
 
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
@@ -27,6 +40,11 @@ function GameComponent() {
     startGame,
     { data: startGameData, loading: startGameLoading, error: startGameError },
   ] = useMutation<{ startGame: Game }>(START_GAME);
+
+  const [
+    placeBet,
+    { data: placeBetData, loading: placeBetLoading, error: placeBetError },
+  ] = useMutation<{ placeBet: Game }>(PLACE_BET);
 
   useEffect(() => {
     if (gameId) {
@@ -52,7 +70,9 @@ function GameComponent() {
       });
     }
 
-    setGame(fetchGameData?.game || startGameData?.startGame);
+    setGame(
+      fetchGameData?.game || startGameData?.startGame || placeBetData?.placeBet
+    );
   }, [
     gameId,
     playerId,
@@ -61,23 +81,28 @@ function GameComponent() {
     fetchGame,
     fetchGameData,
     startGameData,
+    placeBetData,
   ]);
 
-  if (fetchGameError || addPlayerError || startGameError) {
-    console.error(fetchGameError || addPlayerError || startGameError);
+  if (!game || !playerId) {
+    return <h3>Loading...</h3>;
+  }
+
+  if (fetchGameError || addPlayerError || startGameError || placeBetError) {
+    console.error(
+      fetchGameError || addPlayerError || startGameError || placeBetError
+    );
     return <p>A technical error occurred. Try to refresh the page</p>;
   }
 
-  const currentQuestionRound = game?.questionRounds[game.currentQuestionRound];
-  const currentBettingRound =
-    currentQuestionRound?.bettingRounds[
-      currentQuestionRound?.currentBettingRound
-    ];
+  const currentQuestionRound = getCurrentQuestionRound(game);
+  const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   return (
     <div className="container">
-      {(fetchGameLoading || addPlayerLoading || startGameLoading) && (
-        <p>Loading...</p>
-      )}
+      {(fetchGameLoading ||
+        addPlayerLoading ||
+        startGameLoading ||
+        placeBetLoading) && <p>Loading...</p>}
       <button
         className="btn btn-primary m-3"
         disabled={(game?.currentQuestionRound ?? -1) > -1}
@@ -109,7 +134,7 @@ function GameComponent() {
           }}
         />
         {currentQuestionRound && (
-          <div>
+          <div className="ml-5">
             <p>Question: {currentQuestionRound.question.question}</p>
             <p>
               Hint:{" "}
@@ -121,6 +146,30 @@ function GameComponent() {
             </p>
           </div>
         )}
+      </div>
+      <div className="d-flex flex-row">
+        {[
+          {
+            text: "Check",
+            handleOnClick: () => {
+              check(placeBet, game, playerId);
+            },
+          },
+          {
+            text: "Call",
+            handleOnClick: () => {
+              call(placeBet, game, playerId);
+            },
+          },
+          {
+            text: "Raise",
+            handleOnClick: () => {
+              raise(50, placeBet, game, playerId);
+            },
+          },
+        ].map((actionButtonProps) => (
+          <ActionButton key={actionButtonProps.text} {...actionButtonProps} />
+        ))}
       </div>
     </div>
   );

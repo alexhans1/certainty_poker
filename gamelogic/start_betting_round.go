@@ -10,7 +10,6 @@ import (
 // based on the number of remaining players and the position of the dealer.
 // Returns an error if something fails.
 func StartBettingRound(game *model.Game) error {
-	// TODO: what if there are less than three players left?
 	// TODO: filter out players who have no money left or who have folded yet
 	for i, player := range game.Players {
 		if player.ID == game.DealerID {
@@ -26,6 +25,11 @@ func StartBettingRound(game *model.Game) error {
 			smallBlindPlayer := game.Players[(i+1)%len(game.Players)]
 			bigBlindPlayer := game.Players[(i+2)%len(game.Players)]
 
+			// set the CurrentPlayerID to small blind here.
+			// ProcessBet will increment this value to the next player
+			// and set the LastRaisedPlayerID.
+			bettingRound.CurrentPlayerID = smallBlindPlayer.ID
+
 			var err error
 			err = ProcessBet(game, model.Bet{PlayerID: smallBlindPlayer.ID, Amount: 5})
 			if err != nil {
@@ -35,9 +39,6 @@ func StartBettingRound(game *model.Game) error {
 			if err != nil {
 				return err
 			}
-
-			bettingRound.CurrentPlayerID = game.Players[(i+3)%len(game.Players)].ID
-			bettingRound.LastRaisedPlayerID = bigBlindPlayer.ID
 
 			return nil
 		}

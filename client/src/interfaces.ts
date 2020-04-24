@@ -43,3 +43,11 @@ export interface Game {
   currentQuestionRound: number;
   dealerId: Player["id"];
 }
+
+export interface BetInput {
+  gameId: Game["id"];
+  questionRoundId: QuestionRound["id"];
+  bettingRoundId: BettingRound["id"];
+  playerId: Player["id"];
+  amount: number;
+}

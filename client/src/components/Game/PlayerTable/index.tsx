@@ -1,5 +1,5 @@
 import React from "react";
-import { calculatePotSpendingForPlayer } from "../helpers";
+import { calculateBettingRoundSpendingForPlayer } from "../helpers";
 import { Player, QuestionRound, BettingRound } from "../../../interfaces";
 
 interface PlayerTableProps {
@@ -29,10 +29,10 @@ export default ({
             {currentBettingRound?.currentPlayerId === id && <span>❗️</span>}
           </div>
           <div>Remaining money: {money}</div>
-          {currentQuestionRound && (
+          {currentBettingRound && (
             <div>
-              Money in pot:{" "}
-              {calculatePotSpendingForPlayer(currentQuestionRound, id)}
+              Amount bet:{" "}
+              {calculateBettingRoundSpendingForPlayer(currentBettingRound, id)}
             </div>
           )}
         </div>
