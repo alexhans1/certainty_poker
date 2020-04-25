@@ -30,14 +30,23 @@ type PlaceBet = ({
   variables: { input: BetInput };
 }) => void;
 
-const calculateAmountToCall = (bettingRound: BettingRound): number => {
-  return Math.max(
-    ...Object.values(
-      bettingRound.bets.reduce((acc, bet) => {
-        acc[bet.playerId] = acc[bet.playerId] || 0 + bet.amount;
-        return acc;
-      }, {} as { [key: string]: number })
-    )
+const calculateAmountToCall = (
+  bettingRound: BettingRound,
+  playerId: Player["id"]
+): number => {
+  const amountSpentAlreadyInBettingRound = calculateBettingRoundSpendingForPlayer(
+    bettingRound,
+    playerId
+  );
+  return (
+    Math.max(
+      ...Object.values(
+        bettingRound.bets.reduce((acc, bet) => {
+          acc[bet.playerId] = acc[bet.playerId] || 0 + bet.amount;
+          return acc;
+        }, {} as { [key: string]: number })
+      )
+    ) - amountSpentAlreadyInBettingRound
   );
 };
 
@@ -52,6 +61,12 @@ export const check = (
     !currentQuestionRound ||
     currentBettingRound?.currentPlayerId !== playerId
   ) {
+    return;
+  }
+
+  const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
+  if (amountToCall > 0) {
+    // cannot check
     return;
   }
 
@@ -82,7 +97,7 @@ export const call = (
     return;
   }
 
-  const amountToCall = calculateAmountToCall(currentBettingRound);
+  const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
   const moneyOfPlayer =
     game.players.find(({ id }) => id === playerId)?.money ?? 0;
 
@@ -114,7 +129,7 @@ export const raise = (
     return;
   }
 
-  const amountToCall = calculateAmountToCall(currentBettingRound);
+  const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
   if (amountToCall > amount) {
     throw new Error("Amount to call is greater than raised amount.");
   }
