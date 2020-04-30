@@ -135,15 +135,20 @@ function GameComponent() {
         />
         {currentQuestionRound && (
           <div className="ml-5">
-            <p>Question: {currentQuestionRound.question.question}</p>
+            <p>Question:</p>
             <p>
-              Hint:{" "}
-              {
-                currentQuestionRound.question.hints[
-                  currentQuestionRound.currentBettingRound - 1
-                ]
-              }
+              <b>{currentQuestionRound.question.question}</b>
             </p>
+            <p>Hints:</p>
+            {currentQuestionRound.question.hints
+              .slice(0, currentQuestionRound.currentBettingRound)
+              .map((hint, i) => (
+                <p>
+                  <b>
+                    {i + 1}. {hint}
+                  </b>
+                </p>
+              ))}
           </div>
         )}
       </div>

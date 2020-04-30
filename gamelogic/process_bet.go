@@ -27,7 +27,7 @@ func ProcessBet(game *model.Game, bet model.Bet) error {
 	}
 
 	if bet.Amount == 0 {
-		incrementCurrentPlayer(bettingRound, game.Players)
+		incrementCurrentPlayer(game, questionRound, bettingRound, game.Players)
 		return nil
 	}
 
@@ -39,15 +39,20 @@ func ProcessBet(game *model.Game, bet model.Bet) error {
 	}
 	player.Money = player.Money - bet.Amount
 
-	incrementCurrentPlayer(bettingRound, game.Players)
-	setLastRaisedPlayerID(bettingRound)
+	if err := incrementCurrentPlayer(game, questionRound, bettingRound, game.Players); err != nil {
+		return err
+	}
+	if err := setLastRaisedPlayerID(bettingRound); err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func incrementCurrentPlayer(bettingRound *model.BettingRound, players []*model.Player) error {
+func incrementCurrentPlayer(game *model.Game, questionRound *model.QuestionRound, bettingRound *model.BettingRound, players []*model.Player) error {
 	for i, player := range players {
 		if player.ID == bettingRound.CurrentPlayerID {
+			incrementBettingRoundIfOver(game, questionRound, bettingRound, players)
 			bettingRound.CurrentPlayerID = players[(i+1)%len(players)].ID
 			return nil
 		}
@@ -67,5 +72,19 @@ func setLastRaisedPlayerID(bettingRound *model.BettingRound) error {
 		return errors.New("error while setting LastRaisedPlayerID")
 	}
 	bettingRound.LastRaisedPlayerID = largestBet.PlayerID
+	return nil
+}
+
+func incrementBettingRoundIfOver(game *model.Game, questionRound *model.QuestionRound, bettingRound *model.BettingRound, players []*model.Player) error {
+	if bettingRound.CurrentPlayerID == bettingRound.LastRaisedPlayerID {
+		for i, player := range players {
+			if player.ID == game.DealerID {
+				questionRound.CurrentBettingRound++
+				game.DealerID = players[(i+1)%len(players)].ID
+				return StartBettingRound(game)
+			}
+		}
+		return errors.New("dealer not found in player slice")
+	}
 	return nil
 }
