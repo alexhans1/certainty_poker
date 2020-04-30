@@ -80,11 +80,21 @@ func incrementBettingRoundIfOver(game *model.Game, questionRound *model.Question
 		for i, player := range players {
 			if player.ID == game.DealerID {
 				questionRound.CurrentBettingRound++
+				incrementQuestionRoundIfOver(game, questionRound)
 				game.DealerID = players[(i+1)%len(players)].ID
 				return StartBettingRound(game)
 			}
 		}
 		return errors.New("dealer not found in player slice")
+	}
+	return nil
+}
+
+func incrementQuestionRoundIfOver(game *model.Game, questionRound *model.QuestionRound) error {
+	if questionRound.CurrentBettingRound > len(questionRound.Question.Hints) {
+		game.CurrentQuestionRound++
+		game.QuestionRounds[game.CurrentQuestionRound].CurrentBettingRound = 0
+		return distributePot(game.Players, questionRound)
 	}
 	return nil
 }

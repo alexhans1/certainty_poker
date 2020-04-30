@@ -5,14 +5,12 @@ import { Player, QuestionRound, BettingRound } from "../../../interfaces";
 interface PlayerTableProps {
   players?: Player[];
   playerId?: Player["id"];
-  currentQuestionRound?: QuestionRound;
   currentBettingRound?: BettingRound;
 }
 
 export default ({
   players,
   playerId,
-  currentQuestionRound,
   currentBettingRound,
 }: PlayerTableProps) => {
   if (!players?.length) {

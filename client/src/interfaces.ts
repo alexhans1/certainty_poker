@@ -3,7 +3,7 @@ export interface Player {
   money: number;
 }
 
-interface Question {
+export interface Question {
   id: string;
   question: string;
   answer: number;

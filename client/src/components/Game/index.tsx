@@ -10,6 +10,7 @@ import {
 import { Game, Player } from "../../interfaces";
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
 import PlayerTable from "./PlayerTable";
+import Hints from "./Hints";
 import ActionButton from "./ActionButton";
 import {
   getCurrentQuestionRound,
@@ -139,16 +140,10 @@ function GameComponent() {
             <p>
               <b>{currentQuestionRound.question.question}</b>
             </p>
-            <p>Hints:</p>
-            {currentQuestionRound.question.hints
-              .slice(0, currentQuestionRound.currentBettingRound)
-              .map((hint, i) => (
-                <p>
-                  <b>
-                    {i + 1}. {hint}
-                  </b>
-                </p>
-              ))}
+            <Hints
+              currentQuestionRound={currentQuestionRound}
+              hints={currentQuestionRound.question.hints}
+            />
           </div>
         )}
       </div>
