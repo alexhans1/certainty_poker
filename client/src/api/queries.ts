@@ -122,3 +122,40 @@ export const PLACE_BET = gql`
     }
   }
 `;
+
+export const ADD_GUESS = gql`
+  mutation addGuess($input: GuessInput!) {
+    addGuess(input: $input) {
+      id
+      questionRounds {
+        id
+        question {
+          id
+          hints
+          answer
+          question
+        }
+        foldedPlayerIds
+        bettingRounds {
+          id
+          currentPlayerId
+          lastRaisedPlayerId
+          bets {
+            amount
+            playerId
+          }
+        }
+        guesses {
+          guess
+          playerId
+        }
+      }
+      currentQuestionRound
+      players {
+        id
+        money
+      }
+      dealerId
+    }
+  }
+`;

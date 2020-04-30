@@ -1,6 +1,6 @@
 import React from "react";
 import { calculateBettingRoundSpendingForPlayer } from "../helpers";
-import { Player, QuestionRound, BettingRound } from "../../../interfaces";
+import { Player, BettingRound } from "../../../interfaces";
 
 interface PlayerTableProps {
   players?: Player[];

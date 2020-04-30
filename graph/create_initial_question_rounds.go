@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"math/rand"
 	"strconv"
 
 	"github.com/alexhans1/certainty_poker/graph/helpers"
@@ -13,7 +14,7 @@ func createQuestionRound(index int) model.QuestionRound {
 		Question: &model.Question{
 			ID:       helpers.CreateID(),
 			Question: "Test Question " + strconv.Itoa(index+1),
-			Answer:   44,
+			Answer:   rand.Float64() * 1000,
 			Hints:    createHints(index),
 		},
 		Guesses:             make([]*model.Guess, 0),
@@ -29,7 +30,7 @@ func createQuestionRound(index int) model.QuestionRound {
 func createHints(index int) []string {
 	hints := make([]string, 0)
 
-	for i := 0; i < 3; i++ {
+	for i := 0; i < 1; i++ {
 		hints = append(hints, "Test Hint "+strconv.Itoa(i+1)+" for Question "+strconv.Itoa(index+1))
 	}
 	return hints

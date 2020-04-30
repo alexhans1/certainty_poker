@@ -6,19 +6,15 @@ import {
   CREATE_PLAYER,
   START_GAME,
   PLACE_BET,
+  ADD_GUESS,
 } from "../../api/queries";
 import { Game, Player } from "../../interfaces";
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
 import PlayerTable from "./PlayerTable";
+import Question from "./Question";
 import Hints from "./Hints";
-import ActionButton from "./ActionButton";
-import {
-  getCurrentQuestionRound,
-  getCurrentBettingRound,
-  check,
-  call,
-  raise,
-} from "./helpers";
+import ActionButtons from "./PlaceBetActionButtons";
+import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
@@ -47,6 +43,19 @@ function GameComponent() {
     { data: placeBetData, loading: placeBetLoading, error: placeBetError },
   ] = useMutation<{ placeBet: Game }>(PLACE_BET);
 
+  const [
+    addGuess,
+    { data: addGuessData, loading: addGuessLoading, error: addGuessError },
+  ] = useMutation<{ addGuess: Game }>(ADD_GUESS);
+
+  useEffect(() => {
+    setInterval(() => {
+      fetchGame({
+        variables: { gameId },
+      });
+    }, 1500);
+  }, []);
+
   useEffect(() => {
     if (gameId) {
       const storedPlayerId = getPlayerIdFromStorage(gameId);
@@ -66,20 +75,19 @@ function GameComponent() {
           variables: { gameId },
         });
       }
-      fetchGame({
-        variables: { gameId },
-      });
     }
 
     setGame(
-      fetchGameData?.game || startGameData?.startGame || placeBetData?.placeBet
+      fetchGameData?.game ||
+        startGameData?.startGame ||
+        placeBetData?.placeBet ||
+        addGuessData?.addGuess
     );
   }, [
     gameId,
     playerId,
     newPlayerData,
     createPlayer,
-    fetchGame,
     fetchGameData,
     startGameData,
     placeBetData,
@@ -89,9 +97,19 @@ function GameComponent() {
     return <h3>Loading...</h3>;
   }
 
-  if (fetchGameError || addPlayerError || startGameError || placeBetError) {
+  if (
+    fetchGameError ||
+    addPlayerError ||
+    startGameError ||
+    placeBetError ||
+    addGuessError
+  ) {
     console.error(
-      fetchGameError || addPlayerError || startGameError || placeBetError
+      fetchGameError ||
+        addPlayerError ||
+        startGameError ||
+        placeBetError ||
+        addGuessError
     );
     return <p>A technical error occurred. Try to refresh the page</p>;
   }
@@ -100,32 +118,26 @@ function GameComponent() {
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   return (
     <div className="container">
-      {(fetchGameLoading ||
-        addPlayerLoading ||
+      {(addPlayerLoading ||
         startGameLoading ||
-        placeBetLoading) && <p>Loading...</p>}
-      <button
-        className="btn btn-primary m-3"
-        disabled={(game?.currentQuestionRound ?? -1) > -1}
-        onClick={() => {
-          startGame({
-            variables: { gameId },
-          });
-        }}
-      >
-        Start Game
-      </button>
-      <button
-        className="btn btn-primary"
-        onClick={() => {
-          fetchGame({
-            variables: { gameId },
-          });
-        }}
-      >
-        Refresh
-      </button>
-      <div className="d-flex flex-row">
+        placeBetLoading ||
+        addGuessLoading) && <p>Loading...</p>}
+
+      {game.currentQuestionRound < 0 && (
+        <button
+          className="btn btn-primary mx-3"
+          disabled={(game?.currentQuestionRound ?? -1) > -1}
+          onClick={() => {
+            startGame({
+              variables: { gameId },
+            });
+          }}
+        >
+          Start Game
+        </button>
+      )}
+
+      <div className="d-flex flex-row mt-3">
         <PlayerTable
           {...{
             players: game?.players,
@@ -136,10 +148,14 @@ function GameComponent() {
         />
         {currentQuestionRound && (
           <div className="ml-5">
-            <p>Question:</p>
-            <p>
-              <b>{currentQuestionRound.question.question}</b>
-            </p>
+            <Question
+              {...{
+                game,
+                currentQuestionRound,
+                playerId,
+                addGuessMutation: addGuess,
+              }}
+            />
             <Hints
               currentQuestionRound={currentQuestionRound}
               hints={currentQuestionRound.question.hints}
@@ -148,28 +164,15 @@ function GameComponent() {
         )}
       </div>
       <div className="d-flex flex-row">
-        {[
-          {
-            text: "Check",
-            handleOnClick: () => {
-              check(placeBet, game, playerId);
-            },
-          },
-          {
-            text: "Call",
-            handleOnClick: () => {
-              call(placeBet, game, playerId);
-            },
-          },
-          {
-            text: "Raise",
-            handleOnClick: () => {
-              raise(50, placeBet, game, playerId);
-            },
-          },
-        ].map((actionButtonProps) => (
-          <ActionButton key={actionButtonProps.text} {...actionButtonProps} />
-        ))}
+        <ActionButtons
+          {...{
+            game,
+            currentQuestionRound,
+            currentBettingRound,
+            placeBet,
+            playerId,
+          }}
+        />
       </div>
     </div>
   );

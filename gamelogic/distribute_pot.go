@@ -11,10 +11,14 @@ func distributePot(players []*model.Player, questionRound *model.QuestionRound) 
 	// first calculate the winner
 	var winningPlayer *model.Player
 	var bestGuess *model.Guess
-	for _, guess := range questionRound.Guesses {
-		if math.Abs(questionRound.Question.Answer-guess.Guess) <
-			math.Abs(questionRound.Question.Answer-bestGuess.Guess) {
+	for i, guess := range questionRound.Guesses {
+		if i == 0 {
 			bestGuess = guess
+		} else {
+			if math.Abs(questionRound.Question.Answer-guess.Guess) <
+				math.Abs(questionRound.Question.Answer-bestGuess.Guess) {
+				bestGuess = guess
+			}
 		}
 	}
 	if bestGuess == nil {
