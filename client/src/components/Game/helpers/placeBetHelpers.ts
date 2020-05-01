@@ -15,6 +15,7 @@ const calculateAmountToCall = (
   bettingRound: BettingRound,
   playerId: Player["id"]
 ): number => {
+  if (!bettingRound.bets.length) return 0;
   const amountSpentAlreadyInBettingRound = calculateBettingRoundSpendingForPlayer(
     bettingRound,
     playerId

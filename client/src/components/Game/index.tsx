@@ -53,7 +53,7 @@ function GameComponent() {
       fetchGame({
         variables: { gameId },
       });
-    }, 1500);
+    }, 500);
   }, []);
 
   useEffect(() => {

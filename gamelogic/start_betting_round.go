@@ -31,13 +31,17 @@ func StartBettingRound(game *model.Game) error {
 			bettingRound.CurrentPlayerID = smallBlindPlayer.ID
 
 			var err error
-			err = ProcessBet(game, model.Bet{PlayerID: smallBlindPlayer.ID, Amount: 5})
-			if err != nil {
-				return err
-			}
-			err = ProcessBet(game, model.Bet{PlayerID: bigBlindPlayer.ID, Amount: 10})
-			if err != nil {
-				return err
+			if questionRound.CurrentBettingRound == 0 {
+				err = ProcessBet(game, model.Bet{PlayerID: smallBlindPlayer.ID, Amount: 5})
+				if err != nil {
+					return err
+				}
+				err = ProcessBet(game, model.Bet{PlayerID: bigBlindPlayer.ID, Amount: 10})
+				if err != nil {
+					return err
+				}
+			} else {
+				bettingRound.LastRaisedPlayerID = game.DealerID
 			}
 
 			return nil
