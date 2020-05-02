@@ -3,8 +3,8 @@ package gamelogic
 import (
 	"errors"
 
-	"github.com/alexhans1/certainty_poker/graph/helpers"
 	"github.com/alexhans1/certainty_poker/graph/model"
+	"github.com/alexhans1/certainty_poker/helpers"
 )
 
 // ProcessBet is responsible for
@@ -26,8 +26,22 @@ func ProcessBet(game *model.Game, bet model.Bet) error {
 		return errors.New("can only process bets for current player")
 	}
 
+	if bet.Amount == -1 {
+		// player folded
+		questionRound.FoldedPlayerIds = append(questionRound.FoldedPlayerIds, bet.PlayerID)
+		if len(questionRound.FoldedPlayerIds) == len(game.Players)-1 {
+			// if there is only one player left, end question round straight away
+			if err := startNewQuestionRound(game, questionRound); err != nil {
+				return err
+			}
+			return StartBettingRound(game)
+		}
+		incrementCurrentPlayer(game, questionRound, bettingRound)
+		return nil
+	}
+
 	if bet.Amount == 0 {
-		incrementCurrentPlayer(game, questionRound, bettingRound, game.Players)
+		incrementCurrentPlayer(game, questionRound, bettingRound)
 		return nil
 	}
 
@@ -39,7 +53,7 @@ func ProcessBet(game *model.Game, bet model.Bet) error {
 	}
 	player.Money = player.Money - bet.Amount
 
-	if err := incrementCurrentPlayer(game, questionRound, bettingRound, game.Players); err != nil {
+	if err := incrementCurrentPlayer(game, questionRound, bettingRound); err != nil {
 		return err
 	}
 	if err := setLastRaisedPlayerID(bettingRound); err != nil {
@@ -47,17 +61,6 @@ func ProcessBet(game *model.Game, bet model.Bet) error {
 	}
 
 	return nil
-}
-
-func incrementCurrentPlayer(game *model.Game, questionRound *model.QuestionRound, bettingRound *model.BettingRound, players []*model.Player) error {
-	for i, player := range players {
-		if player.ID == bettingRound.CurrentPlayerID {
-			incrementBettingRoundIfOver(game, questionRound, bettingRound, players)
-			bettingRound.CurrentPlayerID = players[(i+1)%len(players)].ID
-			return nil
-		}
-	}
-	return errors.New("current player not found in player slice")
 }
 
 func setLastRaisedPlayerID(bettingRound *model.BettingRound) error {
@@ -75,26 +78,42 @@ func setLastRaisedPlayerID(bettingRound *model.BettingRound) error {
 	return nil
 }
 
-func incrementBettingRoundIfOver(game *model.Game, questionRound *model.QuestionRound, bettingRound *model.BettingRound, players []*model.Player) error {
-	if bettingRound.CurrentPlayerID == bettingRound.LastRaisedPlayerID {
-		for i, player := range players {
-			if player.ID == game.DealerID {
-				questionRound.CurrentBettingRound++
-				incrementQuestionRoundIfOver(game, questionRound)
-				game.DealerID = players[(i+1)%len(players)].ID
-				return StartBettingRound(game)
-			}
+func incrementCurrentPlayer(game *model.Game, questionRound *model.QuestionRound, bettingRound *model.BettingRound) error {
+	for i, player := range game.Players {
+		if player.ID == bettingRound.CurrentPlayerID {
+			incrementBettingRoundIfOver(game, questionRound, bettingRound)
+			bettingRound.CurrentPlayerID = helpers.FindNextNthPlayer(game.Players, i+1, questionRound.FoldedPlayerIds).ID
+			return nil
 		}
-		return errors.New("dealer not found in player slice")
+	}
+	return errors.New("current player not found in player slice")
+}
+
+func incrementBettingRoundIfOver(game *model.Game, questionRound *model.QuestionRound, bettingRound *model.BettingRound) error {
+	if bettingRound.CurrentPlayerID == bettingRound.LastRaisedPlayerID {
+		questionRound.CurrentBettingRound++
+		if questionRound.CurrentBettingRound > len(questionRound.Question.Hints) {
+			return startNewQuestionRound(game, questionRound)
+		}
+		return StartBettingRound(game)
 	}
 	return nil
 }
 
-func incrementQuestionRoundIfOver(game *model.Game, questionRound *model.QuestionRound) error {
-	if questionRound.CurrentBettingRound > len(questionRound.Question.Hints) {
-		game.CurrentQuestionRound++
-		game.QuestionRounds[game.CurrentQuestionRound].CurrentBettingRound = 0
-		return distributePot(game.Players, questionRound)
+func startNewQuestionRound(game *model.Game, questionRound *model.QuestionRound) error {
+	helpers.CreateFoldedPlayerIDsSlice(game.Players, questionRound)
+	for i, player := range game.Players {
+		if player.ID == game.DealerID {
+			game.CurrentQuestionRound++
+			if game.CurrentQuestionRound < len(game.QuestionRounds) {
+				newQuestionRound := game.QuestionRounds[game.CurrentQuestionRound]
+				newQuestionRound.CurrentBettingRound = 0
+				helpers.CreateFoldedPlayerIDsSlice(game.Players, newQuestionRound)
+				game.DealerID = helpers.FindNextNthPlayer(game.Players, i+1, newQuestionRound.FoldedPlayerIds).ID
+				return distributePot(game.Players, questionRound)
+			}
+			return nil
+		}
 	}
-	return nil
+	return errors.New("dealer not found in player slice")
 }

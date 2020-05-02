@@ -9,8 +9,8 @@ import (
 
 	"github.com/alexhans1/certainty_poker/gamelogic"
 	"github.com/alexhans1/certainty_poker/graph/generated"
-	"github.com/alexhans1/certainty_poker/graph/helpers"
 	"github.com/alexhans1/certainty_poker/graph/model"
+	"github.com/alexhans1/certainty_poker/helpers"
 )
 
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {

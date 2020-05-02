@@ -39,3 +39,11 @@ func FindBettingRound(slice []*model.BettingRound, id string) (bettingRound *mod
 	}
 	return nil, errors.New("BettingRound not found")
 }
+
+func FindNextNthPlayer(players []*model.Player, n int, foldedPlayerIDs []string) *model.Player {
+	player := players[n%len(players)]
+	if Contains(foldedPlayerIDs, player.ID) {
+		return FindNextNthPlayer(players, n+1, foldedPlayerIDs)
+	}
+	return players[n%len(players)]
+}

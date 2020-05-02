@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"strconv"
 
-	"github.com/alexhans1/certainty_poker/graph/helpers"
 	"github.com/alexhans1/certainty_poker/graph/model"
+	"github.com/alexhans1/certainty_poker/helpers"
 )
 
 func createQuestionRound(index int) model.QuestionRound {
@@ -30,7 +30,7 @@ func createQuestionRound(index int) model.QuestionRound {
 func createHints(index int) []string {
 	hints := make([]string, 0)
 
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 3; i++ {
 		hints = append(hints, "Test Hint "+strconv.Itoa(i+1)+" for Question "+strconv.Itoa(index+1))
 	}
 	return hints
@@ -53,7 +53,7 @@ func createBettingRounds(length int) []*model.BettingRound {
 func createInitialQuestionRounds() []*model.QuestionRound {
 	questionRounds := make([]*model.QuestionRound, 0)
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		questionRound := createQuestionRound(i)
 		questionRounds = append(questionRounds, &questionRound)
 	}

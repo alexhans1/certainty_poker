@@ -2,6 +2,9 @@ package gamelogic
 
 import (
 	"errors"
+	"math"
+
+	"github.com/alexhans1/certainty_poker/helpers"
 
 	"github.com/alexhans1/certainty_poker/graph/model"
 )
@@ -11,32 +14,36 @@ import (
 // Returns an error if something fails.
 func StartBettingRound(game *model.Game) error {
 	// TODO: filter out players who have no money left or who have folded yet
-	for i, player := range game.Players {
-		if player.ID == game.DealerID {
-			questionRound := game.QuestionRounds[game.CurrentQuestionRound]
-			if questionRound == nil {
-				return errors.New("currentQuestionRound round not found")
-			}
-			bettingRound := questionRound.BettingRounds[questionRound.CurrentBettingRound]
-			if bettingRound == nil {
-				return errors.New("currentBettingRound round not found")
-			}
+	questionRound := game.QuestionRounds[game.CurrentQuestionRound]
+	if questionRound == nil {
+		return errors.New("currentQuestionRound round not found")
+	}
+	bettingRound := questionRound.BettingRounds[questionRound.CurrentBettingRound]
+	if bettingRound == nil {
+		return errors.New("currentBettingRound round not found")
+	}
+	helpers.CreateFoldedPlayerIDsSlice(game.Players, questionRound)
 
-			smallBlindPlayer := game.Players[(i+1)%len(game.Players)]
-			bigBlindPlayer := game.Players[(i+2)%len(game.Players)]
+	for i, player := range game.Players {
+		if !helpers.Contains(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
+			questionRound.FoldedPlayerIds = append(questionRound.FoldedPlayerIds, player.ID)
+		}
+		if player.ID == game.DealerID {
+			smallBlindPlayer := helpers.FindNextNthPlayer(game.Players, i+1, questionRound.FoldedPlayerIds)
+			bigBlindPlayer := helpers.FindNextNthPlayer(game.Players, i+2, questionRound.FoldedPlayerIds)
 
 			// set the CurrentPlayerID to small blind here.
 			// ProcessBet will increment this value to the next player
 			// and set the LastRaisedPlayerID.
 			bettingRound.CurrentPlayerID = smallBlindPlayer.ID
 
-			var err error
 			if questionRound.CurrentBettingRound == 0 {
-				err = ProcessBet(game, model.Bet{PlayerID: smallBlindPlayer.ID, Amount: 5})
+				var err error
+				err = ProcessBet(game, model.Bet{PlayerID: smallBlindPlayer.ID, Amount: int(math.Min(5, float64(smallBlindPlayer.Money)))})
 				if err != nil {
 					return err
 				}
-				err = ProcessBet(game, model.Bet{PlayerID: bigBlindPlayer.ID, Amount: 10})
+				err = ProcessBet(game, model.Bet{PlayerID: bigBlindPlayer.ID, Amount: int(math.Min(10, float64(bigBlindPlayer.Money)))})
 				if err != nil {
 					return err
 				}

@@ -131,3 +131,30 @@ export const raise = (
     },
   });
 };
+
+export const fold = (
+  placeBet: PlaceBet,
+  game: Game,
+  playerId: Player["id"]
+) => {
+  const currentQuestionRound = getCurrentQuestionRound(game);
+  const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
+  if (
+    !currentQuestionRound ||
+    currentBettingRound?.currentPlayerId !== playerId
+  ) {
+    return;
+  }
+
+  placeBet({
+    variables: {
+      input: {
+        gameId: game.id,
+        questionRoundId: currentQuestionRound?.id,
+        bettingRoundId: currentBettingRound.id,
+        playerId: playerId,
+        amount: -1,
+      },
+    },
+  });
+};

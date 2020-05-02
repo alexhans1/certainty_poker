@@ -1,6 +1,6 @@
 import React from "react";
 import { QuestionRound, Player, Game, BettingRound } from "../../../interfaces";
-import { PlaceBet, check, call, raise } from "../helpers";
+import { PlaceBet, check, call, raise, fold } from "../helpers";
 import ActionButton from "./ActionButton";
 
 interface ActionButtonsProps {
@@ -40,6 +40,12 @@ export default ({
           text: "Raise",
           handleOnClick: () => {
             raise(50, placeBet, game, playerId);
+          },
+        },
+        {
+          text: "Fold",
+          handleOnClick: () => {
+            fold(placeBet, game, playerId);
           },
         },
       ].map((actionButtonProps) => (
