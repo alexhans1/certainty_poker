@@ -54,7 +54,6 @@ export interface BetInput {
 
 export interface GuessInput {
   gameId: Game["id"];
-  questionRoundId: QuestionRound["id"];
   playerId: Player["id"];
   guess: number;
 }

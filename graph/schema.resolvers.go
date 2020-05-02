@@ -79,16 +79,10 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 		return nil, err
 	}
 
-	questionRound, err := helpers.FindQuestionRound(game.QuestionRounds, input.QuestionRoundID)
-	if err != nil {
+	if err := gamelogic.AddGuess(game, input); err != nil {
 		return nil, err
 	}
 
-	newGuess := &model.Guess{
-		Guess:    input.Guess,
-		PlayerID: input.PlayerID,
-	}
-	questionRound.Guesses = append(questionRound.Guesses, newGuess)
 	return game, nil
 }
 

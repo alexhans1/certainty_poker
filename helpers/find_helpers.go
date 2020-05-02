@@ -22,11 +22,9 @@ func FindPlayer(slice []*model.Player, id string) (player *model.Player, err err
 	return nil, errors.New("Player not found")
 }
 
-func FindQuestionRound(slice []*model.QuestionRound, id string) (questionRound *model.QuestionRound, err error) {
-	for i := range slice {
-		if slice[i].ID == id {
-			return slice[i], nil
-		}
+func FindQuestionRound(slice []*model.QuestionRound, index int) (questionRound *model.QuestionRound, err error) {
+	if len(slice) > index {
+		return slice[index], nil
 	}
 	return nil, errors.New("QuestionRound not found")
 }

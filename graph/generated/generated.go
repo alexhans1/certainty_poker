@@ -489,7 +489,6 @@ type Query {
 # Mutations
 input GuessInput {
   gameId: ID!
-  questionRoundId: ID!
   playerId: ID!
   guess: Float!
 }
@@ -2898,12 +2897,6 @@ func (ec *executionContext) unmarshalInputGuessInput(ctx context.Context, obj in
 		case "gameId":
 			var err error
 			it.GameID, err = ec.unmarshalNID2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "questionRoundId":
-			var err error
-			it.QuestionRoundID, err = ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
