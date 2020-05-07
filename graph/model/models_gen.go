@@ -36,10 +36,9 @@ type Guess struct {
 }
 
 type GuessInput struct {
-	GameID          string  `json:"gameId"`
-	QuestionRoundID string  `json:"questionRoundId"`
-	PlayerID        string  `json:"playerId"`
-	Guess           float64 `json:"guess"`
+	GameID   string  `json:"gameId"`
+	PlayerID string  `json:"playerId"`
+	Guess    float64 `json:"guess"`
 }
 
 type Player struct {
