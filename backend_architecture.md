@@ -8,6 +8,7 @@ Here, *properties* are "pure" functions (i.e. they do not mutate the state of th
 
 ## Attributes
 
++ __New__ `() Game`: *The constructor.*
 + __Players__`[]model.Player`: *All Players in the Game, in their seating order.*
 + __DealerId__`int`: *The Id of the dealer of the Game.*
 + __QuestionRounds__ `[]model.QuestionRound`: *The QuestionRounds of the Game.*
@@ -24,8 +25,9 @@ Here, *properties* are "pure" functions (i.e. they do not mutate the state of th
 ## Methods
 
 + __New__ `() Game`: *The constructor.*
-+ __AddPlayer__`()`: *Create a new Player and append it to the Game's `Players`.*
-+ __CreateNewQuestionRound__`()`: *Append a freshly created QuestionRound to the Game's `QuestionRounds`, ensuring that the Question of that QuestionRound is not a Question of any of the Previous QuestionRounds in the Game.*
++ __AddPlayer__`(player models.Player)`: *Append `player` to the Game's `Players`.*
++ __CreatePlayer__`()`: *Create a new Player and pass it to the Game's `AddPlayer()` method.*
++ __CreateNewQuestionRound__`()`: *Append a freshly created QuestionRound to the Game's `QuestionRounds`, ensuring that the Question of that QuestionRound is not a Question of any of the previous QuestionRounds in the Game.*
 
 
 # QuestionRound
