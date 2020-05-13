@@ -25,7 +25,7 @@ func StartBettingRound(game *model.Game) error {
 	helpers.CreateFoldedPlayerIDsSlice(game.Players, questionRound)
 
 	for i, player := range game.Players {
-		if !helpers.Contains(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
+		if !helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
 			questionRound.FoldedPlayerIds = append(questionRound.FoldedPlayerIds, player.ID)
 		}
 		if player.ID == game.DealerID {

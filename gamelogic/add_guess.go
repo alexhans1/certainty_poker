@@ -13,7 +13,7 @@ func AddGuess(game *model.Game, input model.GuessInput) error {
 	if err != nil {
 		return err
 	}
-	if helpers.Contains(questionRound.FoldedPlayerIds, input.PlayerID) {
+	if helpers.ContainsString(questionRound.FoldedPlayerIds, input.PlayerID) {
 		// at the start of each new question round all players with no money left are being added to
 		// the FoldedPlayerIds slice. so we can check for that here
 		return errors.New("cannot add guess from player without money")

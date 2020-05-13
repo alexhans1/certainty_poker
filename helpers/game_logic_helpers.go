@@ -8,7 +8,7 @@ import (
 
 func CreateFoldedPlayerIDsSlice(players []*model.Player, questionRound *model.QuestionRound) {
 	for _, player := range players {
-		if !Contains(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
+		if !ContainsString(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
 			questionRound.FoldedPlayerIds = append(questionRound.FoldedPlayerIds, player.ID)
 		}
 	}
