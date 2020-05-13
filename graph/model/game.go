@@ -4,6 +4,14 @@ import(
 	"errors"
 )
 
+func (g *Game) PlayerIds() []string {
+	playerIds := make([]string, 0)
+	for _, player := range g.Players {
+		playerIds = append(playerIds, player.Id)
+	}
+
+	return playerIds
+}
 
 func FindGame(games map[string]*Game, id string) (game *Game, err error) {
 	if game, ok := games[id]; ok {

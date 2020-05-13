@@ -8,16 +8,16 @@ import (
   "github.com/alexhans1/certainty_poker/helpers"
 )
 
-func (q *QuestionRound) Game() Game {
-  // TODO: This must return the Game of the QuestionRound
+func (q *QuestionRound) Game() *Game {
+  // This needs to return the related ("parent") Game of the QuestionRound
 }
 
 func (q *QuestionRound) InPlayerIds() []string {
-  inPlayerIds := make([]string)
+  inPlayerIds := make([]string, 0)
 
   for _, playerId := range q.Game().PlayerIds(){
     if ! helpers.ContainsString(q.FoldedPlayerIds, playerId) {
-      inPlayerIds.append(playerId)
+      inPlayerIds = append(inPlayerIds, playerId)
     }
   }
 
@@ -50,45 +50,48 @@ func (q *QuestionRound) PlayerBets() map[string]int {
 
 func (q *QuestionRound) Rank() [][]string {
   playerIds := q.InPlayerIds()
-  sortedPlayerIds := sort.Slice(playerIds, func (i, j int) bool {
-      q.GuessDeviation(playerIds[i]) < q.GuessDeviation(playerIds[j])
+  sort.Slice(playerIds, func (i, j int) bool {
+      a, _ := q.GuessDeviation(playerIds[i])
+      b, _ := q.GuessDeviation(playerIds[i])
+      return a < b
   })
 
-  result = make([][]int)
+  result := make([][]string, 0)
   for _, playerId := range playerIds {
-    if (len(result) == 0) || (result[len(result - 1)][0] == q.GuessDeviation(playerId)) {
-      result[len(result - 1)].append(playerId)
+    currentDeviation, _ := q.GuessDeviation(playerId)
+    previousDeviation, _ := q.GuessDeviation(result[len(result) - 1][0])
+
+    if (len(result) == 0) || (previousDeviation == currentDeviation) {
+      result[len(result) - 1] = append(result[len(result) - 1], playerId)
     } else {
-      rank := make([]string)
+      rank := make([]string, 0)
       rank[0] = playerId
-      result.append(rank)
+      result = append(result, rank)
     }
   }
 
   return result
 }
 
-
-
-func FindQuestionRound(slice []*model.QuestionRound, index int) (questionRound *model.QuestionRound, err error) {
+func FindQuestionRound(slice []*QuestionRound, index int) (questionRound *QuestionRound, err error) {
 	if len(slice) > index {
 		return slice[index], nil
 	}
 	return nil, errors.New("QuestionRound not found")
 }
 
-func (q *QuestionRound) CreateFoldedPlayerIDsSlice(players []*model.Player) {
+func (q *QuestionRound) CreateFoldedPlayerIdsSlice(players []*Player) {
 	for _, player := range players {
-		if ! helpers.ContainsString(q.FoldedPlayerIds, player.ID) && player.Money <= 0 {
-			questionRound.FoldedPlayerIds = append(q.FoldedPlayerIds, player.ID)
+		if ! helpers.ContainsString(q.FoldedPlayerIds, player.Id) && player.Money <= 0 {
+			q.FoldedPlayerIds = append(q.FoldedPlayerIds, player.Id)
 		}
 	}
 }
 
-func FindNextNthPlayer(players []*model.Player, n int, foldedPlayerIDs []string) *model.Player {
+func FindNextNthPlayer(players []*Player, n int, foldedPlayerIds []string) *Player {
 	player := players[n%len(players)]
-	if ContainsString(foldedPlayerIDs, player.ID) {
-		return FindNextNthPlayer(players, n+1, foldedPlayerIDs)
+	if helpers.ContainsString(foldedPlayerIds, player.Id) {
+		return FindNextNthPlayer(players, n+1, foldedPlayerIds)
 	}
 	return players[n%len(players)]
 }
