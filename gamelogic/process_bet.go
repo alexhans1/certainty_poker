@@ -47,7 +47,7 @@ func ProcessBet(game *model.Game, bet model.Bet) error {
 
 	bettingRound.Bets = append(bettingRound.Bets, &bet)
 
-	player, err := helpers.FindPlayer(game.Players, bet.PlayerID)
+	player, err := model.FindPlayer(game.Players, bet.PlayerID)
 	if err != nil {
 		return err
 	}
@@ -101,14 +101,14 @@ func incrementBettingRoundIfOver(game *model.Game, questionRound *model.Question
 }
 
 func startNewQuestionRound(game *model.Game, questionRound *model.QuestionRound) error {
-	helpers.CreateFoldedPlayerIDsSlice(game.Players, questionRound)
+	questionRound.CreateFoldedPlayerIDsSlice(game.Players)
 	for i, player := range game.Players {
 		if player.ID == game.DealerID {
 			game.CurrentQuestionRound++
 			if game.CurrentQuestionRound < len(game.QuestionRounds) {
 				newQuestionRound := game.QuestionRounds[game.CurrentQuestionRound]
 				newQuestionRound.CurrentBettingRound = 0
-				helpers.CreateFoldedPlayerIDsSlice(game.Players, newQuestionRound)
+				newQuestionRound.CreateFoldedPlayerIDsSlice(game.Players)
 				game.DealerID = helpers.FindNextNthPlayer(game.Players, i+1, newQuestionRound.FoldedPlayerIds).ID
 				return distributePot(game.Players, questionRound)
 			}

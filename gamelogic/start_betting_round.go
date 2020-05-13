@@ -22,10 +22,10 @@ func StartBettingRound(game *model.Game) error {
 	if bettingRound == nil {
 		return errors.New("currentBettingRound round not found")
 	}
-	helpers.CreateFoldedPlayerIDsSlice(game.Players, questionRound)
+	questionRound.CreateFoldedPlayerIDsSlice(game.Players)
 
 	for i, player := range game.Players {
-		if !helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
+		if ! helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
 			questionRound.FoldedPlayerIds = append(questionRound.FoldedPlayerIds, player.ID)
 		}
 		if player.ID == game.DealerID {

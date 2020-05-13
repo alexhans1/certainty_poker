@@ -42,7 +42,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 		return nil, errors.New("not enough players to start the game")
 	}
 
-	helpers.ShufflePlayers(game.Players)
+	model.ShufflePlayers(game.Players)
 	game.DealerID = game.Players[0].ID
 	game.CurrentQuestionRound = 0
 	game.QuestionRounds[0].CurrentBettingRound = 0
