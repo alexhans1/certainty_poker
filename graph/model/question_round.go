@@ -8,6 +8,7 @@ import (
   "github.com/alexhans1/certainty_poker/helpers"
 )
 
+
 func (q *QuestionRound) Game() *Game {
   // This needs to return the related ("parent") Game of the QuestionRound
 }
@@ -71,6 +72,42 @@ func (q *QuestionRound) Rank() [][]string {
   }
 
   return result
+}
+
+
+func (q *QuestionRound) DistributePot() {
+  playerBets := q.PlayerBets()
+  rank := q.Rank()
+  moneyLeft, _ := helpers.MinValueMapStringInt(playerBets, make([]string, 0))
+
+  for moneyLeft > 0 {
+    for len(rank[0]) > 0 {
+      betSize, _ := helpers.MinValueMapStringInt(playerBets, rank[0])
+      potSize := 0
+
+      // Determine size of side pot
+      for playerId, amount := range playerBets {
+        playerBets[playerId], _ = helpers.MaxInt([]int{amount - betSize, 0})
+        contributionToPot, _ := helpers.MaxInt([]int {amount, betSize})
+        potSize += contributionToPot
+      }
+      potShare := potSize / len(rank[0])
+
+      // Distribute money to winners, remove satisfied winners
+      unsatisifiedWinnerIds := make([]string, 0)
+      for _, winnerId := range rank[0] {
+        winner, _ := FindPlayer(q.Game().Players, winnerId)
+        winner.Money += potShare
+        if playerBets[winnerId] > 0 {
+          unsatisifiedWinnerIds = append(unsatisifiedWinnerIds, winnerId)
+        }
+      }
+
+      rank[0] = unsatisifiedWinnerIds
+    }
+    rank = rank[1:]
+    moneyLeft, _ := helpers.MinValueMapStringInt(playerBets, make([]string, 0))
+  }
 }
 
 func FindQuestionRound(slice []*QuestionRound, index int) (questionRound *QuestionRound, err error) {

@@ -14,7 +14,7 @@ import (
 )
 
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
-	gameID := helpers.CreateID()
+	gameID := helpers.CreateId()
 	game := model.Game{
 		ID:                   gameID,
 		QuestionRounds:       createInitialQuestionRounds(),
@@ -66,7 +66,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 	}
 
 	newPlayer := &model.Player{
-		ID:    helpers.CreateID(),
+		ID:    helpers.CreateId(),
 		Money: 100,
 	}
 	game.Players = append(game.Players, newPlayer)
