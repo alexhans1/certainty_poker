@@ -1,13 +1,13 @@
 package model
 
-import(
+import (
 	"errors"
 )
 
 func (g *Game) PlayerIds() []string {
 	playerIds := make([]string, 0)
 	for _, player := range g.Players {
-		playerIds = append(playerIds, player.Id)
+		playerIds = append(playerIds, player.ID)
 	}
 
 	return playerIds

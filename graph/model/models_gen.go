@@ -16,10 +16,11 @@ type BetInput struct {
 }
 
 type BettingRound struct {
-	ID                 string `json:"id"`
-	Bets               []*Bet `json:"bets"`
-	CurrentPlayerID    string `json:"currentPlayerId"`
-	LastRaisedPlayerID string `json:"lastRaisedPlayerId"`
+	ID                 string         `json:"id"`
+	QuestionRound      *QuestionRound `json:"questionRound"`
+	Bets               []*Bet         `json:"bets"`
+	CurrentPlayerID    string         `json:"currentPlayerId"`
+	LastRaisedPlayerID string         `json:"lastRaisedPlayerId"`
 }
 
 type Game struct {
@@ -55,6 +56,7 @@ type Question struct {
 
 type QuestionRound struct {
 	ID                  string          `json:"id"`
+	Game                *Game           `json:"game"`
 	Question            *Question       `json:"question"`
 	Guesses             []*Guess        `json:"guesses"`
 	BettingRounds       []*BettingRound `json:"bettingRounds"`

@@ -1,10 +1,9 @@
 package model
 
-import(
+import (
 	"errors"
 	"math/rand"
 )
-
 
 func ShufflePlayers(playerSlice []*Player) {
 	for i := range playerSlice {
@@ -15,7 +14,7 @@ func ShufflePlayers(playerSlice []*Player) {
 
 func FindPlayer(slice []*Player, id string) (player *Player, err error) {
 	for i := range slice {
-		if slice[i].Id == id {
+		if slice[i].ID == id {
 			return slice[i], nil
 		}
 	}

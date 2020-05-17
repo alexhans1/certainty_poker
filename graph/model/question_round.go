@@ -1,134 +1,123 @@
 package model
 
 import (
-  "errors"
-  "math"
-  "sort"
+	"errors"
+	"math"
+	"sort"
 
-  "github.com/alexhans1/certainty_poker/helpers"
+	"github.com/alexhans1/certainty_poker/helpers"
 )
 
+func (q *QuestionRound) inPlayerIDs() []string {
+	inPlayerIDs := make([]string, 0)
 
-func (q *QuestionRound) Game() *Game {
-  // This needs to return the related ("parent") Game of the QuestionRound
-}
-
-func (q *QuestionRound) InPlayerIds() []string {
-  inPlayerIds := make([]string, 0)
-
-  for _, playerId := range q.Game().PlayerIds(){
-    if ! helpers.ContainsString(q.FoldedPlayerIds, playerId) {
-      inPlayerIds = append(inPlayerIds, playerId)
-    }
-  }
-
-  return inPlayerIds
-}
-
-func (q *QuestionRound) GuessDeviation(PlayerId string) (float64, error) {
-  for _, guess := range q.Guesses {
-    if guess.PlayerId == PlayerId {
-      return math.Abs(q.Question.Answer - guess.Guess), nil
-    }
-  }
-  return -1.0, errors.New("PlayerId not found in QuestionRound.")
-}
-
-func (q *QuestionRound) PlayerBets() map[string]int {
-  m := make(map[string]int)
-  for _, bettingRound := range q.BettingRounds {
-    for _, bet := range bettingRound.Bets {
-      if amount, ok := m[bet.PlayerId]; ok {
-        m[bet.PlayerId] += bet.Amount
-      } else {
-        m[bet.PlayerId] = bet.Amount
-      }
-    }
-  }
-
-  return m
-}
-
-func (q *QuestionRound) Rank() [][]string {
-  playerIds := q.InPlayerIds()
-  sort.Slice(playerIds, func (i, j int) bool {
-      a, _ := q.GuessDeviation(playerIds[i])
-      b, _ := q.GuessDeviation(playerIds[i])
-      return a < b
-  })
-
-  result := make([][]string, 0)
-  for _, playerId := range playerIds {
-    currentDeviation, _ := q.GuessDeviation(playerId)
-    previousDeviation, _ := q.GuessDeviation(result[len(result) - 1][0])
-
-    if (len(result) == 0) || (previousDeviation == currentDeviation) {
-      result[len(result) - 1] = append(result[len(result) - 1], playerId)
-    } else {
-      rank := make([]string, 0)
-      rank[0] = playerId
-      result = append(result, rank)
-    }
-  }
-
-  return result
-}
-
-
-func (q *QuestionRound) DistributePot() {
-  playerBets := q.PlayerBets()
-  rank := q.Rank()
-  moneyLeft, _ := helpers.MinValueMapStringInt(playerBets, make([]string, 0))
-
-  for moneyLeft > 0 {
-    for len(rank[0]) > 0 {
-      betSize, _ := helpers.MinValueMapStringInt(playerBets, rank[0])
-      potSize := 0
-
-      // Determine size of side pot
-      for playerId, amount := range playerBets {
-        playerBets[playerId], _ = helpers.MaxInt([]int{amount - betSize, 0})
-        contributionToPot, _ := helpers.MaxInt([]int {amount, betSize})
-        potSize += contributionToPot
-      }
-      potShare := potSize / len(rank[0])
-
-      // Distribute money to winners, remove satisfied winners
-      unsatisifiedWinnerIds := make([]string, 0)
-      for _, winnerId := range rank[0] {
-        winner, _ := FindPlayer(q.Game().Players, winnerId)
-        winner.Money += potShare
-        if playerBets[winnerId] > 0 {
-          unsatisifiedWinnerIds = append(unsatisifiedWinnerIds, winnerId)
-        }
-      }
-
-      rank[0] = unsatisifiedWinnerIds
-    }
-    rank = rank[1:]
-    moneyLeft, _ := helpers.MinValueMapStringInt(playerBets, make([]string, 0))
-  }
-}
-
-func FindQuestionRound(slice []*QuestionRound, index int) (questionRound *QuestionRound, err error) {
-	if len(slice) > index {
-		return slice[index], nil
+	for _, playerID := range q.Game.PlayerIds() {
+		if !helpers.ContainsString(q.FoldedPlayerIds, playerID) {
+			inPlayerIDs = append(inPlayerIDs, playerID)
+		}
 	}
-	return nil, errors.New("QuestionRound not found")
+
+	return inPlayerIDs
 }
 
-func (q *QuestionRound) CreateFoldedPlayerIdsSlice(players []*Player) {
+func (q *QuestionRound) guessDeviation(PlayerID string) (float64, error) {
+	for _, guess := range q.Guesses {
+		if guess.PlayerID == PlayerID {
+			return math.Abs(q.Question.Answer - guess.Guess), nil
+		}
+	}
+	return -1.0, errors.New("playerID not found in QuestionRound")
+}
+
+func (q *QuestionRound) playerBets() map[string]int {
+	m := make(map[string]int)
+	for _, bettingRound := range q.BettingRounds {
+		for _, bet := range bettingRound.Bets {
+			if _, ok := m[bet.PlayerID]; ok {
+				m[bet.PlayerID] += bet.Amount
+			} else {
+				m[bet.PlayerID] = bet.Amount
+			}
+		}
+	}
+
+	return m
+}
+
+func (q *QuestionRound) rank() [][]string {
+	playerIDs := q.inPlayerIDs()
+	sort.Slice(playerIDs, func(i, j int) bool {
+		a, _ := q.guessDeviation(playerIDs[i])
+		b, _ := q.guessDeviation(playerIDs[i])
+		return a < b
+	})
+
+	result := make([][]string, 0)
+	for _, playerID := range playerIDs {
+		currentDeviation, _ := q.guessDeviation(playerID)
+		previousDeviation, _ := q.guessDeviation(result[len(result)-1][0])
+
+		if (len(result) == 0) || (previousDeviation == currentDeviation) {
+			result[len(result)-1] = append(result[len(result)-1], playerID)
+		} else {
+			rank := make([]string, 0)
+			rank[0] = playerID
+			result = append(result, rank)
+		}
+	}
+
+	return result
+}
+
+func (q *QuestionRound) DistributePot() int {
+	playerBets := q.playerBets()
+	rank := q.rank()
+	moneyLeft, _ := helpers.MinValueMapStringInt(playerBets, make([]string, 0))
+
+	for moneyLeft > 0 {
+		for len(rank[0]) > 0 {
+			betSize, _ := helpers.MinValueMapStringInt(playerBets, rank[0])
+			potSize := 0
+
+			// Determine size of side pot
+			for playerID, amount := range playerBets {
+				playerBets[playerID], _ = helpers.MaxInt([]int{amount - betSize, 0})
+				contributionToPot, _ := helpers.MaxInt([]int{amount, betSize})
+				potSize += contributionToPot
+			}
+			potShare := potSize / len(rank[0])
+
+			// Distribute money to winners, remove satisfied winners
+			unsatisifiedWinnerIDs := make([]string, 0)
+			for _, winnerID := range rank[0] {
+				winner, _ := FindPlayer(q.Game.Players, winnerID)
+				winner.Money += potShare
+				if playerBets[winnerID] > 0 {
+					unsatisifiedWinnerIDs = append(unsatisifiedWinnerIDs, winnerID)
+				}
+			}
+
+			rank[0] = unsatisifiedWinnerIDs
+		}
+		rank = rank[1:]
+		moneyLeft, _ = helpers.MinValueMapStringInt(playerBets, make([]string, 0))
+
+	}
+	return moneyLeft
+}
+
+func (q *QuestionRound) CreateFoldedPlayerIDsSlice(players []*Player) {
 	for _, player := range players {
-		if ! helpers.ContainsString(q.FoldedPlayerIds, player.Id) && player.Money <= 0 {
-			q.FoldedPlayerIds = append(q.FoldedPlayerIds, player.Id)
+		if !helpers.ContainsString(q.FoldedPlayerIds, player.ID) && player.Money <= 0 {
+			q.FoldedPlayerIds = append(q.FoldedPlayerIds, player.ID)
 		}
 	}
 }
 
-func FindNextNthPlayer(players []*Player, n int, foldedPlayerIds []string) *Player {
+func FindNextNthPlayer(players []*Player, n int, foldedPlayerIDs []string) *Player {
 	player := players[n%len(players)]
-	if helpers.ContainsString(foldedPlayerIds, player.Id) {
-		return FindNextNthPlayer(players, n+1, foldedPlayerIds)
+	if helpers.ContainsString(foldedPlayerIDs, player.ID) {
+		return FindNextNthPlayer(players, n+1, foldedPlayerIDs)
 	}
 	return players[n%len(players)]
 }

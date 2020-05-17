@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/alexhans1/certainty_poker/graph/model"
-	"github.com/alexhans1/certainty_poker/helpers"
 )
 
 // ProcessBet is responsible for
@@ -82,7 +81,7 @@ func incrementCurrentPlayer(game *model.Game, questionRound *model.QuestionRound
 	for i, player := range game.Players {
 		if player.ID == bettingRound.CurrentPlayerID {
 			incrementBettingRoundIfOver(game, questionRound, bettingRound)
-			bettingRound.CurrentPlayerID = helpers.FindNextNthPlayer(game.Players, i+1, questionRound.FoldedPlayerIds).ID
+			bettingRound.CurrentPlayerID = model.FindNextNthPlayer(game.Players, i+1, questionRound.FoldedPlayerIds).ID
 			return nil
 		}
 	}
@@ -109,7 +108,7 @@ func startNewQuestionRound(game *model.Game, questionRound *model.QuestionRound)
 				newQuestionRound := game.QuestionRounds[game.CurrentQuestionRound]
 				newQuestionRound.CurrentBettingRound = 0
 				newQuestionRound.CreateFoldedPlayerIDsSlice(game.Players)
-				game.DealerID = helpers.FindNextNthPlayer(game.Players, i+1, newQuestionRound.FoldedPlayerIds).ID
+				game.DealerID = model.FindNextNthPlayer(game.Players, i+1, newQuestionRound.FoldedPlayerIds).ID
 				return distributePot(game.Players, questionRound)
 			}
 			return nil

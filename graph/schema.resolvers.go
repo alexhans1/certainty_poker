@@ -14,7 +14,7 @@ import (
 )
 
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
-	gameID := helpers.CreateId()
+	gameID := helpers.CreateID()
 	game := model.Game{
 		ID:                   gameID,
 		QuestionRounds:       createInitialQuestionRounds(),
@@ -29,7 +29,7 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 }
 
 func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model.Game, error) {
-	game, err := helpers.FindGame(r.games, gameID)
+	game, err := model.FindGame(r.games, gameID)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 }
 
 func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Player, error) {
-	game, err := helpers.FindGame(r.games, gameID)
+	game, err := model.FindGame(r.games, gameID)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 	}
 
 	newPlayer := &model.Player{
-		ID:    helpers.CreateId(),
+		ID:    helpers.CreateID(),
 		Money: 100,
 	}
 	game.Players = append(game.Players, newPlayer)
@@ -74,7 +74,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 }
 
 func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error) {
-	game, err := helpers.FindGame(r.games, input.GameID)
+	game, err := model.FindGame(r.games, input.GameID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 }
 
 func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (*model.Game, error) {
-	game, err := helpers.FindGame(r.games, input.GameID)
+	game, err := model.FindGame(r.games, input.GameID)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 }
 
 func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, error) {
-	return helpers.FindGame(r.games, gameID)
+	return model.FindGame(r.games, gameID)
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -10,9 +10,9 @@ import (
 
 func createQuestionRound(index int) model.QuestionRound {
 	questionRound := model.QuestionRound{
-		ID: helpers.CreateId(),
+		ID: helpers.CreateID(),
 		Question: &model.Question{
-			ID:       helpers.CreateId(),
+			ID:       helpers.CreateID(),
 			Question: "Test Question " + strconv.Itoa(index+1),
 			Answer:   rand.Float64() * 1000,
 			Hints:    createHints(index),
@@ -41,7 +41,7 @@ func createBettingRounds(length int) []*model.BettingRound {
 
 	for i := 0; i < length; i++ {
 		bettingRounds = append(bettingRounds, &model.BettingRound{
-			ID:                 helpers.CreateId(),
+			ID:                 helpers.CreateID(),
 			Bets:               make([]*model.Bet, 0),
 			CurrentPlayerID:    "not started",
 			LastRaisedPlayerID: "not started",

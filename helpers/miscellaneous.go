@@ -2,11 +2,12 @@ package helpers
 
 import (
 	"errors"
+
 	"github.com/google/uuid"
 )
 
-// CreateId creates a new uuid.
-func CreateId() string {
+// CreateID creates a new uuid.
+func CreateID() string {
 	return uuid.New().String()
 }
 
@@ -20,11 +21,12 @@ func ContainsString(slice []string, x string) bool {
 	return false
 }
 
+// MaxInt returns largest 
 func MaxInt(slice []int) (int, error) {
 	if len(slice) == 0 {
-		return 0, errors.New("Cannot find maximum of empty slice.")
+		return 0, errors.New("cannot find maximum of empty slice")
 	}
-	max:= slice[0]
+	max := slice[0]
 
 	for _, value := range slice {
 		if value > max {
@@ -35,7 +37,7 @@ func MaxInt(slice []int) (int, error) {
 	return max, nil
 }
 
-// Minimum value of a map string -> int
+// MinValueMapStringInt returns minimum value of a map string -> int
 func MinValueMapStringInt(m map[string]int, keys []string) (int, error) {
 	first := false
 	min := 0
@@ -52,7 +54,7 @@ func MinValueMapStringInt(m map[string]int, keys []string) (int, error) {
 		}
 	}
 	if first == false {
-		return 0,  errors.New("None of the keys found in map")
+		return 0, errors.New("None of the keys found in map")
 	} else {
 		return min, nil
 	}
