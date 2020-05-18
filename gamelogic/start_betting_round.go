@@ -22,15 +22,15 @@ func StartBettingRound(game *model.Game) error {
 	if bettingRound == nil {
 		return errors.New("currentBettingRound round not found")
 	}
-	helpers.CreateFoldedPlayerIDsSlice(game.Players, questionRound)
+	questionRound.CreateFoldedPlayerIDsSlice(game.Players)
 
 	for i, player := range game.Players {
-		if !helpers.Contains(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
+		if !helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {
 			questionRound.FoldedPlayerIds = append(questionRound.FoldedPlayerIds, player.ID)
 		}
 		if player.ID == game.DealerID {
-			smallBlindPlayer := helpers.FindNextNthPlayer(game.Players, i+1, questionRound.FoldedPlayerIds)
-			bigBlindPlayer := helpers.FindNextNthPlayer(game.Players, i+2, questionRound.FoldedPlayerIds)
+			smallBlindPlayer := model.FindNextNthPlayer(game.Players, i+1, questionRound.FoldedPlayerIds)
+			bigBlindPlayer := model.FindNextNthPlayer(game.Players, i+2, questionRound.FoldedPlayerIds)
 
 			// set the CurrentPlayerID to small blind here.
 			// ProcessBet will increment this value to the next player

@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/alexhans1/certainty_poker/graph/model"
-	"github.com/alexhans1/certainty_poker/helpers"
 )
 
 // ProcessBet is responsible for
@@ -47,7 +46,7 @@ func ProcessBet(game *model.Game, bet model.Bet) error {
 
 	bettingRound.Bets = append(bettingRound.Bets, &bet)
 
-	player, err := helpers.FindPlayer(game.Players, bet.PlayerID)
+	player, err := model.FindPlayer(game.Players, bet.PlayerID)
 	if err != nil {
 		return err
 	}
@@ -82,7 +81,7 @@ func incrementCurrentPlayer(game *model.Game, questionRound *model.QuestionRound
 	for i, player := range game.Players {
 		if player.ID == bettingRound.CurrentPlayerID {
 			incrementBettingRoundIfOver(game, questionRound, bettingRound)
-			bettingRound.CurrentPlayerID = helpers.FindNextNthPlayer(game.Players, i+1, questionRound.FoldedPlayerIds).ID
+			bettingRound.CurrentPlayerID = model.FindNextNthPlayer(game.Players, i+1, questionRound.FoldedPlayerIds).ID
 			return nil
 		}
 	}
@@ -101,15 +100,15 @@ func incrementBettingRoundIfOver(game *model.Game, questionRound *model.Question
 }
 
 func startNewQuestionRound(game *model.Game, questionRound *model.QuestionRound) error {
-	helpers.CreateFoldedPlayerIDsSlice(game.Players, questionRound)
+	questionRound.CreateFoldedPlayerIDsSlice(game.Players)
 	for i, player := range game.Players {
 		if player.ID == game.DealerID {
 			game.CurrentQuestionRound++
 			if game.CurrentQuestionRound < len(game.QuestionRounds) {
 				newQuestionRound := game.QuestionRounds[game.CurrentQuestionRound]
 				newQuestionRound.CurrentBettingRound = 0
-				helpers.CreateFoldedPlayerIDsSlice(game.Players, newQuestionRound)
-				game.DealerID = helpers.FindNextNthPlayer(game.Players, i+1, newQuestionRound.FoldedPlayerIds).ID
+				newQuestionRound.CreateFoldedPlayerIDsSlice(game.Players)
+				game.DealerID = model.FindNextNthPlayer(game.Players, i+1, newQuestionRound.FoldedPlayerIds).ID
 				return distributePot(game.Players, questionRound)
 			}
 			return nil

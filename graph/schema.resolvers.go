@@ -29,7 +29,7 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 }
 
 func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model.Game, error) {
-	game, err := helpers.FindGame(r.games, gameID)
+	game, err := model.FindGame(r.games, gameID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 		return nil, errors.New("not enough players to start the game")
 	}
 
-	helpers.ShufflePlayers(game.Players)
+	model.ShufflePlayers(game.Players)
 	game.DealerID = game.Players[0].ID
 	game.CurrentQuestionRound = 0
 	game.QuestionRounds[0].CurrentBettingRound = 0
@@ -56,7 +56,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 }
 
 func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Player, error) {
-	game, err := helpers.FindGame(r.games, gameID)
+	game, err := model.FindGame(r.games, gameID)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 }
 
 func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error) {
-	game, err := helpers.FindGame(r.games, input.GameID)
+	game, err := model.FindGame(r.games, input.GameID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 }
 
 func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (*model.Game, error) {
-	game, err := helpers.FindGame(r.games, input.GameID)
+	game, err := model.FindGame(r.games, input.GameID)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 }
 
 func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, error) {
-	return helpers.FindGame(r.games, gameID)
+	return model.FindGame(r.games, gameID)
 }
 
 // Mutation returns generated.MutationResolver implementation.
