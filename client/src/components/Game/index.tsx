@@ -23,7 +23,7 @@ function GameComponent() {
 
   const [
     fetchGame,
-    { data: fetchGameData, loading: fetchGameLoading, error: fetchGameError },
+    { data: fetchGameData, error: fetchGameError },
   ] = useLazyQuery<{ game: Game }>(GET_GAME_BY_ID, {
     fetchPolicy: "cache-and-network",
   });
