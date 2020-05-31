@@ -7,7 +7,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/alexhans1/certainty_poker/gamelogic"
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
 	"github.com/alexhans1/certainty_poker/helpers"
@@ -16,11 +15,10 @@ import (
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
 	gameID := helpers.CreateID()
 	game := model.Game{
-		ID:                   gameID,
-		QuestionRounds:       createInitialQuestionRounds(),
-		CurrentQuestionRound: -1,
-		DealerID:             "dealerId",
-		Players:              make([]*model.Player, 0),
+		ID:             gameID,
+		QuestionRounds: createInitialQuestionRounds(),
+		DealerID:       "dealerId",
+		Players:        make([]*model.Player, 0),
 	}
 
 	r.games[gameID] = &game
@@ -34,7 +32,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 		return nil, err
 	}
 
-	if game.CurrentQuestionRound >= 0 {
+	if game.HasStarted() {
 		return nil, errors.New("cannot start game that is already in progress")
 	}
 
@@ -44,13 +42,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 
 	model.ShufflePlayers(game.Players)
 	game.DealerID = game.Players[0].ID
-	game.CurrentQuestionRound = 0
-	game.QuestionRounds[0].CurrentBettingRound = 0
-
-	startBettingRoundErr := gamelogic.StartBettingRound(game)
-	if startBettingRoundErr != nil {
-		return nil, startBettingRoundErr
-	}
+	game.AddNewQuestionRound()
 
 	return game, nil
 }
@@ -61,7 +53,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 		return nil, err
 	}
 
-	if game.CurrentQuestionRound > -1 {
+	if game.HasStarted() {
 		return nil, errors.New("cannot join game after it started")
 	}
 
@@ -79,9 +71,9 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 		return nil, err
 	}
 
-	if err := gamelogic.AddGuess(game, input); err != nil {
-		return nil, err
-	}
+	// if err := gamelogic.AddGuess(game, input); err != nil {
+	// 	return nil, err
+	// }
 
 	return game, nil
 }
@@ -92,12 +84,46 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 		return nil, err
 	}
 
-	processBetErr := gamelogic.ProcessBet(game, model.Bet{
-		Amount:   input.Amount,
-		PlayerID: input.PlayerID,
-	})
-	if processBetErr != nil {
-		return nil, processBetErr
+	questionRound := game.CurrentQuestionRound()
+	bettingRound := questionRound.CurrentBettingRound()
+
+	for _, player := range game.Players {
+		if helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) {
+			return nil, errors.New("folded players cannot place another bet in current question round")
+		}
+		if player.ID == input.PlayerID && player.Money < input.Amount {
+			return nil, errors.New("player does not have enough money to place this bet")
+		}
+	}
+
+	player, _ := model.FindPlayer(game.Players, input.PlayerID)
+
+	if input.Amount == -1 {
+		bettingRound.Fold(input.PlayerID)
+	}
+
+	if input.Amount > 0 {
+		newBet := model.Bet{
+			Amount:   input.Amount,
+			PlayerID: input.PlayerID,
+		}
+		if input.Amount > bettingRound.AmountToCall() {
+			bettingRound.Raise(&newBet)
+		} else {
+			bettingRound.Call(&newBet)
+		}
+	}
+
+	bettingRound.MoveToNextPlayer()
+
+	if bettingRound.IsFinished() {
+		if questionRound.IsFinished() {
+			questionRound.DistributePot()
+			game.AddNewQuestionRound()
+		} else {
+			questionRound.AddNewBettingRound()
+		}
+		game.CurrentQuestionRound().CurrentBettingRound().StartBettingRound()
 	}
 
 	return game, nil
