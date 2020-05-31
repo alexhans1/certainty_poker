@@ -1,40 +1,11 @@
 package model
 
 import (
-	"errors"
-
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
-// FindBettingRound finds by id
-func FindBettingRound(slice []*BettingRound, id string) (bettingRound *BettingRound, err error) {
-	for i := range slice {
-		if slice[i].ID == id {
-			return slice[i], nil
-		}
-	}
-	return nil, errors.New("BettingRound not found")
-}
-
-// Fold adds a player to the FoldedPlayerId List of the question round
-func (b *BettingRound) Fold(playerID string) {
-	if !helpers.ContainsString(b.QuestionRound.FoldedPlayerIds, playerID) {
-		b.QuestionRound.FoldedPlayerIds = append(b.QuestionRound.FoldedPlayerIds, playerID)
-	}
-}
-
-// Call processes the bet
-func (b *BettingRound) Call(bet *Bet) {
-	for _, player := range b.QuestionRound.Game.Players {
-		if player.ID == bet.PlayerID {
-			b.Bets = append(b.Bets, bet)
-			player.Money -= bet.Amount
-		}
-	}
-}
-
-// Raise processes the bet and sets the last raised player ID
-func (b *BettingRound) Raise(bet *Bet) {
+// AddBet processes the bet
+func (b *BettingRound) AddBet(bet *Bet) {
 	for _, player := range b.QuestionRound.Game.Players {
 		if player.ID == bet.PlayerID {
 			b.Bets = append(b.Bets, bet)
@@ -63,10 +34,9 @@ func (b *BettingRound) AmountToCall() int {
 
 // MoveToNextPlayer sets the current player ID. Warning: It expects the current player to still be in the game!
 func (b *BettingRound) MoveToNextPlayer() {
-	inPlayers, _ := b.QuestionRound.Game.InPlayers()
-	for i, player := range inPlayers {
+	for _, player := range b.QuestionRound.Game.InPlayers() {
 		if player.ID == b.CurrentPlayerID {
-			b.CurrentPlayerID = inPlayers[i+1%len(inPlayers)].ID
+			b.CurrentPlayerID = player.FindNextActivePlayer().ID
 		}
 	}
 }
@@ -74,6 +44,9 @@ func (b *BettingRound) MoveToNextPlayer() {
 // IsFinished returns true if the betting round is over
 func (b *BettingRound) IsFinished() bool {
 	activePlayers, _ := b.QuestionRound.Game.ActivePlayers()
+	if len(activePlayers) <= 1 {
+		return true
+	}
 	amountToCall := b.AmountToCall()
 	if amountToCall > 0 {
 		// if the amount to call is greater than 0, then if an active player has less than that in the pot, the BR is not yet over
@@ -95,4 +68,18 @@ func (b *BettingRound) IsFinished() bool {
 		}
 	}
 	return true
+}
+
+// Start sets current player id to next active player of dealer
+func (b *BettingRound) Start() {
+	for _, player := range b.QuestionRound.Game.Players {
+		if player.ID == b.QuestionRound.Game.DealerID {
+			if len(b.QuestionRound.BettingRounds) <= 1 {
+				// in the first betting round the player after the big blind starts
+				b.CurrentPlayerID = player.FindNextActivePlayer().FindNextActivePlayer().FindNextActivePlayer().ID
+			} else {
+				b.CurrentPlayerID = player.FindNextActivePlayer().ID
+			}
+		}
+	}
 }

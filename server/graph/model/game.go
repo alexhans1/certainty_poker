@@ -13,6 +13,16 @@ func (g *Game) CurrentQuestionRound() *QuestionRound {
 	return g.QuestionRounds[len(g.QuestionRounds)-1]
 }
 
+// IsFinished returns true if there is only one player left in the game
+func (g *Game) IsFinished() bool {
+	return len(g.InPlayers()) <= 1
+}
+
+// Dealer returns the dealer player object
+func (g *Game) Dealer() *Player {
+	return FindPlayer(g.Players, g.DealerID)
+}
+
 // AddNewQuestionRound adds a new question round
 func (g *Game) AddNewQuestionRound() {
 	newQuestionRoundIndex := len(g.QuestionRounds) + 1
@@ -22,8 +32,7 @@ func (g *Game) AddNewQuestionRound() {
 		hints = append(hints, "Test Hint "+strconv.Itoa(i+1)+" for Question "+strconv.Itoa(newQuestionRoundIndex+1))
 	}
 
-	newQuestionRound := QuestionRound{
-		ID: helpers.CreateID(),
+	newQuestionRound := &QuestionRound{
 		Question: &Question{
 			ID:       helpers.CreateID(),
 			Question: "Test Question " + strconv.Itoa(newQuestionRoundIndex+1),
@@ -33,27 +42,38 @@ func (g *Game) AddNewQuestionRound() {
 		Guesses:         make([]*Guess, 0),
 		BettingRounds:   make([]*BettingRound, 0),
 		FoldedPlayerIds: make([]string, 0),
+		Game:            g,
 	}
+	g.QuestionRounds = append(g.QuestionRounds, newQuestionRound)
+
+	g.DealerID = g.Dealer().FindNextInPlayer().ID
 
 	newQuestionRound.AddNewBettingRound()
-	newQuestionRound.Start()
 
-	g.QuestionRounds = append(g.QuestionRounds, &newQuestionRound)
+	newQuestionRound.PlaceBlinds()
 }
 
-// InPlayers returns the players that are still active in the game
-func (g *Game) InPlayers() ([]*Player, []string) {
+// AddNewPlayer adds a new player
+func (g *Game) AddNewPlayer() *Player {
+	newPlayer := &Player{
+		ID:    helpers.CreateID(),
+		Money: 100,
+	}
+	g.Players = append(g.Players, newPlayer)
+	return newPlayer
+}
+
+// InPlayers returns the players that are not out of the game
+func (g *Game) InPlayers() []*Player {
 	inPlayers := make([]*Player, 0)
-	inPlayerIds := make([]string, 0)
 
 	for _, player := range g.Players {
-		if !player.IsOut() {
+		if !player.IsOutGame() {
 			inPlayers = append(inPlayers, player)
-			inPlayerIds = append(inPlayerIds, player.ID)
 		}
 	}
 
-	return inPlayers, inPlayerIds
+	return inPlayers
 }
 
 // OutPlayers returns the players that are no longer in the game
@@ -62,7 +82,7 @@ func (g *Game) OutPlayers() ([]*Player, []string) {
 	outPlayerIds := make([]string, 0)
 
 	for _, player := range g.Players {
-		if player.IsOut() {
+		if player.IsOutGame() {
 			outPlayers = append(outPlayers, player)
 			outPlayerIds = append(outPlayerIds, player.ID)
 		}
@@ -71,13 +91,14 @@ func (g *Game) OutPlayers() ([]*Player, []string) {
 	return outPlayers, outPlayerIds
 }
 
+// TODO: move to question round
 // ActivePlayers returns the players that are in the game and have not folded in current QR
 func (g *Game) ActivePlayers() ([]*Player, []string) {
 	activePlayers := make([]*Player, 0)
 	activePlayerIds := make([]string, 0)
 
 	for _, player := range g.Players {
-		if !player.IsOut() && !helpers.ContainsString(g.CurrentQuestionRound().FoldedPlayerIds, player.ID) {
+		if !player.IsOutGame() && !helpers.ContainsString(g.CurrentQuestionRound().FoldedPlayerIds, player.ID) {
 			activePlayers = append(activePlayers, player)
 			activePlayerIds = append(activePlayerIds, player.ID)
 		}

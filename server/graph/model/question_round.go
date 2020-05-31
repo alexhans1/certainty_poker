@@ -112,16 +112,19 @@ func (q *QuestionRound) DistributePot() int {
 	return moneyLeft
 }
 
-func (q *QuestionRound) CreateFoldedPlayerIDsSlice(players []*Player) {
-	for _, player := range players {
-		if !helpers.ContainsString(q.FoldedPlayerIds, player.ID) && player.Money <= 0 {
-			q.FoldedPlayerIds = append(q.FoldedPlayerIds, player.ID)
-		}
+// Fold adds a player to the FoldedPlayerId List of the question round
+func (q *QuestionRound) Fold(playerID string) {
+	if !helpers.ContainsString(q.FoldedPlayerIds, playerID) {
+		q.FoldedPlayerIds = append(q.FoldedPlayerIds, playerID)
 	}
 }
 
 // IsFinished returns true if the current betting round is finished and all hints are already revealed
 func (q *QuestionRound) IsFinished() bool {
+	activePlayers, _ := q.Game.ActivePlayers()
+	if len(activePlayers) <= 1 {
+		return true
+	}
 	if len(q.BettingRounds) > len(q.Question.Hints) {
 		return q.CurrentBettingRound().IsFinished()
 	}
@@ -130,62 +133,45 @@ func (q *QuestionRound) IsFinished() bool {
 
 // AddNewBettingRound adds a new betting round
 func (q *QuestionRound) AddNewBettingRound() {
-	newBettingRound := BettingRound{
-		ID:              helpers.CreateID(),
+	newBettingRound := &BettingRound{
 		Bets:            make([]*Bet, 0),
 		CurrentPlayerID: "not started",
+		QuestionRound:   q,
 	}
 
-	inPlayers, _ := q.Game.InPlayers()
-	for i, player := range inPlayers {
-		if player.ID == q.Game.DealerID {
-			newBettingRound.CurrentPlayerID = inPlayers[i+1%len(inPlayers)].ID
-			q.BettingRounds = append(q.BettingRounds, &newBettingRound)
-			return
-		}
-	}
+	newBettingRound.Start()
+
+	q.BettingRounds = append(q.BettingRounds, newBettingRound)
 }
 
-// Start sets the current and last raised player IDs and places the blinds
-func (q *QuestionRound) Start() {
+// PlaceBlinds places the small and big blind of the QR
+func (q *QuestionRound) PlaceBlinds() {
 	inPlayers, _ := q.Game.InPlayers()
 	for i, player := range inPlayers {
 		if player.ID == q.Game.DealerID {
-			q.CurrentBettingRound().Raise(&Bet{
+			q.CurrentBettingRound().AddBet(&Bet{
 				PlayerID: inPlayers[i+1%len(inPlayers)].ID,
 				Amount:   5,
 			})
-			q.CurrentBettingRound().Raise(&Bet{
+			q.CurrentBettingRound().AddBet(&Bet{
 				PlayerID: inPlayers[i+2%len(inPlayers)].ID,
 				Amount:   10,
 			})
-			q.CurrentBettingRound().CurrentPlayerID = inPlayers[i+3%len(inPlayers)].ID
 		}
 	}
 }
 
 // AddGuess adds to the guesses slice of the question round
-func (q *QuestionRound) AddGuess() {
-	inPlayers, _ := q.Game.InPlayers()
-	for i, player := range inPlayers {
-		if player.ID == q.Game.DealerID {
-			q.CurrentBettingRound().Raise(&Bet{
-				PlayerID: inPlayers[i+1%len(inPlayers)].ID,
-				Amount:   5,
-			})
-			q.CurrentBettingRound().Raise(&Bet{
-				PlayerID: inPlayers[i+2%len(inPlayers)].ID,
-				Amount:   10,
-			})
-			q.CurrentBettingRound().CurrentPlayerID = inPlayers[i+3%len(inPlayers)].ID
+func (q *QuestionRound) AddGuess(guess Guess) error {
+	player := FindPlayer(q.Game.InPlayers(), guess.PlayerID)
+	if player == nil {
+		return errors.New("player is no longer in game")
+	}
+	for _, g := range q.Guesses {
+		if guess.PlayerID == g.PlayerID {
+			return errors.New("player has already placed a guess for this question")
 		}
 	}
-}
-
-func FindNextNthPlayer(players []*Player, n int, foldedPlayerIDs []string) *Player {
-	player := players[n%len(players)]
-	if helpers.ContainsString(foldedPlayerIDs, player.ID) {
-		return FindNextNthPlayer(players, n+1, foldedPlayerIDs)
-	}
-	return players[n%len(players)]
+	q.Guesses = append(q.Guesses, &guess)
+	return nil
 }

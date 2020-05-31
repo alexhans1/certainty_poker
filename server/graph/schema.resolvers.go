@@ -57,12 +57,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 		return nil, errors.New("cannot join game after it started")
 	}
 
-	newPlayer := &model.Player{
-		ID:    helpers.CreateID(),
-		Money: 100,
-	}
-	game.Players = append(game.Players, newPlayer)
-	return newPlayer, nil
+	return game.AddNewPlayer(), nil
 }
 
 func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error) {
@@ -71,9 +66,10 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 		return nil, err
 	}
 
-	// if err := gamelogic.AddGuess(game, input); err != nil {
-	// 	return nil, err
-	// }
+	game.CurrentQuestionRound().AddGuess(Guess{
+		PlayerID: input.PlayerID,
+		Guess:    input.Guess,
+	})
 
 	return game, nil
 }
@@ -85,7 +81,6 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	}
 
 	questionRound := game.CurrentQuestionRound()
-	bettingRound := questionRound.CurrentBettingRound()
 
 	for _, player := range game.Players {
 		if helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) {
@@ -94,36 +89,37 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 		if player.ID == input.PlayerID && player.Money < input.Amount {
 			return nil, errors.New("player does not have enough money to place this bet")
 		}
+		// TODO: add validation that player has to call the amount to call if they can
 	}
 
-	player, _ := model.FindPlayer(game.Players, input.PlayerID)
+	bettingRound := questionRound.CurrentBettingRound()
+	player := model.FindPlayer(game.Players, input.PlayerID)
 
 	if input.Amount == -1 {
-		bettingRound.Fold(input.PlayerID)
-	}
-
-	if input.Amount > 0 {
+		questionRound.Fold(input.PlayerID)
+	} else {
+		amountToCall = bettingRound.AmountToCall()
+		if input.Amount < amountToCall && player.Money > input.Amount {
+			return nil, errors.New("amount is not enough to call and the player is not all in")
+		}
 		newBet := model.Bet{
 			Amount:   input.Amount,
 			PlayerID: input.PlayerID,
 		}
-		if input.Amount > bettingRound.AmountToCall() {
-			bettingRound.Raise(&newBet)
-		} else {
-			bettingRound.Call(&newBet)
-		}
+		bettingRound.AddBet(&newBet)
 	}
-
-	bettingRound.MoveToNextPlayer()
 
 	if bettingRound.IsFinished() {
 		if questionRound.IsFinished() {
 			questionRound.DistributePot()
-			game.AddNewQuestionRound()
+			if !game.IsFinished() {
+				game.AddNewQuestionRound()
+			}
 		} else {
 			questionRound.AddNewBettingRound()
 		}
-		game.CurrentQuestionRound().CurrentBettingRound().StartBettingRound()
+	} else {
+		bettingRound.MoveToNextPlayer()
 	}
 
 	return game, nil

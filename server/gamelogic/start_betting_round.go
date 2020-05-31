@@ -9,7 +9,7 @@ import (
 	"github.com/alexhans1/certainty_poker/graph/model"
 )
 
-// StartBettingRound sets the CurrentPlayerID and LastRaisedPlayerID for the start of a betting round
+// StartBettingRound sets the CurrentPlayerID for the start of a betting round
 // based on the number of remaining players and the position of the dealer.
 // Returns an error if something fails.
 func StartBettingRound(game *model.Game) error {
@@ -22,7 +22,6 @@ func StartBettingRound(game *model.Game) error {
 	if bettingRound == nil {
 		return errors.New("currentBettingRound round not found")
 	}
-	questionRound.CreateFoldedPlayerIDsSlice(game.Players)
 
 	for i, player := range game.Players {
 		if !helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) && player.Money <= 0 {

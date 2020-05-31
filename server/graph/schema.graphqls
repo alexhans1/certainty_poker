@@ -13,7 +13,6 @@ type Player {
 }
 
 type QuestionRound {
-  id: ID!
   game: Game!
   question: Question
   guesses: [Guess!]!
@@ -34,7 +33,6 @@ type Guess {
 }
 
 type BettingRound {
-  id: ID!
   questionRound: QuestionRound!
   bets: [Bet!]!
   currentPlayerId: ID!

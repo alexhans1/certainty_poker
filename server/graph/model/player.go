@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"math/rand"
 
 	"github.com/alexhans1/certainty_poker/helpers"
@@ -31,11 +30,58 @@ func (p *Player) MoneyInBettingRound() int {
 	return m
 }
 
-// IsOut returns true if the player has no more money left and has no chance of winning some in the current question round
-func (p *Player) IsOut() bool {
-	return !(p.Money > 0 ||
-		(p.MoneyInQuestionRound() > 0 &&
-			!helpers.ContainsString(p.Game.CurrentQuestionRound().FoldedPlayerIds, p.ID)))
+// HasFolded returns true if the player in included in the FoldedPlayerId list of the current QR
+func (p *Player) HasFolded() bool {
+	return helpers.ContainsString(p.Game.CurrentQuestionRound().FoldedPlayerIds, p.ID)
+}
+
+// IsOutGame returns true if the player has no more money left and has no chance of winning some in the current question round
+func (p *Player) IsOutGame() bool {
+	if p.Money > 0 {
+		return false
+	}
+	if p.MoneyInQuestionRound() > 0 && !p.HasFolded() {
+		return false
+	}
+	return true
+}
+
+// IsActive returns true if the
+func (p *Player) IsActive() bool {
+	return !(p.HasFolded() || p.IsOutGame() || p.IsAllIn())
+}
+
+// IsAllIn returns true if the player has no money left but money in current QR and has not folded
+func (p *Player) IsAllIn() bool {
+	return !(p.Money > 0 || p.IsOutGame() || p.HasFolded())
+}
+
+// FindNextActivePlayer returns the next neighbour that is active
+func (p *Player) FindNextActivePlayer() *Player {
+	nextPlayer := p.getNextPlayer()
+	if nextPlayer.IsActive() {
+		return nextPlayer
+	}
+	return nextPlayer.FindNextActivePlayer()
+}
+
+// FindNextInPlayer returns the next neighbour that is active
+func (p *Player) FindNextInPlayer() *Player {
+	nextPlayer := p.getNextPlayer()
+	if !nextPlayer.IsOutGame() {
+		return nextPlayer
+	}
+	return nextPlayer.FindNextInPlayer()
+}
+
+// getNextPlayer returns the next player in the player slice
+func (p *Player) getNextPlayer() *Player {
+	players := p.Game.Players
+	for i, player := range players {
+		if player.ID == p.ID {
+			return players[i+1%len(players)]
+		}
+	}
 }
 
 func ShufflePlayers(playerSlice []*Player) {
@@ -45,11 +91,12 @@ func ShufflePlayers(playerSlice []*Player) {
 	}
 }
 
-func FindPlayer(slice []*Player, id string) (player *Player, err error) {
+// FindPlayer finds player by ID in given player slice
+func FindPlayer(slice []*Player, id string) (player *Player) {
 	for i := range slice {
 		if slice[i].ID == id {
-			return slice[i], nil
+			return slice[i]
 		}
 	}
-	return nil, errors.New("Player not found")
+	return nil
 }
