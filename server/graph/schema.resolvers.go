@@ -16,9 +16,9 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 	gameID := helpers.CreateID()
 	game := model.Game{
 		ID:             gameID,
-		QuestionRounds: createInitialQuestionRounds(),
-		DealerID:       "dealerId",
+		QuestionRounds: make([]*model.QuestionRound, 0),
 		Players:        make([]*model.Player, 0),
+		DealerID:       "dealerId",
 	}
 
 	r.games[gameID] = &game
@@ -66,7 +66,7 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 		return nil, err
 	}
 
-	game.CurrentQuestionRound().AddGuess(Guess{
+	game.CurrentQuestionRound().AddGuess(model.Guess{
 		PlayerID: input.PlayerID,
 		Guess:    input.Guess,
 	})
@@ -98,7 +98,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	if input.Amount == -1 {
 		questionRound.Fold(input.PlayerID)
 	} else {
-		amountToCall = bettingRound.AmountToCall()
+		amountToCall := bettingRound.AmountToCall()
 		if input.Amount < amountToCall && player.Money > input.Amount {
 			return nil, errors.New("amount is not enough to call and the player is not all in")
 		}

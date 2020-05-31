@@ -96,7 +96,7 @@ func (q *QuestionRound) DistributePot() int {
 			// Distribute money to winners, remove satisfied winners
 			unsatisifiedWinnerIDs := make([]string, 0)
 			for _, winnerID := range rank[0] {
-				winner, _ := FindPlayer(q.Game.Players, winnerID)
+				winner := FindPlayer(q.Game.Players, winnerID)
 				winner.Money += potShare
 				if playerBets[winnerID] > 0 {
 					unsatisifiedWinnerIDs = append(unsatisifiedWinnerIDs, winnerID)
@@ -146,7 +146,7 @@ func (q *QuestionRound) AddNewBettingRound() {
 
 // PlaceBlinds places the small and big blind of the QR
 func (q *QuestionRound) PlaceBlinds() {
-	inPlayers, _ := q.Game.InPlayers()
+	inPlayers := q.Game.InPlayers()
 	for i, player := range inPlayers {
 		if player.ID == q.Game.DealerID {
 			q.CurrentBettingRound().AddBet(&Bet{

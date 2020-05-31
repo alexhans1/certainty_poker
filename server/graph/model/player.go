@@ -74,7 +74,6 @@ func (p *Player) FindNextInPlayer() *Player {
 	return nextPlayer.FindNextInPlayer()
 }
 
-// getNextPlayer returns the next player in the player slice
 func (p *Player) getNextPlayer() *Player {
 	players := p.Game.Players
 	for i, player := range players {
@@ -82,8 +81,10 @@ func (p *Player) getNextPlayer() *Player {
 			return players[i+1%len(players)]
 		}
 	}
+	return nil
 }
 
+// ShufflePlayers receives a slice and returns it in a new order
 func ShufflePlayers(playerSlice []*Player) {
 	for i := range playerSlice {
 		j := rand.Intn(i + 1)
