@@ -123,10 +123,9 @@ function GameComponent() {
         placeBetLoading ||
         addGuessLoading) && <p>Loading...</p>}
 
-      {game.currentQuestionRound < 0 && (
+      {!game.questionRounds.length && (
         <button
           className="btn btn-primary mx-3"
-          disabled={(game?.currentQuestionRound ?? -1) > -1}
           onClick={() => {
             startGame({
               variables: { gameId },

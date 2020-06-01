@@ -8,6 +8,11 @@ import (
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
+// CurrentBettingRound returns the last element of the game's QuestionRounds slice
+func (q *QuestionRound) CurrentBettingRound() *BettingRound {
+	return q.BettingRounds[len(q.BettingRounds)-1]
+}
+
 func (q *QuestionRound) inPlayerIDs() []string {
 	inPlayerIDs := make([]string, 0)
 
@@ -46,13 +51,19 @@ func (q *QuestionRound) playerBets() map[string]int {
 
 func (q *QuestionRound) rank() [][]string {
 	playerIDs := q.inPlayerIDs()
+	result := make([][]string, 0)
+
+	activePlayers := q.Game.ActivePlayers()
+	if len(activePlayers) == 1 {
+		return [][]string{{activePlayers[0].ID}}
+	}
+
 	sort.Slice(playerIDs, func(i, j int) bool {
 		a, _ := q.guessDeviation(playerIDs[i])
-		b, _ := q.guessDeviation(playerIDs[i])
+		b, _ := q.guessDeviation(playerIDs[j])
 		return a < b
 	})
 
-	result := make([][]string, 0)
 	for _, playerID := range playerIDs {
 		currentDeviation, _ := q.guessDeviation(playerID)
 		previousDeviation, _ := q.guessDeviation(result[len(result)-1][0])
@@ -69,6 +80,7 @@ func (q *QuestionRound) rank() [][]string {
 	return result
 }
 
+// DistributePot determines who won the question round and allocates the money accordingly
 func (q *QuestionRound) DistributePot() int {
 	playerBets := q.playerBets()
 	rank := q.rank()
@@ -90,7 +102,7 @@ func (q *QuestionRound) DistributePot() int {
 			// Distribute money to winners, remove satisfied winners
 			unsatisifiedWinnerIDs := make([]string, 0)
 			for _, winnerID := range rank[0] {
-				winner, _ := FindPlayer(q.Game.Players, winnerID)
+				winner := FindPlayer(q.Game.Players, winnerID)
 				winner.Money += potShare
 				if playerBets[winnerID] > 0 {
 					unsatisifiedWinnerIDs = append(unsatisifiedWinnerIDs, winnerID)
@@ -106,18 +118,62 @@ func (q *QuestionRound) DistributePot() int {
 	return moneyLeft
 }
 
-func (q *QuestionRound) CreateFoldedPlayerIDsSlice(players []*Player) {
-	for _, player := range players {
-		if !helpers.ContainsString(q.FoldedPlayerIds, player.ID) && player.Money <= 0 {
-			q.FoldedPlayerIds = append(q.FoldedPlayerIds, player.ID)
-		}
+// Fold adds a player to the FoldedPlayerId List of the question round
+func (q *QuestionRound) Fold(playerID string) {
+	if !helpers.ContainsString(q.FoldedPlayerIds, playerID) {
+		q.FoldedPlayerIds = append(q.FoldedPlayerIds, playerID)
 	}
 }
 
-func FindNextNthPlayer(players []*Player, n int, foldedPlayerIDs []string) *Player {
-	player := players[n%len(players)]
-	if helpers.ContainsString(foldedPlayerIDs, player.ID) {
-		return FindNextNthPlayer(players, n+1, foldedPlayerIDs)
+// IsFinished returns true if the current betting round is finished and all hints are already revealed
+func (q *QuestionRound) IsFinished() bool {
+	activePlayers := q.Game.ActivePlayers()
+	if len(activePlayers) <= 1 {
+		return true
 	}
-	return players[n%len(players)]
+	if len(q.BettingRounds) > len(q.Question.Hints) {
+		return q.CurrentBettingRound().IsFinished()
+	}
+	return false
+}
+
+// AddNewBettingRound adds a new betting round
+func (q *QuestionRound) AddNewBettingRound() {
+	newBettingRound := &BettingRound{
+		Bets:          make([]*Bet, 0),
+		CurrentPlayer: nil,
+		QuestionRound: q,
+	}
+
+	newBettingRound.Start()
+
+	q.BettingRounds = append(q.BettingRounds, newBettingRound)
+}
+
+// PlaceBlinds places the small and big blind of the QR
+func (q *QuestionRound) PlaceBlinds() {
+	dealer := q.Game.Dealer()
+	q.CurrentBettingRound().AddBet(&Bet{
+		PlayerID: dealer.FindNextInPlayer().ID,
+		Amount:   5,
+	})
+	q.CurrentBettingRound().AddBet(&Bet{
+		PlayerID: dealer.FindNextInPlayer().FindNextInPlayer().ID,
+		Amount:   10,
+	})
+}
+
+// AddGuess adds to the guesses slice of the question round
+func (q *QuestionRound) AddGuess(guess Guess) error {
+	player := FindPlayer(q.Game.InPlayers(), guess.PlayerID)
+	if player == nil {
+		return errors.New("player is no longer in game")
+	}
+	for _, g := range q.Guesses {
+		if guess.PlayerID == g.PlayerID {
+			return errors.New("player has already placed a guess for this question")
+		}
+	}
+	q.Guesses = append(q.Guesses, &guess)
+	return nil
 }

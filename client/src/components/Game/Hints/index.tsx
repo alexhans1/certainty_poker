@@ -10,14 +10,14 @@ export default ({ hints, currentQuestionRound }: HintsProps) => {
   if (!hints?.length) {
     return null;
   }
-  if (currentQuestionRound.currentBettingRound === 0) {
+  if (currentQuestionRound.bettingRounds.length <= 1) {
     return null;
   }
   return (
     <>
       <p>Hints:</p>
       {currentQuestionRound.question.hints
-        .slice(0, currentQuestionRound.currentBettingRound)
+        .slice(0, currentQuestionRound.bettingRounds.length - 1)
         .map((hint, i) => (
           <p>
             <b>

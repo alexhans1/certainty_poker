@@ -20,15 +20,18 @@ const calculateAmountToCall = (
     bettingRound,
     playerId
   );
+
+  const amountSpentInBettingRoundPerPlayer = bettingRound.bets.reduce(
+    (acc, bet) => {
+      acc[bet.playerId] = (acc[bet.playerId] || 0) + bet.amount;
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
+
   return (
-    Math.max(
-      ...Object.values(
-        bettingRound.bets.reduce((acc, bet) => {
-          acc[bet.playerId] = acc[bet.playerId] || 0 + bet.amount;
-          return acc;
-        }, {} as { [key: string]: number })
-      )
-    ) - amountSpentAlreadyInBettingRound
+    Math.max(...Object.values(amountSpentInBettingRoundPerPlayer)) -
+    amountSpentAlreadyInBettingRound
   );
 };
 
@@ -41,7 +44,7 @@ export const check = (
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   if (
     !currentQuestionRound ||
-    currentBettingRound?.currentPlayerId !== playerId
+    currentBettingRound?.currentPlayer.id !== playerId
   ) {
     return;
   }
@@ -56,8 +59,6 @@ export const check = (
     variables: {
       input: {
         gameId: game.id,
-        questionRoundId: currentQuestionRound?.id,
-        bettingRoundId: currentBettingRound.id,
         playerId: playerId,
         amount: 0,
       },
@@ -74,7 +75,7 @@ export const call = (
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   if (
     !currentQuestionRound ||
-    currentBettingRound?.currentPlayerId !== playerId
+    currentBettingRound?.currentPlayer.id !== playerId
   ) {
     return;
   }
@@ -87,8 +88,6 @@ export const call = (
     variables: {
       input: {
         gameId: game.id,
-        questionRoundId: currentQuestionRound?.id,
-        bettingRoundId: currentBettingRound.id,
         playerId: playerId,
         amount: Math.min(amountToCall, moneyOfPlayer),
       },
@@ -106,7 +105,7 @@ export const raise = (
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   if (
     !currentQuestionRound ||
-    currentBettingRound?.currentPlayerId !== playerId
+    currentBettingRound?.currentPlayer.id !== playerId
   ) {
     return;
   }
@@ -123,8 +122,6 @@ export const raise = (
     variables: {
       input: {
         gameId: game.id,
-        questionRoundId: currentQuestionRound?.id,
-        bettingRoundId: currentBettingRound.id,
         playerId: playerId,
         amount: Math.min(amount, moneyOfPlayer),
       },
@@ -141,7 +138,7 @@ export const fold = (
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   if (
     !currentQuestionRound ||
-    currentBettingRound?.currentPlayerId !== playerId
+    currentBettingRound?.currentPlayer.id !== playerId
   ) {
     return;
   }
@@ -150,8 +147,6 @@ export const fold = (
     variables: {
       input: {
         gameId: game.id,
-        questionRoundId: currentQuestionRound?.id,
-        bettingRoundId: currentBettingRound.id,
         playerId: playerId,
         amount: -1,
       },

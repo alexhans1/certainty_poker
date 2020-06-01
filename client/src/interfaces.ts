@@ -21,18 +21,14 @@ interface Bet {
 }
 
 export interface BettingRound {
-  id: string;
   bets: Bet[];
-  currentPlayerId: Player["id"];
-  lastRaisedPlayerId: Player["id"];
+  currentPlayer: Player;
 }
 
 export interface QuestionRound {
-  id: string;
   question: Question;
   guesses: Guess[];
   bettingRounds: BettingRound[];
-  currentBettingRound: number;
   folderPlayerIds: Player["id"][];
 }
 
@@ -40,14 +36,11 @@ export interface Game {
   id: string;
   players: Player[];
   questionRounds: QuestionRound[];
-  currentQuestionRound: number;
   dealerId: Player["id"];
 }
 
 export interface BetInput {
   gameId: Game["id"];
-  questionRoundId: QuestionRound["id"];
-  bettingRoundId: BettingRound["id"];
   playerId: Player["id"];
   amount: number;
 }

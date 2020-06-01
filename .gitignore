@@ -16,4 +16,4 @@
 
 .DS_Store
 .vscode
-cmd/__debug_bin
+__debug_bin

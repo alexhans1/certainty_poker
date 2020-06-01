@@ -53,7 +53,7 @@ export default ({
           key={actionButtonProps.text}
           {...actionButtonProps}
           isDisabled={
-            currentBettingRound?.currentPlayerId !== playerId ||
+            currentBettingRound?.currentPlayer.id !== playerId ||
             currentQuestionRound?.guesses.length < game.players.length
           }
         />

@@ -3,22 +3,20 @@ type Game {
   id: ID!
   players: [Player!]!
   questionRounds: [QuestionRound!]!
-  currentQuestionRound: Int!
   dealerId: ID!
 }
 
 type Player {
   id: ID!
   money: Int!
+  game: Game!
 }
 
 type QuestionRound {
-  id: ID!
   game: Game!
   question: Question
   guesses: [Guess!]!
   bettingRounds: [BettingRound!]!
-  currentBettingRound: Int!
   foldedPlayerIds: [ID!]!
 }
 
@@ -35,11 +33,9 @@ type Guess {
 }
 
 type BettingRound {
-  id: ID!
   questionRound: QuestionRound!
   bets: [Bet!]!
-  currentPlayerId: ID!
-  lastRaisedPlayerId: ID!
+  currentPlayer: Player!
 }
 
 type Bet {
@@ -61,8 +57,6 @@ input GuessInput {
 
 input BetInput {
   gameId: ID!
-  questionRoundId: ID!
-  bettingRoundId: ID!
   playerId: ID!
   amount: Int!
 }

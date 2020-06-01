@@ -24,7 +24,7 @@ export default ({
           {i !== 0 && <hr />}
           <div>
             {id === playerId && <span>👩‍💻</span>}Name: {id}
-            {currentBettingRound?.currentPlayerId === id && <span>❗️</span>}
+            {currentBettingRound?.currentPlayer.id === id && <span>❗️</span>}
           </div>
           <div>Remaining money: {money}</div>
           {currentBettingRound && (
