@@ -21,7 +21,7 @@ func ContainsString(slice []string, x string) bool {
 	return false
 }
 
-// MaxInt returns largest 
+// MaxInt returns largest
 func MaxInt(slice []int) (int, error) {
 	if len(slice) == 0 {
 		return 0, errors.New("cannot find maximum of empty slice")
@@ -58,4 +58,47 @@ func MinValueMapStringInt(m map[string]int, keys []string) (int, error) {
 	} else {
 		return min, nil
 	}
+}
+
+func SliceStringEqual(sliceOne []string, sliceTwo []string) bool {
+	if len(sliceOne) != len(sliceTwo) {
+		return false
+	}
+
+	for index, elementOne := range sliceOne {
+		if sliceTwo[index] != elementOne {
+			return false
+		}
+	}
+
+	return true
+}
+
+func SliceIntEqual(sliceOne []int, sliceTwo []int) bool {
+	if len(sliceOne) != len(sliceTwo) {
+		return false
+	}
+
+	for index, elementOne := range sliceOne {
+		if sliceTwo[index] != elementOne {
+			return false
+		}
+	}
+
+	return true
+}
+
+
+func SliceSliceStringEqual(sliceOne [][]string, sliceTwo [][]string) bool {
+	if len(sliceOne) != len(sliceTwo) {
+		return false
+	}
+
+	for index, elementOne := range sliceOne {
+		if !SliceStringEqual(elementOne, sliceTwo[index]) {
+			return false
+		}
+	}
+
+	return true
 }
