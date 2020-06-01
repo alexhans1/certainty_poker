@@ -41,7 +41,6 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 	}
 
 	model.ShufflePlayers(game.Players)
-	game.DealerID = game.Players[0].ID
 	game.AddNewQuestionRound()
 
 	return game, nil
@@ -81,25 +80,22 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	}
 
 	questionRound := game.CurrentQuestionRound()
+	player := model.FindPlayer(game.Players, input.PlayerID)
 
-	for _, player := range game.Players {
-		if helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) {
-			return nil, errors.New("folded players cannot place another bet in current question round")
-		}
-		if player.ID == input.PlayerID && player.Money < input.Amount {
-			return nil, errors.New("player does not have enough money to place this bet")
-		}
-		// TODO: add validation that player has to call the amount to call if they can
+	if helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) {
+		return nil, errors.New("folded players cannot place another bet in current question round")
+	}
+	if player.ID == input.PlayerID && player.Money < input.Amount {
+		return nil, errors.New("player does not have enough money to place this bet")
 	}
 
 	bettingRound := questionRound.CurrentBettingRound()
-	player := model.FindPlayer(game.Players, input.PlayerID)
 
 	if input.Amount == -1 {
 		questionRound.Fold(input.PlayerID)
 	} else {
-		amountToCall := bettingRound.AmountToCall()
-		if input.Amount < amountToCall && player.Money > input.Amount {
+		minimumAmount := bettingRound.AmountToCall() - player.MoneyInQuestionRound()
+		if input.Amount < minimumAmount && player.Money > input.Amount {
 			return nil, errors.New("amount is not enough to call and the player is not all in")
 		}
 		newBet := model.Bet{

@@ -11,9 +11,9 @@ export const calculateBettingRoundSpendingForPlayer = (
 };
 
 export const getCurrentQuestionRound = (game?: Game) =>
-  game?.questionRounds[game.currentQuestionRound];
+  game?.questionRounds[game?.questionRounds?.length - 1];
 
 export const getCurrentBettingRound = (currentQuestionRound?: QuestionRound) =>
   currentQuestionRound?.bettingRounds[
-    currentQuestionRound?.currentBettingRound
+    currentQuestionRound?.bettingRounds?.length - 1
   ];

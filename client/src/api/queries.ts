@@ -5,7 +5,6 @@ export const GET_GAME_BY_ID = gql`
     game(gameId: $gameId) {
       id
       questionRounds {
-        id
         question {
           id
           hints
@@ -13,11 +12,10 @@ export const GET_GAME_BY_ID = gql`
           question
         }
         foldedPlayerIds
-        currentBettingRound
         bettingRounds {
-          id
-          currentPlayerId
-          lastRaisedPlayerId
+          currentPlayer {
+            id
+          }
           bets {
             amount
             playerId
@@ -28,7 +26,6 @@ export const GET_GAME_BY_ID = gql`
           playerId
         }
       }
-      currentQuestionRound
       players {
         id
         money
@@ -52,7 +49,6 @@ export const START_GAME = gql`
     startGame(gameId: $gameId) {
       id
       questionRounds {
-        id
         question {
           id
           hints
@@ -60,11 +56,10 @@ export const START_GAME = gql`
           question
         }
         foldedPlayerIds
-        currentBettingRound
         bettingRounds {
-          id
-          currentPlayerId
-          lastRaisedPlayerId
+          currentPlayer {
+            id
+          }
           bets {
             amount
             playerId
@@ -75,7 +70,6 @@ export const START_GAME = gql`
           playerId
         }
       }
-      currentQuestionRound
       players {
         id
         money
@@ -90,7 +84,6 @@ export const PLACE_BET = gql`
     placeBet(input: $input) {
       id
       questionRounds {
-        id
         question {
           id
           hints
@@ -98,11 +91,10 @@ export const PLACE_BET = gql`
           question
         }
         foldedPlayerIds
-        currentBettingRound
         bettingRounds {
-          id
-          currentPlayerId
-          lastRaisedPlayerId
+          currentPlayer {
+            id
+          }
           bets {
             amount
             playerId
@@ -113,7 +105,6 @@ export const PLACE_BET = gql`
           playerId
         }
       }
-      currentQuestionRound
       players {
         id
         money
@@ -128,7 +119,6 @@ export const ADD_GUESS = gql`
     addGuess(input: $input) {
       id
       questionRounds {
-        id
         question {
           id
           hints
@@ -137,9 +127,9 @@ export const ADD_GUESS = gql`
         }
         foldedPlayerIds
         bettingRounds {
-          id
-          currentPlayerId
-          lastRaisedPlayerId
+          currentPlayer {
+            id
+          }
           bets {
             amount
             playerId
@@ -150,7 +140,6 @@ export const ADD_GUESS = gql`
           playerId
         }
       }
-      currentQuestionRound
       players {
         id
         money

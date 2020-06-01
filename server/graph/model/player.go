@@ -78,7 +78,7 @@ func (p *Player) getNextPlayer() *Player {
 	players := p.Game.Players
 	for i, player := range players {
 		if player.ID == p.ID {
-			return players[i+1%len(players)]
+			return players[(i+1)%len(players)]
 		}
 	}
 	return nil

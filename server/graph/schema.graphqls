@@ -35,7 +35,7 @@ type Guess {
 type BettingRound {
   questionRound: QuestionRound!
   bets: [Bet!]!
-  currentPlayerId: ID!
+  currentPlayer: Player!
 }
 
 type Bet {

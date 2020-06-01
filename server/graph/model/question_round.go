@@ -51,13 +51,19 @@ func (q *QuestionRound) playerBets() map[string]int {
 
 func (q *QuestionRound) rank() [][]string {
 	playerIDs := q.inPlayerIDs()
+	result := make([][]string, 0)
+
+	activePlayers := q.Game.ActivePlayers()
+	if len(activePlayers) == 1 {
+		return [][]string{{activePlayers[0].ID}}
+	}
+
 	sort.Slice(playerIDs, func(i, j int) bool {
 		a, _ := q.guessDeviation(playerIDs[i])
-		b, _ := q.guessDeviation(playerIDs[i])
+		b, _ := q.guessDeviation(playerIDs[j])
 		return a < b
 	})
 
-	result := make([][]string, 0)
 	for _, playerID := range playerIDs {
 		currentDeviation, _ := q.guessDeviation(playerID)
 		previousDeviation, _ := q.guessDeviation(result[len(result)-1][0])
@@ -121,7 +127,7 @@ func (q *QuestionRound) Fold(playerID string) {
 
 // IsFinished returns true if the current betting round is finished and all hints are already revealed
 func (q *QuestionRound) IsFinished() bool {
-	activePlayers, _ := q.Game.ActivePlayers()
+	activePlayers := q.Game.ActivePlayers()
 	if len(activePlayers) <= 1 {
 		return true
 	}
@@ -134,9 +140,9 @@ func (q *QuestionRound) IsFinished() bool {
 // AddNewBettingRound adds a new betting round
 func (q *QuestionRound) AddNewBettingRound() {
 	newBettingRound := &BettingRound{
-		Bets:            make([]*Bet, 0),
-		CurrentPlayerID: "not started",
-		QuestionRound:   q,
+		Bets:          make([]*Bet, 0),
+		CurrentPlayer: nil,
+		QuestionRound: q,
 	}
 
 	newBettingRound.Start()
@@ -146,19 +152,15 @@ func (q *QuestionRound) AddNewBettingRound() {
 
 // PlaceBlinds places the small and big blind of the QR
 func (q *QuestionRound) PlaceBlinds() {
-	inPlayers := q.Game.InPlayers()
-	for i, player := range inPlayers {
-		if player.ID == q.Game.DealerID {
-			q.CurrentBettingRound().AddBet(&Bet{
-				PlayerID: inPlayers[i+1%len(inPlayers)].ID,
-				Amount:   5,
-			})
-			q.CurrentBettingRound().AddBet(&Bet{
-				PlayerID: inPlayers[i+2%len(inPlayers)].ID,
-				Amount:   10,
-			})
-		}
-	}
+	dealer := q.Game.Dealer()
+	q.CurrentBettingRound().AddBet(&Bet{
+		PlayerID: dealer.FindNextInPlayer().ID,
+		Amount:   5,
+	})
+	q.CurrentBettingRound().AddBet(&Bet{
+		PlayerID: dealer.FindNextInPlayer().FindNextInPlayer().ID,
+		Amount:   10,
+	})
 }
 
 // AddGuess adds to the guesses slice of the question round
