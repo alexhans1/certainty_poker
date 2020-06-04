@@ -2,13 +2,13 @@ package tests
 
 import (
   "strconv"
-  
+
   "github.com/alexhans1/certainty_poker/graph/model"
   "github.com/alexhans1/certainty_poker/helpers"
 )
 
-// factory for Test QuestionRounds
-func questionRoundFactory(playerMoney []int, playerBets[]int, playerGuesses []float64, foldedPlayerIDs []string) *model.QuestionRound {
+
+func testGameFactory(playerMoney []int, playerBets[]int, playerGuesses []float64, foldedPlayerIDs []string) *model.Game {
   game := &model.Game {
     ID:             helpers.CreateID(),
     QuestionRounds: make([]*model.QuestionRound, 0),
@@ -63,5 +63,5 @@ func questionRoundFactory(playerMoney []int, playerBets[]int, playerGuesses []fl
 
   game.QuestionRounds = append(game.QuestionRounds, questionRound)
 
-  return questionRound
+  return game
 }
