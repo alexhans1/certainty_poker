@@ -13,25 +13,13 @@ func (q *QuestionRound) CurrentBettingRound() *BettingRound {
 	return q.BettingRounds[len(q.BettingRounds)-1]
 }
 
-func (q *QuestionRound) inPlayerIDs() []string {
-	inPlayerIDs := make([]string, 0)
-
-	for _, playerID := range q.Game.PlayerIds() {
-		if !helpers.ContainsString(q.FoldedPlayerIds, playerID) {
-			inPlayerIDs = append(inPlayerIDs, playerID)
-		}
-	}
-
-	return inPlayerIDs
-}
-
-func (q *QuestionRound) guessDeviation(PlayerID string) (float64, error) {
+func (q *QuestionRound) guessDeviation(playerID string) (float64, error) {
 	for _, guess := range q.Guesses {
-		if guess.PlayerID == PlayerID {
+		if guess.PlayerID == playerID {
 			return math.Abs(q.Question.Answer - guess.Guess), nil
 		}
 	}
-	return -1.0, errors.New("playerID not found in QuestionRound")
+	return -1.0, errors.New("player not found in QuestionRound")
 }
 
 func (q *QuestionRound) playerBets() map[string]int {
@@ -49,41 +37,44 @@ func (q *QuestionRound) playerBets() map[string]int {
 	return m
 }
 
-func (q *QuestionRound) rank() [][]string {
-	playerIDs := q.inPlayerIDs()
-	result := make([][]string, 0)
-
+func (q *QuestionRound) Rank() [][]string {
+	ranks := make([][]string, 0)
 	activePlayers := q.Game.ActivePlayers()
+
 	if len(activePlayers) == 1 {
 		return [][]string{{activePlayers[0].ID}}
 	}
 
-	sort.Slice(playerIDs, func(i, j int) bool {
-		a, _ := q.guessDeviation(playerIDs[i])
-		b, _ := q.guessDeviation(playerIDs[j])
+	sort.Slice(activePlayers, func(i, j int) bool {
+		a, _ := q.guessDeviation(activePlayers[i].ID)
+		b, _ := q.guessDeviation(activePlayers[j].ID)
 		return a < b
 	})
 
-	for _, playerID := range playerIDs {
-		currentDeviation, _ := q.guessDeviation(playerID)
-		previousDeviation, _ := q.guessDeviation(result[len(result)-1][0])
+	for _, player := range activePlayers {
+		currentDeviation, _ := q.guessDeviation(player.ID)
 
-		if (len(result) == 0) || (previousDeviation == currentDeviation) {
-			result[len(result)-1] = append(result[len(result)-1], playerID)
+		if (len(ranks) == 0) {
+			ranks = append(ranks, []string{player.ID})
 		} else {
-			rank := make([]string, 0)
-			rank[0] = playerID
-			result = append(result, rank)
-		}
-	}
+			previousDeviation, _ := q.guessDeviation(ranks[len(ranks)-1][0])
 
-	return result
+			if (previousDeviation == currentDeviation) {
+				ranks[len(ranks)-1] = append(ranks[len(ranks)-1], player.ID)
+			} else {
+				newRank := []string{player.ID}
+				ranks = append(ranks, newRank)
+			}
+	  }
+  }
+
+	return ranks
 }
 
-// DistributePot determines who won the question round and allocates the money accordingly
+// DistributePot determines winner(s), allocates money accordingly
 func (q *QuestionRound) DistributePot() int {
 	playerBets := q.playerBets()
-	rank := q.rank()
+	rank := q.Rank()
 	moneyLeft, _ := helpers.MinValueMapStringInt(playerBets, make([]string, 0))
 
 	for moneyLeft > 0 {
