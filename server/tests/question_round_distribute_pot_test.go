@@ -72,7 +72,7 @@ func TestCascadingAllIn(t *testing.T) {
   questionRound := testGameFactory(playerMoney, playerBets, playerGuesses, foldedPlayerIDs).QuestionRounds[0]
 
   expectedRank := [][]string{[]string{"4"}, []string{"3"}, []string{"2"}, []string{"1"},[]string{"0"}}
-  expectedMoney:= []int{1, 2, 3, 4, 5}
+  expectedMoney:= []int{2, 2, 3, 4, 5}
 
   evaluateRank(t, questionRound, expectedRank)
   evaluateDistribution(t, questionRound, expectedMoney)
