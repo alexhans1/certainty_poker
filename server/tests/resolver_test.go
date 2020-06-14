@@ -104,11 +104,14 @@ func TestGame(t *testing.T) {
 			StartGame model.Game
 		}
 		c.MustPost(`mutation startGame($gameId: ID!) {
-      startGame(gameId: $gameId) `+gameQuery+`
-    }
-    `, &resp, client.Var("gameId", gameID))
+			startGame(gameId: $gameId) `+gameQuery+`
+			}
+		`, &resp, client.Var("gameId", gameID))
 
 		require.Equal(t, gameID, resp.StartGame.ID)
+		require.Len(t, resp.StartGame.QuestionRounds, 1)
+		require.Len(t, resp.StartGame.QuestionRounds[0].BettingRounds, 1)
+		require.Equal(t, "Test Question 1", resp.StartGame.QuestionRounds[0].Question.Question)
 	})
 }
 
