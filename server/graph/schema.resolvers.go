@@ -80,6 +80,10 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	}
 
 	questionRound := game.CurrentQuestionRound()
+	if questionRound.CurrentBettingRound().CurrentPlayer.ID != input.PlayerID {
+		return nil, errors.New("it's not the player's turn")
+	}
+
 	player := model.FindPlayer(game.Players, input.PlayerID)
 
 	if helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) {
