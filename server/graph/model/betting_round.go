@@ -47,6 +47,15 @@ func (b *BettingRound) IsFinished() bool {
 	if len(activePlayers) <= 1 {
 		return true
 	}
+	areAllPlayersAllIn := true
+	for _, player := range activePlayers {
+		if player.Money > 0 {
+			areAllPlayersAllIn = false
+		}
+	}
+	if areAllPlayersAllIn {
+		return true
+	}
 	amountToCall := b.AmountToCall()
 	if amountToCall > 0 {
 		bigBlindPlayer := b.QuestionRound.Game.BigBlindPlayer()

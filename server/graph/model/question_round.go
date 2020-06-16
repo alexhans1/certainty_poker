@@ -54,19 +54,19 @@ func (q *QuestionRound) Rank() [][]string {
 	for _, player := range activePlayers {
 		currentDeviation, _ := q.guessDeviation(player.ID)
 
-		if (len(ranks) == 0) {
+		if len(ranks) == 0 {
 			ranks = append(ranks, []string{player.ID})
 		} else {
 			previousDeviation, _ := q.guessDeviation(ranks[len(ranks)-1][0])
 
-			if (previousDeviation == currentDeviation) {
+			if previousDeviation == currentDeviation {
 				ranks[len(ranks)-1] = append(ranks[len(ranks)-1], player.ID)
 			} else {
 				newRank := []string{player.ID}
 				ranks = append(ranks, newRank)
 			}
-	  }
-  }
+		}
+	}
 
 	return ranks
 }
@@ -120,6 +120,15 @@ func (q *QuestionRound) Fold(playerID string) {
 func (q *QuestionRound) IsFinished() bool {
 	activePlayers := q.Game.ActivePlayers()
 	if len(activePlayers) <= 1 {
+		return true
+	}
+	areAllPlayersAllIn := true
+	for _, player := range activePlayers {
+		if player.Money > 0 {
+			areAllPlayersAllIn = false
+		}
+	}
+	if areAllPlayersAllIn {
 		return true
 	}
 	if len(q.BettingRounds) > len(q.Question.Hints) {
