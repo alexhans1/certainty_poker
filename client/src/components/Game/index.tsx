@@ -13,6 +13,7 @@ import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
 import PlayerTable from "./PlayerTable";
 import Question from "./Question";
 import Hints from "./Hints";
+import Pot from "./Pot";
 import ActionButtons from "./PlaceBetActionButtons";
 import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 
@@ -158,6 +159,10 @@ function GameComponent() {
             <Hints
               currentQuestionRound={currentQuestionRound}
               hints={currentQuestionRound.question.hints}
+            />
+            <Pot
+              playerId={playerId}
+              currentQuestionRound={currentQuestionRound}
             />
           </div>
         )}
