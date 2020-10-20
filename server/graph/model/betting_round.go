@@ -37,6 +37,7 @@ func (b *BettingRound) MoveToNextPlayer() {
 	for _, player := range b.QuestionRound.Game.InPlayers() {
 		if player.ID == b.CurrentPlayer.ID {
 			b.CurrentPlayer = player.FindNextActivePlayer()
+			return
 		}
 	}
 }
