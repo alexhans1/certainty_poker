@@ -80,6 +80,10 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	}
 
 	questionRound := game.CurrentQuestionRound()
+	if len(questionRound.Guesses) < len(game.InPlayers()) {
+		return nil, errors.New("not all players have submitted their guess yet")
+	}
+
 	if questionRound.CurrentBettingRound().CurrentPlayer.ID != input.PlayerID {
 		return nil, errors.New("it's not the player's turn")
 	}
