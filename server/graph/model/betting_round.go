@@ -37,6 +37,7 @@ func (b *BettingRound) MoveToNextPlayer() {
 	for _, player := range b.QuestionRound.Game.InPlayers() {
 		if player.ID == b.CurrentPlayer.ID {
 			b.CurrentPlayer = player.FindNextActivePlayer()
+			return
 		}
 	}
 }
@@ -45,6 +46,15 @@ func (b *BettingRound) MoveToNextPlayer() {
 func (b *BettingRound) IsFinished() bool {
 	activePlayers := b.QuestionRound.Game.ActivePlayers()
 	if len(activePlayers) <= 1 {
+		return true
+	}
+	areAllPlayersAllIn := true
+	for _, player := range activePlayers {
+		if player.Money > 0 {
+			areAllPlayersAllIn = false
+		}
+	}
+	if areAllPlayersAllIn {
 		return true
 	}
 	amountToCall := b.AmountToCall()

@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/alexhans1/certainty_poker/helpers"
+	poker "github.com/alexhans1/poker-chip-allocation"
 )
 
 // CurrentBettingRound returns the last element of the game's QuestionRounds slice
@@ -54,59 +55,36 @@ func (q *QuestionRound) Rank() [][]string {
 	for _, player := range activePlayers {
 		currentDeviation, _ := q.guessDeviation(player.ID)
 
-		if (len(ranks) == 0) {
+		if len(ranks) == 0 {
 			ranks = append(ranks, []string{player.ID})
 		} else {
 			previousDeviation, _ := q.guessDeviation(ranks[len(ranks)-1][0])
 
-			if (previousDeviation == currentDeviation) {
+			if previousDeviation == currentDeviation {
 				ranks[len(ranks)-1] = append(ranks[len(ranks)-1], player.ID)
 			} else {
 				newRank := []string{player.ID}
 				ranks = append(ranks, newRank)
 			}
-	  }
-  }
+		}
+	}
 
 	return ranks
 }
 
 // DistributePot determines winner(s), allocates money accordingly
-func (q *QuestionRound) DistributePot() int {
+func (q *QuestionRound) DistributePot() {
 	playerBets := q.playerBets()
 	rank := q.Rank()
-	moneyLeft, _ := helpers.MinValueMapStringInt(playerBets, make([]string, 0))
 
-	for moneyLeft > 0 {
-		for len(rank[0]) > 0 {
-			betSize, _ := helpers.MinValueMapStringInt(playerBets, rank[0])
-			potSize := 0
-
-			// Determine size of side pot
-			for playerID, amount := range playerBets {
-				playerBets[playerID], _ = helpers.MaxInt([]int{amount - betSize, 0})
-				contributionToPot, _ := helpers.MaxInt([]int{amount, betSize})
-				potSize += contributionToPot
-			}
-			potShare := potSize / len(rank[0])
-
-			// Distribute money to winners, remove satisfied winners
-			unsatisifiedWinnerIDs := make([]string, 0)
-			for _, winnerID := range rank[0] {
-				winner := FindPlayer(q.Game.Players, winnerID)
-				winner.Money += potShare
-				if playerBets[winnerID] > 0 {
-					unsatisifiedWinnerIDs = append(unsatisifiedWinnerIDs, winnerID)
-				}
-			}
-
-			rank[0] = unsatisifiedWinnerIDs
+	winnings := poker.Allocate(rank, playerBets)
+	for playerID, amountWon := range winnings {
+		if amountWon > 0 {
+			player := FindPlayer(q.Game.Players, playerID)
+			player.Money += amountWon
 		}
-		rank = rank[1:]
-		moneyLeft, _ = helpers.MinValueMapStringInt(playerBets, make([]string, 0))
-
 	}
-	return moneyLeft
+
 }
 
 // Fold adds a player to the FoldedPlayerId List of the question round
@@ -120,6 +98,15 @@ func (q *QuestionRound) Fold(playerID string) {
 func (q *QuestionRound) IsFinished() bool {
 	activePlayers := q.Game.ActivePlayers()
 	if len(activePlayers) <= 1 {
+		return true
+	}
+	areAllPlayersAllIn := true
+	for _, player := range activePlayers {
+		if player.Money > 0 {
+			areAllPlayersAllIn = false
+		}
+	}
+	if areAllPlayersAllIn {
 		return true
 	}
 	if len(q.BettingRounds) > len(q.Question.Hints) {
