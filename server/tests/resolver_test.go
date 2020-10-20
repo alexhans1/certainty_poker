@@ -25,7 +25,8 @@ var gameQuery string = `
       foldedPlayerIds
       bettingRounds {
         currentPlayer {
-          id
+		  id
+		  money
         }
         bets {
           amount
@@ -49,8 +50,9 @@ func TestGame(t *testing.T) {
 	c := client.New(handler.NewDefaultServer(generated.NewExecutableSchema(graph.NewResolver())))
 
 	var gameID string
-	var playerOneID string
-	var playerTwoID string
+	var player1ID string
+	var player2ID string
+	var player3ID string
 	var currentPlayer *model.Player
 
 	t.Run("Create Game", func(t *testing.T) {
@@ -62,7 +64,7 @@ func TestGame(t *testing.T) {
 		}
 		`, &resp)
 
-		if !IsValidUUID(resp.CreateGame.ID) {
+		if !isValidUUID(resp.CreateGame.ID) {
 			t.Errorf("invalid uuid")
 		}
 		require.Equal(t, "dealerId", resp.CreateGame.DealerID)
@@ -87,7 +89,7 @@ func TestGame(t *testing.T) {
 
 		require.Equal(t, 100, resp.AddPlayer.Money)
 
-		playerOneID = resp.AddPlayer.ID
+		player1ID = resp.AddPlayer.ID
 	})
 
 	t.Run("Start Game should fail", func(t *testing.T) {
@@ -121,7 +123,26 @@ func TestGame(t *testing.T) {
 		`, &resp, client.Var("gameId", gameID))
 
 		require.Equal(t, 100, resp.AddPlayer.Money)
-		playerTwoID = resp.AddPlayer.ID
+		player2ID = resp.AddPlayer.ID
+	})
+
+	t.Run("Add Player", func(t *testing.T) {
+		var resp struct {
+			AddPlayer struct {
+				ID    string
+				Money int
+			}
+		}
+		c.MustPost(`mutation addPlayer($gameId: ID!) {
+			addPlayer(gameId: $gameId) {
+				id
+				money
+			}
+		}
+		`, &resp, client.Var("gameId", gameID))
+
+		require.Equal(t, 100, resp.AddPlayer.Money)
+		player3ID = resp.AddPlayer.ID
 	})
 
 	t.Run("Start Game", func(t *testing.T) {
@@ -147,7 +168,8 @@ func TestGame(t *testing.T) {
 		currentPlayer = resp.StartGame.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
 	})
 
-	t.Run("Add Guess", func(t *testing.T) {
+	// First Question Round
+	t.Run("Add Guess 1", func(t *testing.T) {
 		var resp struct {
 			AddGuess model.Game
 		}
@@ -159,33 +181,14 @@ func TestGame(t *testing.T) {
 			&resp,
 			client.Var("input", model.GuessInput{
 				GameID:   gameID,
-				PlayerID: playerOneID,
+				PlayerID: player1ID,
 				Guess:    10,
 			}))
 
 		require.Equal(t, float64(10), resp.AddGuess.CurrentQuestionRound().Guesses[0].Guess)
 	})
 
-	// t.Run("Place bet should fail because not all players have placed bets yet", func(t *testing.T) {
-	// 	var resp struct {
-	// 		PlaceBet model.Game
-	// 	}
-	// 	err := c.Post(`
-	// 		mutation placeBet($input: BetInput!) {
-	// 			placeBet(input: $input) `+gameQuery+`
-	// 		}
-	// 		`,
-	// 		&resp,
-	// 		client.Var("input", model.BetInput{
-	// 			GameID:   gameID,
-	// 			Amount:   10,
-	// 			PlayerID: currentPlayer.ID,
-	// 		}))
-
-	// 	require.EqualError(t, err, "[{\"message\":\"not enough players to start the game\",\"path\":[\"startGame\"]}]")
-	// })
-
-	t.Run("Add Guess", func(t *testing.T) {
+	t.Run("Add Guess 2", func(t *testing.T) {
 		var resp struct {
 			AddGuess model.Game
 		}
@@ -197,20 +200,60 @@ func TestGame(t *testing.T) {
 			&resp,
 			client.Var("input", model.GuessInput{
 				GameID:   gameID,
-				PlayerID: playerTwoID,
+				PlayerID: player3ID,
+				Guess:    15,
+			}))
+
+		require.Equal(t, float64(15), resp.AddGuess.CurrentQuestionRound().Guesses[1].Guess)
+	})
+
+	t.Run("Place bet should fail because not all players have submitted their guess", func(t *testing.T) {
+		var resp struct {
+			PlaceBet model.Game
+		}
+		err := c.Post(`
+			mutation placeBet($input: BetInput!) {
+				placeBet(input: $input) `+gameQuery+`
+			}
+			`,
+			&resp,
+			client.Var("input", model.BetInput{
+				GameID:   gameID,
+				Amount:   10,
+				PlayerID: currentPlayer.ID,
+			}))
+
+		require.EqualError(t, err, "[{\"message\":\"not all players have submitted their guess yet\",\"path\":[\"placeBet\"]}]")
+	})
+
+	t.Run("Add Guess 3", func(t *testing.T) {
+		var resp struct {
+			AddGuess model.Game
+		}
+		c.MustPost(`
+			mutation addGuess($input: GuessInput!) {
+				addGuess(input: $input) `+gameQuery+`
+			}
+			`,
+			&resp,
+			client.Var("input", model.GuessInput{
+				GameID:   gameID,
+				PlayerID: player2ID,
 				Guess:    20,
 			}))
 
-		require.Equal(t, float64(20), resp.AddGuess.CurrentQuestionRound().Guesses[1].Guess)
+		require.Equal(t, float64(20), resp.AddGuess.CurrentQuestionRound().Guesses[2].Guess)
+		require.Equal(t, resp.AddGuess.Players[0].ID, currentPlayer.ID)
+		require.Equal(t, resp.AddGuess.DealerID, currentPlayer.ID)
 	})
 
 	t.Run("Place Bet should fail if player is not current player", func(t *testing.T) {
 		var resp struct {
 			PlaceBet model.Game
 		}
-		notCurrentPlayerID := playerOneID
+		notCurrentPlayerID := player1ID
 		if notCurrentPlayerID == currentPlayer.ID {
-			notCurrentPlayerID = playerTwoID
+			notCurrentPlayerID = player2ID
 		}
 		err := c.Post(`
 			mutation placeBet($input: BetInput!) {
@@ -258,14 +301,37 @@ func TestGame(t *testing.T) {
 			&resp,
 			client.Var("input", model.BetInput{
 				GameID:   gameID,
-				Amount:   1,
+				Amount:   9,
 				PlayerID: currentPlayer.ID,
 			}))
 
 		require.EqualError(t, err, "[{\"message\":\"amount is not enough to call and the player is not all in\",\"path\":[\"placeBet\"]}]")
 	})
 
-	t.Run("Place Bet should succeed", func(t *testing.T) {
+	t.Run("Dealer calls", func(t *testing.T) {
+		var resp struct {
+			PlaceBet model.Game
+		}
+		c.Post(`
+			mutation placeBet($input: BetInput!) {
+				placeBet(input: $input) `+gameQuery+`
+			}
+			`,
+			&resp,
+			client.Var("input", model.BetInput{
+				GameID:   gameID,
+				Amount:   10,
+				PlayerID: currentPlayer.ID,
+			}))
+
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 3)
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().BettingRounds, 1)
+		require.NotEqual(t, resp.PlaceBet.DealerID, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer.ID)
+
+		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
+	})
+
+	t.Run("Small Blind calls", func(t *testing.T) {
 		var resp struct {
 			PlaceBet model.Game
 		}
@@ -281,14 +347,13 @@ func TestGame(t *testing.T) {
 				PlayerID: currentPlayer.ID,
 			}))
 
-		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 3)
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 4)
 		require.Len(t, resp.PlaceBet.CurrentQuestionRound().BettingRounds, 1)
-		require.NotEqual(t, currentPlayer.ID, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer.ID)
 
 		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
 	})
 
-	t.Run("Place Bet should succeed if amount is 0", func(t *testing.T) {
+	t.Run("Big Blind raises", func(t *testing.T) {
 		var resp struct {
 			PlaceBet model.Game
 		}
@@ -300,18 +365,17 @@ func TestGame(t *testing.T) {
 			&resp,
 			client.Var("input", model.BetInput{
 				GameID:   gameID,
-				Amount:   0,
+				Amount:   10,
 				PlayerID: currentPlayer.ID,
 			}))
 
-		require.Len(t, resp.PlaceBet.CurrentQuestionRound().BettingRounds[0].Bets, 4)
-		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 0)
-		require.Len(t, resp.PlaceBet.CurrentQuestionRound().BettingRounds, 2)
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 5)
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().BettingRounds, 1)
 
 		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
 	})
 
-	t.Run("Place Bet should succeed if amount is -1", func(t *testing.T) {
+	t.Run("Dealer folds", func(t *testing.T) {
 		var resp struct {
 			PlaceBet model.Game
 		}
@@ -327,53 +391,129 @@ func TestGame(t *testing.T) {
 				PlayerID: currentPlayer.ID,
 			}))
 
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 5)
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().BettingRounds, 1)
+		require.Len(t, resp.PlaceBet.ActivePlayers(), 2)
+		require.Equal(t, 90, currentPlayer.Money)
+
+		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
+	})
+
+	t.Run("Small Blind calls again", func(t *testing.T) {
+		var resp struct {
+			PlaceBet model.Game
+		}
+		c.Post(`
+			mutation placeBet($input: BetInput!) {
+				placeBet(input: $input) `+gameQuery+`
+			}
+			`,
+			&resp,
+			client.Var("input", model.BetInput{
+				GameID:   gameID,
+				Amount:   10,
+				PlayerID: currentPlayer.ID,
+			}))
+
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 0)
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().BettingRounds, 2)
+
+		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
+	})
+
+	t.Run("Small Blind checks", func(t *testing.T) {
+		var resp struct {
+			PlaceBet model.Game
+		}
+		c.Post(`
+			mutation placeBet($input: BetInput!) {
+				placeBet(input: $input) `+gameQuery+`
+			}
+			`,
+			&resp,
+			client.Var("input", model.BetInput{
+				GameID:   gameID,
+				Amount:   0,
+				PlayerID: currentPlayer.ID,
+			}))
+
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 1)
+
+		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
+	})
+
+	t.Run("Big Blind checks", func(t *testing.T) {
+		var resp struct {
+			PlaceBet model.Game
+		}
+		c.Post(`
+			mutation placeBet($input: BetInput!) {
+				placeBet(input: $input) `+gameQuery+`
+			}
+			`,
+			&resp,
+			client.Var("input", model.BetInput{
+				GameID:   gameID,
+				Amount:   0,
+				PlayerID: currentPlayer.ID,
+			}))
+
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 0)
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().BettingRounds, 3)
+
+		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
+	})
+
+	t.Run("Small Blind goes all in", func(t *testing.T) {
+		var resp struct {
+			PlaceBet model.Game
+		}
+		c.Post(`
+			mutation placeBet($input: BetInput!) {
+				placeBet(input: $input) `+gameQuery+`
+			}
+			`,
+			&resp,
+			client.Var("input", model.BetInput{
+				GameID:   gameID,
+				Amount:   currentPlayer.Money,
+				PlayerID: currentPlayer.ID,
+			}))
+
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 1)
+
+		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
+	})
+
+	t.Run("Big Blind folds", func(t *testing.T) {
+		var resp struct {
+			PlaceBet model.Game
+		}
+		c.Post(`
+			mutation placeBet($input: BetInput!) {
+				placeBet(input: $input) `+gameQuery+`
+			}
+			`,
+			&resp,
+			client.Var("input", model.BetInput{
+				GameID:   gameID,
+				Amount:   -1,
+				PlayerID: currentPlayer.ID,
+			}))
+
+		require.Len(t, resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().Bets, 2)
 		require.Len(t, resp.PlaceBet.QuestionRounds, 2)
-		require.Equal(t, resp.PlaceBet.Players[0].Money, 105)
-		require.Equal(t, resp.PlaceBet.Players[1].Money, 80)
+		require.Equal(t, 80, resp.PlaceBet.Players[0].Money)
+		require.Equal(t, 130, resp.PlaceBet.Players[1].Money)
+		require.Equal(t, 75, resp.PlaceBet.Players[2].Money)
 
 		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
 	})
 
-	t.Run("Place Bet should succeed if player goes all in", func(t *testing.T) {
-		var resp struct {
-			PlaceBet model.Game
-		}
-		c.MustPost(`
-			mutation placeBet($input: BetInput!) {
-				placeBet(input: $input) `+gameQuery+`
-			}
-			`,
-			&resp,
-			client.Var("input", model.BetInput{
-				GameID:   gameID,
-				Amount:   105,
-				PlayerID: currentPlayer.ID,
-			}))
-
-		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
-	})
-
-	t.Run("Place Bet should succeed if other player calls all in", func(t *testing.T) {
-		var resp struct {
-			PlaceBet model.Game
-		}
-		c.MustPost(`
-			mutation placeBet($input: BetInput!) {
-				placeBet(input: $input) `+gameQuery+`
-			}
-			`,
-			&resp,
-			client.Var("input", model.BetInput{
-				GameID:   gameID,
-				Amount:   80,
-				PlayerID: currentPlayer.ID,
-			}))
-
-		currentPlayer = resp.PlaceBet.CurrentQuestionRound().CurrentBettingRound().CurrentPlayer
-	})
+	// Second Question Round
 }
 
-func IsValidUUID(u string) bool {
+func isValidUUID(u string) bool {
 	_, err := uuid.Parse(u)
 	return err == nil
 }
