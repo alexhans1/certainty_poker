@@ -1,6 +1,6 @@
 import React from "react";
 import { QuestionRound, Player, Game, BettingRound } from "../../../interfaces";
-import { PlaceBet, check, call, raise, fold } from "../helpers";
+import { PlaceBet, check, call, raise, fold, haveAllPlayersPlacedTheirBets } from "../helpers";
 import ActionButton from "./ActionButton";
 
 interface ActionButtonsProps {
@@ -54,7 +54,7 @@ export default ({
           {...actionButtonProps}
           isDisabled={
             currentBettingRound?.currentPlayer.id !== playerId ||
-            currentQuestionRound?.guesses.length < game.players.length
+            !haveAllPlayersPlacedTheirBets(currentQuestionRound, game.players)
           }
         />
       ))}

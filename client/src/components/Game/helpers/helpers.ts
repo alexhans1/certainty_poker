@@ -17,3 +17,17 @@ export const getCurrentBettingRound = (currentQuestionRound?: QuestionRound) =>
   currentQuestionRound?.bettingRounds[
     currentQuestionRound?.bettingRounds?.length - 1
   ];
+
+export const haveAllPlayersPlacedTheirBets = (
+  currentQuestionRound: QuestionRound,
+  players: Player[]
+) => {
+  const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
+  const remainingPlayers = players.filter(
+    (player) =>
+      currentBettingRound &&
+      (player.money > 0 ||
+        calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id))
+  );
+  return currentQuestionRound.guesses.length === remainingPlayers.length;
+};
