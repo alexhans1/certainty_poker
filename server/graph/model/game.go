@@ -112,12 +112,27 @@ func (g *Game) ActivePlayers() []*Player {
 	activePlayers := make([]*Player, 0)
 
 	for _, player := range g.Players {
-		if !player.IsOutGame() && !helpers.ContainsString(g.CurrentQuestionRound().FoldedPlayerIds, player.ID) {
+		if player.IsActive() {
 			activePlayers = append(activePlayers, player)
 		}
 	}
 
 	return activePlayers
+}
+
+// ActionablePlayers returns the players that are in the game,
+// have not folded in current QR and
+// are not all in
+func (g *Game) ActionablePlayers() []*Player {
+	actionablePlayers := make([]*Player, 0)
+
+	for _, player := range g.Players {
+		if player.IsActionable() {
+			actionablePlayers = append(actionablePlayers, player)
+		}
+	}
+
+	return actionablePlayers
 }
 
 // PlayerIds returns a slice of all player IDs

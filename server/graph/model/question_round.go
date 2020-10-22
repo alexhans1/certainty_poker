@@ -38,6 +38,7 @@ func (q *QuestionRound) playerBets() map[string]int {
 	return m
 }
 
+// Rank determines who has won the question round
 func (q *QuestionRound) Rank() [][]string {
 	ranks := make([][]string, 0)
 	activePlayers := q.Game.ActivePlayers()
@@ -94,19 +95,16 @@ func (q *QuestionRound) Fold(playerID string) {
 	}
 }
 
-// IsFinished returns true if the current betting round is finished and all hints are already revealed
+// IsFinished returns true if the current betting
+// round is finished and all hints are already revealed
+// or all players are all in or only one player is still active
 func (q *QuestionRound) IsFinished() bool {
 	activePlayers := q.Game.ActivePlayers()
+	actionablePlayers := q.Game.ActionablePlayers()
 	if len(activePlayers) <= 1 {
 		return true
 	}
-	areAllPlayersAllIn := true
-	for _, player := range activePlayers {
-		if player.Money > 0 {
-			areAllPlayersAllIn = false
-		}
-	}
-	if areAllPlayersAllIn {
+	if len(actionablePlayers) == 0 {
 		return true
 	}
 	if len(q.BettingRounds) > len(q.Question.Hints) {

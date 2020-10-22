@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
@@ -118,6 +119,8 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 			questionRound.DistributePot()
 			if !game.IsFinished() {
 				game.AddNewQuestionRound()
+			} else {
+				fmt.Println("game is finished")
 			}
 		} else {
 			questionRound.AddNewBettingRound()

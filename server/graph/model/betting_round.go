@@ -36,7 +36,7 @@ func (b *BettingRound) AmountToCall() int {
 func (b *BettingRound) MoveToNextPlayer() {
 	for _, player := range b.QuestionRound.Game.InPlayers() {
 		if player.ID == b.CurrentPlayer.ID {
-			b.CurrentPlayer = player.FindNextActivePlayer()
+			b.CurrentPlayer = player.FindNextActionablePlayer()
 			return
 		}
 	}
@@ -45,16 +45,11 @@ func (b *BettingRound) MoveToNextPlayer() {
 // IsFinished returns true if the betting round is over
 func (b *BettingRound) IsFinished() bool {
 	activePlayers := b.QuestionRound.Game.ActivePlayers()
+	actionablePlayers := b.QuestionRound.Game.ActionablePlayers()
 	if len(activePlayers) <= 1 {
 		return true
 	}
-	areAllPlayersAllIn := true
-	for _, player := range activePlayers {
-		if player.Money > 0 {
-			areAllPlayersAllIn = false
-		}
-	}
-	if areAllPlayersAllIn {
+	if len(actionablePlayers) == 0 {
 		return true
 	}
 	amountToCall := b.AmountToCall()
@@ -62,25 +57,27 @@ func (b *BettingRound) IsFinished() bool {
 		bigBlindPlayer := b.QuestionRound.Game.BigBlindPlayer()
 		if len(b.QuestionRound.BettingRounds) == 1 &&
 			amountToCall == 10 &&
-			b.CurrentPlayer.FindNextActivePlayer().ID == bigBlindPlayer.ID {
+			b.CurrentPlayer.FindNextActionablePlayer().ID == bigBlindPlayer.ID {
 			// if it's the first betting round, the big blind player gets to bet again
 			return false
 		}
-		// if the amount to call is greater than 0, then if an active player has less than that in the pot, the BR is not yet over
-		for _, player := range activePlayers {
+		// if the amount to call is greater than 0, then if an
+		// actionable player has less than that in the pot,
+		// the BR is not yet over
+		for _, player := range actionablePlayers {
 			if player.MoneyInBettingRound() != amountToCall {
 				return false
 			}
 		}
 	} else {
-		// if the amount to call is 0, then the BR is over when all active players have checked
+		// if the amount to call is 0, then the BR is over when all actionable players have checked
 		playerIdsOfPlayersThatMadeABet := make([]string, 0)
 		for _, bet := range b.Bets {
 			if !helpers.ContainsString(playerIdsOfPlayersThatMadeABet, bet.PlayerID) {
 				playerIdsOfPlayersThatMadeABet = append(playerIdsOfPlayersThatMadeABet, bet.PlayerID)
 			}
 		}
-		if len(playerIdsOfPlayersThatMadeABet) != len(activePlayers) {
+		if len(playerIdsOfPlayersThatMadeABet) != len(actionablePlayers) {
 			return false
 		}
 	}
@@ -93,9 +90,9 @@ func (b *BettingRound) Start() {
 		if player.ID == b.QuestionRound.Game.DealerID {
 			if len(b.QuestionRound.BettingRounds) <= 1 {
 				// in the first betting round the player after the big blind starts
-				b.CurrentPlayer = player.FindNextActivePlayer().FindNextActivePlayer().FindNextActivePlayer()
+				b.CurrentPlayer = player.FindNextActionablePlayer().FindNextActionablePlayer().FindNextActionablePlayer()
 			} else {
-				b.CurrentPlayer = player.FindNextActivePlayer()
+				b.CurrentPlayer = player.FindNextActionablePlayer()
 			}
 		}
 	}

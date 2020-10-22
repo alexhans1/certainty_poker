@@ -35,7 +35,8 @@ func (p *Player) HasFolded() bool {
 	return helpers.ContainsString(p.Game.CurrentQuestionRound().FoldedPlayerIds, p.ID)
 }
 
-// IsOutGame returns true if the player has no more money left and has no chance of winning some in the current question round
+// IsOutGame returns true if the player has no more money left and
+// has no chance of winning some in the current question round
 func (p *Player) IsOutGame() bool {
 	if p.Money > 0 {
 		return false
@@ -46,8 +47,13 @@ func (p *Player) IsOutGame() bool {
 	return true
 }
 
-// IsActive returns true if the
+// IsActive returns true if the player can win money in current QR
 func (p *Player) IsActive() bool {
+	return !(p.HasFolded() || p.IsOutGame())
+}
+
+// IsActionable returns true if the player can still place bets in current QR
+func (p *Player) IsActionable() bool {
 	return !(p.HasFolded() || p.IsOutGame() || p.IsAllIn())
 }
 
@@ -56,13 +62,13 @@ func (p *Player) IsAllIn() bool {
 	return !(p.Money > 0 || p.IsOutGame() || p.HasFolded())
 }
 
-// FindNextActivePlayer returns the next neighbour that is active
-func (p *Player) FindNextActivePlayer() *Player {
+// FindNextActionablePlayer returns the next neighbour that is actionable
+func (p *Player) FindNextActionablePlayer() *Player {
 	nextPlayer := p.getNextPlayer()
-	if nextPlayer.IsActive() {
+	if nextPlayer.IsActionable() {
 		return nextPlayer
 	}
-	return nextPlayer.FindNextActivePlayer()
+	return nextPlayer.FindNextActionablePlayer()
 }
 
 // FindNextInPlayer returns the next neighbour that is active
