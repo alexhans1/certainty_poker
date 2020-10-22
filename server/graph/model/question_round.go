@@ -85,7 +85,7 @@ func (q *QuestionRound) DistributePot() {
 			player.Money += amountWon
 		}
 	}
-
+	q.IsOver = true
 }
 
 // Fold adds a player to the FoldedPlayerId List of the question round

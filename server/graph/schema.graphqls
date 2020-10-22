@@ -18,6 +18,7 @@ type QuestionRound {
   guesses: [Guess!]!
   bettingRounds: [BettingRound!]!
   foldedPlayerIds: [ID!]!
+  isOver: Boolean
 }
 
 type Question {

@@ -56,4 +56,5 @@ type QuestionRound struct {
 	Guesses         []*Guess        `json:"guesses"`
 	BettingRounds   []*BettingRound `json:"bettingRounds"`
 	FoldedPlayerIds []string        `json:"foldedPlayerIds"`
+	IsOver          bool            `json:"isOver"`
 }

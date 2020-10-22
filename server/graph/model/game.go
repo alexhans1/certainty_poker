@@ -53,7 +53,9 @@ func (g *Game) AddNewQuestionRound() {
 		BettingRounds:   make([]*BettingRound, 0),
 		FoldedPlayerIds: make([]string, 0),
 		Game:            g,
+		IsOver:          false,
 	}
+	newQuestionRound.IsOver = false
 	g.QuestionRounds = append(g.QuestionRounds, newQuestionRound)
 
 	dealer := g.Dealer()

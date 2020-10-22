@@ -96,6 +96,7 @@ type ComplexityRoot struct {
 		FoldedPlayerIds func(childComplexity int) int
 		Game            func(childComplexity int) int
 		Guesses         func(childComplexity int) int
+		IsOver          func(childComplexity int) int
 		Question        func(childComplexity int) int
 	}
 }
@@ -347,6 +348,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.QuestionRound.Guesses(childComplexity), true
 
+	case "QuestionRound.isOver":
+		if e.complexity.QuestionRound.IsOver == nil {
+			break
+		}
+
+		return e.complexity.QuestionRound.IsOver(childComplexity), true
+
 	case "QuestionRound.question":
 		if e.complexity.QuestionRound.Question == nil {
 			break
@@ -438,6 +446,7 @@ type QuestionRound {
   guesses: [Guess!]!
   bettingRounds: [BettingRound!]!
   foldedPlayerIds: [ID!]!
+  isOver: Boolean
 }
 
 type Question {
@@ -1701,6 +1710,37 @@ func (ec *executionContext) _QuestionRound_foldedPlayerIds(ctx context.Context, 
 	res := resTmp.([]string)
 	fc.Result = res
 	return ec.marshalNID2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _QuestionRound_isOver(ctx context.Context, field graphql.CollectedField, obj *model.QuestionRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "QuestionRound",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsOver, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -3176,6 +3216,8 @@ func (ec *executionContext) _QuestionRound(ctx context.Context, sel ast.Selectio
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "isOver":
+			out.Values[i] = ec._QuestionRound_isOver(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
