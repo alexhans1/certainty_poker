@@ -52,13 +52,16 @@ func (b *BettingRound) IsFinished() bool {
 	if len(actionablePlayers) == 0 {
 		return true
 	}
+	if len(actionablePlayers) == 1 && actionablePlayers[0].ID == b.CurrentPlayer.ID {
+		return true
+	}
 	amountToCall := b.AmountToCall()
 	if amountToCall > 0 {
+		// if it's the first betting round, the big blind player gets to bet again
 		bigBlindPlayer := b.QuestionRound.Game.BigBlindPlayer()
 		if len(b.QuestionRound.BettingRounds) == 1 &&
 			amountToCall == 10 &&
 			b.CurrentPlayer.FindNextActionablePlayer().ID == bigBlindPlayer.ID {
-			// if it's the first betting round, the big blind player gets to bet again
 			return false
 		}
 		// if the amount to call is greater than 0, then if an
@@ -71,6 +74,10 @@ func (b *BettingRound) IsFinished() bool {
 		}
 	} else {
 		// if the amount to call is 0, then the BR is over when all actionable players have checked
+		// or there is only one actionable player left
+		if len(actionablePlayers) == 1 {
+			return true
+		}
 		playerIdsOfPlayersThatMadeABet := make([]string, 0)
 		for _, bet := range b.Bets {
 			if !helpers.ContainsString(playerIdsOfPlayersThatMadeABet, bet.PlayerID) {

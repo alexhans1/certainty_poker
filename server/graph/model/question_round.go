@@ -104,7 +104,7 @@ func (q *QuestionRound) IsFinished() bool {
 	if len(activePlayers) <= 1 {
 		return true
 	}
-	if len(actionablePlayers) == 0 {
+	if len(actionablePlayers) <= 1 {
 		return true
 	}
 	if len(q.BettingRounds) > len(q.Question.Hints) {

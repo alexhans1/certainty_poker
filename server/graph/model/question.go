@@ -4,6 +4,7 @@ import (
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
+// NewQuestion constructor
 func NewQuestion(question string, answer float64, hints []string) *Question {
 	q := new(Question)
 
