@@ -3,7 +3,7 @@ import { BettingRound, Player, QuestionRound } from "../../../interfaces";
 import { calculateAmountToCall } from "../helpers";
 
 const styles = {
-  fontSize: "0.7em",
+  fontSize: "0.9em",
 };
 
 interface PotProps {
@@ -36,14 +36,14 @@ export default ({
       style={styles}
     >
       <span>
-        Pot: (total/you):{" "}
+        Pot (total/you):{" "}
         <span role="img" aria-label="money">
           💰
         </span>
         {totalPot}/{playerPot}
       </span>
       <span>
-        To call: (total/you):{" "}
+        To call:{" "}
         <span role="img" aria-label="money">
           💰
         </span>

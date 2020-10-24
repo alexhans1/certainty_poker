@@ -7,6 +7,7 @@ import {
   raise,
   fold,
   haveAllPlayersPlacedTheirBets,
+  calculateAmountToCall,
 } from "../helpers";
 import ActionButton from "./Button";
 
@@ -36,6 +37,7 @@ export default ({
           handleOnClick: () => {
             check(placeBet, game, playerId);
           },
+          isDisabled: calculateAmountToCall(currentBettingRound, playerId) > 0,
         },
         {
           text: "Call",
@@ -60,6 +62,7 @@ export default ({
           key={actionButtonProps.text}
           {...actionButtonProps}
           isDisabled={
+            actionButtonProps.isDisabled ||
             currentBettingRound?.currentPlayer.id !== playerId ||
             !haveAllPlayersPlacedTheirBets(currentQuestionRound, game.players)
           }
