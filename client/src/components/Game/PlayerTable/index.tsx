@@ -32,6 +32,9 @@ export default ({
   }
   moveAppPlayerToTop(players, playerId);
 
+  const playerGuess = currentQuestionRound?.guesses.find(
+    (g) => g.playerId === playerId
+  )?.guess;
   return (
     <div>
       {(players || []).map(({ id, money }) => {
@@ -61,7 +64,7 @@ export default ({
                     isDead || isFolded ? "dead" : ""
                   }`}
                 >
-                  <span>300km</span>
+                  <span>{playerGuess}</span>
                   <span role="img" aria-label="money">
                     💰{money}
                   </span>
