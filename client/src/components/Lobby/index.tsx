@@ -30,8 +30,8 @@ function Lobby() {
   };
   return (
     <>
-      <br/>
-      <button className="btn btn-primary" onClick={handleCreateGame}>
+      <p className="mt-3">Start a new game or open a link of an existing game.</p>
+      <button className="btn btn-lg btn-primary mt-auto mb-3 mx-5" onClick={handleCreateGame}>
         {loading ? "Loading..." : "Create Game"}
       </button>
     </>
