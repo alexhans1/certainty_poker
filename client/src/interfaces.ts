@@ -10,7 +10,7 @@ export interface Question {
   hints: string[];
 }
 
-interface Guess {
+export interface Guess {
   playerId: Player["id"];
   guess: number;
 }

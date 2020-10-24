@@ -1,8 +1,10 @@
 import React from "react";
-import { QuestionRound } from "../../../interfaces";
+import { Game, Player, QuestionRound } from "../../../interfaces";
 
 interface QuestionProps {
+  game: Game;
   currentQuestionRound: QuestionRound;
+  playerId: Player["id"];
 }
 
 const styles = {
@@ -11,15 +13,26 @@ const styles = {
   },
 };
 
-export default ({ currentQuestionRound }: QuestionProps) => {
-  // const [guess, setGuess] = useState(0);
-  // const inputIsDisabled = !!currentQuestionRound.guesses.find(
-  //   (guess) => guess.playerId === playerId
-  // );
+export default ({ game, currentQuestionRound, playerId }: QuestionProps) => {
+  // if the user has not yet placed a bet,
+  // show the result of the previous round if their is one
+  if (
+    game.questionRounds.length > 1 &&
+    !currentQuestionRound.guesses.find((guess) => guess.playerId === playerId)
+  ) {
+    const previousQuestionRound =
+      game.questionRounds[game.questionRounds.length - 2];
+    return (
+      <>
+        <p>{previousQuestionRound.question.question}</p>
+        <p>Answer: {previousQuestionRound.question.answer}</p>
+      </>
+    );
+  }
   const noHints = currentQuestionRound.bettingRounds.length <= 1;
-  return noHints ? (
-    <p style={styles.question}>{currentQuestionRound.question.question}</p>
-  ) : (
-    <span>{currentQuestionRound.question.question}</span>
+  return (
+    <span style={(noHints && styles.question) || {}}>
+      {currentQuestionRound.question.question}
+    </span>
   );
 };

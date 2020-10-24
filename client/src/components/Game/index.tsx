@@ -20,7 +20,7 @@ import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
   const [game, setGame] = useState<Game | undefined>(undefined);
-  const { game_id: gameId } = useParams();
+  const { game_id: gameId } = useParams<{ game_id: string }>();
 
   const [
     fetchGame,
@@ -129,7 +129,11 @@ function GameComponent() {
       >
         {currentQuestionRound && (
           <div>
-            <Question currentQuestionRound={currentQuestionRound} />
+            <Question
+              game={game}
+              currentQuestionRound={currentQuestionRound}
+              playerId={playerId}
+            />
             <Hints currentQuestionRound={currentQuestionRound} />
           </div>
         )}
@@ -139,6 +143,7 @@ function GameComponent() {
             playerId,
             currentQuestionRound,
             currentBettingRound,
+            game,
           }}
         />
       </div>

@@ -1,6 +1,12 @@
 import React from "react";
 import { isPlayerDead, hasFolded } from "../helpers";
-import { Player, BettingRound, QuestionRound } from "../../../interfaces";
+import {
+  Player,
+  BettingRound,
+  QuestionRound,
+  Game,
+  Guess,
+} from "../../../interfaces";
 
 import "./styles.scss";
 
@@ -9,6 +15,7 @@ interface PlayerTableProps {
   playerId?: Player["id"];
   currentBettingRound?: BettingRound;
   currentQuestionRound?: QuestionRound;
+  game?: Game;
 }
 
 const moveAppPlayerToTop = (players: Player[], playerId: Player["id"]) =>
@@ -26,11 +33,27 @@ export default ({
   playerId,
   currentBettingRound,
   currentQuestionRound,
+  game,
 }: PlayerTableProps) => {
   if (!players?.length || !playerId) {
     return null;
   }
   moveAppPlayerToTop(players, playerId);
+
+  const revealPreviousAnswers =
+    game &&
+    game.questionRounds.length > 1 &&
+    !currentQuestionRound?.guesses.find((guess) => guess.playerId === playerId);
+
+  let previousQuestionRoundGuesses: { [key: string]: Guess["guess"] };
+  if (game && revealPreviousAnswers) {
+    previousQuestionRoundGuesses = game.questionRounds[
+      game.questionRounds.length - 2
+    ].guesses.reduce(
+      (acc, guess) => ({ ...acc, [guess.playerId]: guess.guess }),
+      {}
+    );
+  }
 
   const playerGuess = currentQuestionRound?.guesses.find(
     (g) => g.playerId === playerId
@@ -58,28 +81,20 @@ export default ({
               )}
             </div>
             <div>
-              {id === playerId ? (
-                <div
-                  className={`money ${id === playerId ? "" : "md"} ${
-                    isDead || isFolded ? "dead" : ""
-                  }`}
-                >
-                  <span>{playerGuess}</span>
-                  <span role="img" aria-label="money">
-                    💰{money}
-                  </span>
-                </div>
-              ) : (
-                <div
-                  className={`money ${id === playerId ? "" : "md"} ${
-                    isDead || isFolded ? "dead" : ""
-                  }`}
-                >
-                  <span role="img" aria-label="money">
-                    💰{money}
-                  </span>
-                </div>
-              )}
+              <div
+                className={`money ${id === playerId ? "" : "md"} ${
+                  isDead || isFolded ? "dead" : ""
+                }`}
+              >
+                {revealPreviousAnswers ? (
+                  <span>{previousQuestionRoundGuesses[id]}</span>
+                ) : (
+                  id === playerId && <span>{playerGuess}</span>
+                )}
+                <span role="img" aria-label="money">
+                  💰{money}
+                </span>
+              </div>
             </div>
             {isDead && (
               <span className="skull" role="img" aria-label="skull">
