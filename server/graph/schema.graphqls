@@ -9,6 +9,7 @@ type Game {
 type Player {
   id: ID!
   money: Int!
+  name: String!
   game: Game!
 }
 
@@ -18,7 +19,7 @@ type QuestionRound {
   guesses: [Guess!]!
   bettingRounds: [BettingRound!]!
   foldedPlayerIds: [ID!]!
-  isOver: Boolean
+  isOver: Boolean!
 }
 
 type Question {
@@ -62,10 +63,15 @@ input BetInput {
   amount: Int!
 }
 
+input PlayerInput {
+  gameId: ID!
+  playerName: String!
+}
+
 type Mutation {
   createGame: Game!
   startGame(gameId: ID!): Game!
-  addPlayer(gameId: ID!): Player!
+  addPlayer(input: PlayerInput!): Player!
   addGuess(input: GuessInput!): Game!
   placeBet(input: BetInput!): Game!
 }

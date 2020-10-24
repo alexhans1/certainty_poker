@@ -40,7 +40,13 @@ type GuessInput struct {
 type Player struct {
 	ID    string `json:"id"`
 	Money int    `json:"money"`
+	Name  string `json:"name"`
 	Game  *Game  `json:"game"`
+}
+
+type PlayerInput struct {
+	GameID     string `json:"gameId"`
+	PlayerName string `json:"playerName"`
 }
 
 type Question struct {
