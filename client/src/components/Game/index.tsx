@@ -123,7 +123,10 @@ function GameComponent() {
         startGameLoading ||
         placeBetLoading ||
         addGuessLoading) && <p>Loading...</p>}
-      <div className="d-flex flex-column mt-3" style={{ fontWeight: 300 }}>
+      <div
+        className="d-flex flex-column mt-3"
+        style={{ fontWeight: 300, paddingBottom: "130px" }}
+      >
         {currentQuestionRound && (
           <div>
             <Question currentQuestionRound={currentQuestionRound} />
