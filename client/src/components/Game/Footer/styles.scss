@@ -5,8 +5,13 @@
   width: 100%;
   background-color: #393d4e;
   color: #ebebeb;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding: 1em 0.6em;
+}
+
+.footer-content {
+  width: 100%;
+  flex-direction: column;
+  display: flex;
+  margin: 0 auto;
+  max-width: 400px;
 }

@@ -1,39 +1,16 @@
-import { Player, Game, BettingRound, BetInput } from "../../../interfaces";
+import { Player, Game, BetInput } from "../../../interfaces";
 import {
   calculateBettingRoundSpendingForPlayer,
   getCurrentQuestionRound,
   getCurrentBettingRound,
 } from ".";
+import { calculateAmountToCall } from "./helpers";
 
 export type PlaceBet = ({
   variables: { input },
 }: {
   variables: { input: BetInput };
 }) => void;
-
-const calculateAmountToCall = (
-  bettingRound: BettingRound,
-  playerId: Player["id"]
-): number => {
-  if (!bettingRound.bets.length) return 0;
-  const amountSpentAlreadyInBettingRound = calculateBettingRoundSpendingForPlayer(
-    bettingRound,
-    playerId
-  );
-
-  const amountSpentInBettingRoundPerPlayer = bettingRound.bets.reduce(
-    (acc, bet) => {
-      acc[bet.playerId] = (acc[bet.playerId] || 0) + bet.amount;
-      return acc;
-    },
-    {} as { [key: string]: number }
-  );
-
-  return (
-    Math.max(...Object.values(amountSpentInBettingRoundPerPlayer)) -
-    amountSpentAlreadyInBettingRound
-  );
-};
 
 export const check = (
   placeBet: PlaceBet,

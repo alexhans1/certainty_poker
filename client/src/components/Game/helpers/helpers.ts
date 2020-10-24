@@ -59,3 +59,27 @@ export const isPlayerDead = (
   }
   return true;
 };
+
+export const calculateAmountToCall = (
+  bettingRound: BettingRound,
+  playerId: Player["id"]
+): number => {
+  if (!bettingRound.bets.length) return 0;
+  const amountSpentAlreadyInBettingRound = calculateBettingRoundSpendingForPlayer(
+    bettingRound,
+    playerId
+  );
+
+  const amountSpentInBettingRoundPerPlayer = bettingRound.bets.reduce(
+    (acc, bet) => {
+      acc[bet.playerId] = (acc[bet.playerId] || 0) + bet.amount;
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
+
+  return (
+    Math.max(...Object.values(amountSpentInBettingRoundPerPlayer)) -
+    amountSpentAlreadyInBettingRound
+  );
+};

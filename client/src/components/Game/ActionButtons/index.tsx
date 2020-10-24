@@ -29,7 +29,7 @@ export default ({
     return null;
   }
   return (
-    <div className="d-flex flex-row w-100 justify-content-around">
+    <div className="d-flex flex-row w-100 justify-content-between">
       {[
         {
           text: "Check",
