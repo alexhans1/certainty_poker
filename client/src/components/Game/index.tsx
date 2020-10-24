@@ -169,6 +169,7 @@ function GameComponent() {
       {!game.questionRounds.length && (
         <button
           className="btn btn-lg btn-primary mt-auto mb-3 mx-5"
+          disabled={game.players.length <= 1}
           onClick={() => {
             startGame({
               variables: { gameId },
