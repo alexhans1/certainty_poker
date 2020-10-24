@@ -24,6 +24,7 @@ export default ({
     return null;
   }
   const [guess, setGuess] = useState<number>();
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const canAddGuess = !currentQuestionRound.guesses.find(
     (guess) => guess.playerId === playerId
   );
@@ -32,10 +33,18 @@ export default ({
       anchor={"bottom"}
       open={canAddGuess}
       variant="persistent"
-      className="drawer"
+      className={`drawer ${isCollapsed && canAddGuess ? "collapsed" : ""}`}
     >
       <div className="d-flex align-items-center flex-column">
-        <span id="newQuestion">New Question</span>
+        <span id="newQuestion" className="w-100">
+          <button
+            onClick={() => {
+              setIsCollapsed(!isCollapsed);
+            }}
+          >
+            New Question
+          </button>
+        </span>
         <div className="container px-5 pt-4 pb-5 d-flex flex-column">
           <p>{currentQuestionRound.question.question}</p>
           <div className="d-flex justify-content-center">

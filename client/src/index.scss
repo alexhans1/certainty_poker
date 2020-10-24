@@ -18,3 +18,8 @@ $theme-colors: (
 
 // Bootstrap and its default variables
 @import "node_modules/bootstrap/scss/bootstrap";
+
+a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
