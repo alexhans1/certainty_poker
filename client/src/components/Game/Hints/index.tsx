@@ -36,6 +36,7 @@ export default ({ currentQuestionRound }: HintsProps) => {
         .slice(0, currentQuestionRound.bettingRounds.length - 1)
         .map((hint, i) => (
           <span
+            key={hint}
             style={
               numberOfHints === i + 1 ? styles.currentHint : styles.oldHint
             }
