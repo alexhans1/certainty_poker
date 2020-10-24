@@ -15,7 +15,7 @@ import Question from "./Question";
 import Hints from "./Hints";
 import Pot from "./Pot";
 import AnswerDrawer from "./AnswerDrawer";
-import ActionButtons from "./PlaceBetActionButtons";
+import Footer from "./Footer";
 import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 
 function GameComponent() {
@@ -146,17 +146,6 @@ function GameComponent() {
             playerId={playerId}
             currentQuestionRound={currentQuestionRound}
           />
-          <div className="d-flex flex-row">
-            <ActionButtons
-              {...{
-                game,
-                currentQuestionRound,
-                currentBettingRound,
-                placeBet,
-                playerId,
-              }}
-            />
-          </div>
           <AnswerDrawer
             game={game}
             addGuessMutation={addGuess}
@@ -165,19 +154,16 @@ function GameComponent() {
           />
         </>
       )}
-      {!game.questionRounds.length && (
-        <button
-          className="btn btn-lg btn-primary mt-auto mb-3 mx-5"
-          disabled={game.players.length <= 1}
-          onClick={() => {
-            startGame({
-              variables: { gameId },
-            });
-          }}
-        >
-          Start Game
-        </button>
-      )}
+      <Footer
+        {...{
+          game,
+          currentQuestionRound,
+          currentBettingRound,
+          placeBet,
+          playerId,
+          startGame,
+        }}
+      />
     </>
   );
 }
