@@ -1,16 +1,16 @@
 import React from "react";
-import { Question, QuestionRound } from "../../../interfaces";
+import { QuestionRound } from "../../../interfaces";
 
 interface HintsProps {
-  hints: Question["hints"];
   currentQuestionRound: QuestionRound;
 }
 
-export default ({ hints, currentQuestionRound }: HintsProps) => {
-  if (!hints?.length) {
+export default ({ currentQuestionRound }: HintsProps) => {
+  const hints = currentQuestionRound.question.hints;
+  if (currentQuestionRound.bettingRounds.length <= 1) {
     return null;
   }
-  if (currentQuestionRound.bettingRounds.length <= 1) {
+  if (!hints?.length) {
     return null;
   }
   return (

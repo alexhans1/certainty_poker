@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  calculateBettingRoundSpendingForPlayer,
-  isPlayerDead,
-} from "../helpers";
+import { isPlayerDead } from "../helpers";
 import { Player, BettingRound, QuestionRound } from "../../../interfaces";
 
 import "./styles.scss";
