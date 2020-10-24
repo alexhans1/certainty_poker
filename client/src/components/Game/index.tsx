@@ -118,7 +118,7 @@ function GameComponent() {
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   return (
-    <div className="container">
+    <>
       {(addPlayerLoading ||
         startGameLoading ||
         placeBetLoading ||
@@ -178,7 +178,7 @@ function GameComponent() {
           }}
         />
       </div>
-    </div>
+    </>
   );
 }
 
