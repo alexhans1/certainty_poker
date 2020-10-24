@@ -1,12 +1,22 @@
 import React from "react";
-import { Player, QuestionRound } from "../../../interfaces";
+import { BettingRound, Player, QuestionRound } from "../../../interfaces";
+import { calculateAmountToCall } from "../helpers";
+
+const styles = {
+  fontSize: "0.7em",
+};
 
 interface PotProps {
   playerId: Player["id"];
   currentQuestionRound: QuestionRound;
+  currentBettingRound: BettingRound;
 }
 
-export default ({ currentQuestionRound, playerId }: PotProps) => {
+export default ({
+  currentQuestionRound,
+  currentBettingRound,
+  playerId,
+}: PotProps) => {
   const [totalPot, playerPot] = currentQuestionRound.bettingRounds.reduce(
     ([total, playerShare], br) => {
       br.bets.forEach((bet) => {
@@ -19,12 +29,26 @@ export default ({ currentQuestionRound, playerId }: PotProps) => {
     },
     [0, 0]
   );
+  const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
   return (
-    <>
-      <p>Pot:</p>
-      <b>Total: {totalPot}</b>
-      <br />
-      <b>Your share: {playerPot}</b>
-    </>
+    <div
+      className="d-flex w-100 flex-row  justify-content-between pb-3"
+      style={styles}
+    >
+      <span>
+        Pot: (total/you):{" "}
+        <span role="img" aria-label="money">
+          💰
+        </span>
+        {totalPot}/{playerPot}
+      </span>
+      <span>
+        To call: (total/you):{" "}
+        <span role="img" aria-label="money">
+          💰
+        </span>
+        {amountToCall}
+      </span>
+    </div>
   );
 };

@@ -13,7 +13,6 @@ import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
 import PlayerTable from "./PlayerTable";
 import Question from "./Question";
 import Hints from "./Hints";
-import Pot from "./Pot";
 import AnswerDrawer from "./AnswerDrawer";
 import Footer from "./Footer";
 import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
@@ -141,18 +140,12 @@ function GameComponent() {
         />
       </div>
       {currentQuestionRound && (
-        <>
-          <Pot
-            playerId={playerId}
-            currentQuestionRound={currentQuestionRound}
-          />
-          <AnswerDrawer
-            game={game}
-            addGuessMutation={addGuess}
-            currentQuestionRound={currentQuestionRound}
-            playerId={playerId}
-          />
-        </>
+        <AnswerDrawer
+          game={game}
+          addGuessMutation={addGuess}
+          currentQuestionRound={currentQuestionRound}
+          playerId={playerId}
+        />
       )}
       <Footer
         {...{

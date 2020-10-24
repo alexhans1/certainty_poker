@@ -1,6 +1,7 @@
 import React from "react";
 import { QuestionRound, Game, BettingRound } from "../../../interfaces";
 import ActionButtons, { ActionButtonsProps } from "../ActionButtons";
+import Pot from "../Pot";
 
 import "./styles.scss";
 
@@ -26,30 +27,39 @@ export default ({
 }: FooterProps) => {
   return (
     <div className="footer">
-      {!game.questionRounds.length && (
-        <button
-          className="btn btn-lg btn-primary mt-auto mx-5"
-          disabled={game.players.length <= 1}
-          onClick={() => {
-            startGame({
-              variables: { gameId: game.id },
-            });
-          }}
-        >
-          Start Game
-        </button>
-      )}
-      {currentQuestionRound && currentBettingRound && (
-        <ActionButtons
-          {...{
-            game,
-            currentQuestionRound,
-            currentBettingRound,
-            placeBet,
-            playerId,
-          }}
-        />
-      )}
+      <div className="footer-content">
+        {!game.questionRounds.length && (
+          <button
+            className="btn btn-lg btn-primary mt-auto mx-5"
+            disabled={game.players.length <= 1}
+            onClick={() => {
+              startGame({
+                variables: { gameId: game.id },
+              });
+            }}
+          >
+            Start Game
+          </button>
+        )}
+        {currentQuestionRound && currentBettingRound && (
+          <>
+            <Pot
+              playerId={playerId}
+              currentQuestionRound={currentQuestionRound}
+              currentBettingRound={currentBettingRound}
+            />
+            <ActionButtons
+              {...{
+                game,
+                currentQuestionRound,
+                currentBettingRound,
+                placeBet,
+                playerId,
+              }}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 };
