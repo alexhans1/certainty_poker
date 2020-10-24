@@ -7,6 +7,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #282c39;
   background: linear-gradient(#393d4e, #282c39);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 $body-color: #ebebeb;
