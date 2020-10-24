@@ -1,0 +1,53 @@
+$largeAvatar: 110px;
+$smallAvatar: 70px;
+
+.avatar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3em;
+  vertical-align: middle;
+  width: $smallAvatar;
+  height: $smallAvatar;
+  border-radius: 50%;
+  background: #ebebeb;
+
+  &.lg {
+    font-size: 2.3em;
+    width: $largeAvatar;
+    height: $largeAvatar;
+  }
+
+  &.md {
+    margin-left: calc((#{$largeAvatar} - #{$smallAvatar}) / 2);
+  }
+
+  &.dead {
+    background: #bebebe;
+  }
+}
+.money {
+  font-size: 1.2em;
+  display: flex;
+  flex-direction: column;
+  margin-left: 1.5em;
+
+  &.md {
+    margin-left: calc(1.5em + calc((#{$largeAvatar} - #{$smallAvatar}) / 2));
+  }
+
+  &.dead {
+    color: #8a8a8a;
+  }
+}
+.dice {
+  position: absolute;
+  top: 0.5em;
+  left: -0.2em;
+  font-size: 1.3em;
+}
+.skull {
+  margin-left: 0.6em;
+  font-size: 2em;
+}

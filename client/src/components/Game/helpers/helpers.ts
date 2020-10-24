@@ -10,6 +10,16 @@ export const calculateBettingRoundSpendingForPlayer = (
   );
 };
 
+const calculateSpendingRoundSpendingForPlayer = (
+  playerId: Player["id"],
+  questionRound?: QuestionRound
+) => {
+  return questionRound?.bettingRounds.reduce(
+    (sum, br) => calculateBettingRoundSpendingForPlayer(br, playerId),
+    0
+  );
+};
+
 export const getCurrentQuestionRound = (game?: Game) =>
   game?.questionRounds[game?.questionRounds?.length - 1];
 
@@ -30,4 +40,22 @@ export const haveAllPlayersPlacedTheirBets = (
         calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id))
   );
   return currentQuestionRound.guesses.length === remainingPlayers.length;
+};
+
+export const isPlayerDead = (
+  currentQuestionRound: QuestionRound,
+  player: Player
+) => {
+  if (player.money > 0) {
+    return false;
+  }
+  const amountInQuestionRound = calculateSpendingRoundSpendingForPlayer(
+    player.id,
+    currentQuestionRound
+  );
+  const hasFolded = currentQuestionRound?.folderPlayerIds.includes(player.id);
+  if (amountInQuestionRound && amountInQuestionRound > 0 && !hasFolded) {
+    return false;
+  }
+  return true;
 };
