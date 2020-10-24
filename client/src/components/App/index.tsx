@@ -11,11 +11,14 @@ function PageNotFound() {
 
 function App() {
   return (
-    <Switch>
-      <Route path="/" component={Lobby} exact />
-      <Route path="/:game_id" component={Game} exact />
-      <Route component={PageNotFound} />
-    </Switch>
+    <div id="app" className="container">
+      <a href="/" id="title">Certainty Poker</a>
+      <Switch>
+        <Route path="/" component={Lobby} exact />
+        <Route path="/:game_id" component={Game} exact />
+        <Route component={PageNotFound} />
+      </Switch>
+    </div>
   );
 }
 

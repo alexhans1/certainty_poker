@@ -29,12 +29,12 @@ function Lobby() {
     createGame();
   };
   return (
-    <div className="container">
-      <h1>Certainty Poker</h1>
+    <>
+      <br/>
       <button className="btn btn-primary" onClick={handleCreateGame}>
         {loading ? "Loading..." : "Create Game"}
       </button>
-    </div>
+    </>
   );
 }
 
