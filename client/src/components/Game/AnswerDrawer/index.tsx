@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import { Game, Player, QuestionRound } from "../../../interfaces";
-import { AddGuess, addGuess } from "../helpers";
+import { AddGuess, addGuess, isPlayerDead } from "../helpers";
 
 import "./styles.scss";
 
@@ -18,6 +18,11 @@ export default ({
   addGuessMutation,
   game,
 }: QuestionProps) => {
+  const player = game.players.find((p) => p.id === playerId);
+  const isDead = player && isPlayerDead(currentQuestionRound, player);
+  if (isDead) {
+    return null;
+  }
   const [guess, setGuess] = useState(0);
   const canAddGuess = !currentQuestionRound.guesses.find(
     (guess) => guess.playerId === playerId

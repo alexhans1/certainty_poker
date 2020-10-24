@@ -53,7 +53,7 @@ export const isPlayerDead = (
     player.id,
     currentQuestionRound
   );
-  const hasFolded = currentQuestionRound?.folderPlayerIds.includes(player.id);
+  const hasFolded = currentQuestionRound?.folderPlayerIds?.includes(player.id);
   if (amountInQuestionRound && amountInQuestionRound > 0 && !hasFolded) {
     return false;
   }
