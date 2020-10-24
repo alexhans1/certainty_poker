@@ -1,5 +1,5 @@
 import React from "react";
-import { isPlayerDead } from "../helpers";
+import { isPlayerDead, hasFolded } from "../helpers";
 import { Player, BettingRound, QuestionRound } from "../../../interfaces";
 
 import "./styles.scss";
@@ -38,11 +38,13 @@ export default ({
         const isDead =
           currentQuestionRound &&
           isPlayerDead(currentQuestionRound, { id, money });
+        const isFolded =
+          currentQuestionRound && hasFolded(currentQuestionRound, id);
         return (
           <div key={id} className="d-flex align-items-center pt-4 ml-4">
             <div
               className={`avatar ${id === playerId ? "lg" : "md"} ${
-                isDead ? "dead" : ""
+                isDead || isFolded ? "dead" : ""
               }`}
             >
               <span>🧟‍♂️</span>
@@ -56,7 +58,7 @@ export default ({
               {id === playerId ? (
                 <div
                   className={`money ${id === playerId ? "" : "md"} ${
-                    isDead ? "dead" : ""
+                    isDead || isFolded ? "dead" : ""
                   }`}
                 >
                   <span>300km</span>
@@ -67,7 +69,7 @@ export default ({
               ) : (
                 <div
                   className={`money ${id === playerId ? "" : "md"} ${
-                    isDead ? "dead" : ""
+                    isDead || isFolded ? "dead" : ""
                   }`}
                 >
                   <span role="img" aria-label="money">
