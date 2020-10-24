@@ -47,8 +47,8 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 	return game, nil
 }
 
-func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model.Player, error) {
-	game, err := model.FindGame(r.games, gameID)
+func (r *mutationResolver) AddPlayer(ctx context.Context, input model.PlayerInput) (*model.Player, error) {
+	game, err := model.FindGame(r.games, input.GameID)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, gameID string) (*model
 		return nil, errors.New("cannot join game after it started")
 	}
 
-	return game.AddNewPlayer(), nil
+	return game.AddNewPlayer(input.PlayerName), nil
 }
 
 func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error) {

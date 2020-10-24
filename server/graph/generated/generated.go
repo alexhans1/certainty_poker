@@ -68,7 +68,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddGuess   func(childComplexity int, input model.GuessInput) int
-		AddPlayer  func(childComplexity int, gameID string) int
+		AddPlayer  func(childComplexity int, input model.PlayerInput) int
 		CreateGame func(childComplexity int) int
 		PlaceBet   func(childComplexity int, input model.BetInput) int
 		StartGame  func(childComplexity int, gameID string) int
@@ -78,6 +78,7 @@ type ComplexityRoot struct {
 		Game  func(childComplexity int) int
 		ID    func(childComplexity int) int
 		Money func(childComplexity int) int
+		Name  func(childComplexity int) int
 	}
 
 	Query struct {
@@ -104,7 +105,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	CreateGame(ctx context.Context) (*model.Game, error)
 	StartGame(ctx context.Context, gameID string) (*model.Game, error)
-	AddPlayer(ctx context.Context, gameID string) (*model.Player, error)
+	AddPlayer(ctx context.Context, input model.PlayerInput) (*model.Player, error)
 	AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error)
 	PlaceBet(ctx context.Context, input model.BetInput) (*model.Game, error)
 }
@@ -226,7 +227,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.AddPlayer(childComplexity, args["gameId"].(string)), true
+		return e.complexity.Mutation.AddPlayer(childComplexity, args["input"].(model.PlayerInput)), true
 
 	case "Mutation.createGame":
 		if e.complexity.Mutation.CreateGame == nil {
@@ -279,6 +280,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Player.Money(childComplexity), true
+
+	case "Player.name":
+		if e.complexity.Player.Name == nil {
+			break
+		}
+
+		return e.complexity.Player.Name(childComplexity), true
 
 	case "Query.game":
 		if e.complexity.Query.Game == nil {
@@ -437,6 +445,7 @@ type Game {
 type Player {
   id: ID!
   money: Int!
+  name: String!
   game: Game!
 }
 
@@ -446,7 +455,7 @@ type QuestionRound {
   guesses: [Guess!]!
   bettingRounds: [BettingRound!]!
   foldedPlayerIds: [ID!]!
-  isOver: Boolean
+  isOver: Boolean!
 }
 
 type Question {
@@ -490,10 +499,15 @@ input BetInput {
   amount: Int!
 }
 
+input PlayerInput {
+  gameId: ID!
+  playerName: String!
+}
+
 type Mutation {
   createGame: Game!
   startGame(gameId: ID!): Game!
-  addPlayer(gameId: ID!): Player!
+  addPlayer(input: PlayerInput!): Player!
   addGuess(input: GuessInput!): Game!
   placeBet(input: BetInput!): Game!
 }
@@ -522,14 +536,14 @@ func (ec *executionContext) field_Mutation_addGuess_args(ctx context.Context, ra
 func (ec *executionContext) field_Mutation_addPlayer_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["gameId"]; ok {
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+	var arg0 model.PlayerInput
+	if tmp, ok := rawArgs["input"]; ok {
+		arg0, err = ec.unmarshalNPlayerInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐPlayerInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["gameId"] = arg0
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -1098,7 +1112,7 @@ func (ec *executionContext) _Mutation_addPlayer(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddPlayer(rctx, args["gameId"].(string))
+		return ec.resolvers.Mutation().AddPlayer(rctx, args["input"].(model.PlayerInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1263,6 +1277,40 @@ func (ec *executionContext) _Player_money(ctx context.Context, field graphql.Col
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Player_name(ctx context.Context, field graphql.CollectedField, obj *model.Player) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Player",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Player_game(ctx context.Context, field graphql.CollectedField, obj *model.Player) (ret graphql.Marshaler) {
@@ -1736,11 +1784,14 @@ func (ec *executionContext) _QuestionRound_isOver(ctx context.Context, field gra
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -2858,6 +2909,30 @@ func (ec *executionContext) unmarshalInputGuessInput(ctx context.Context, obj in
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputPlayerInput(ctx context.Context, obj interface{}) (model.PlayerInput, error) {
+	var it model.PlayerInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "gameId":
+			var err error
+			it.GameID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "playerName":
+			var err error
+			it.PlayerName, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -3081,6 +3156,11 @@ func (ec *executionContext) _Player(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "name":
+			out.Values[i] = ec._Player_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "game":
 			out.Values[i] = ec._Player_game(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -3218,6 +3298,9 @@ func (ec *executionContext) _QuestionRound(ctx context.Context, sel ast.Selectio
 			}
 		case "isOver":
 			out.Values[i] = ec._QuestionRound_isOver(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3783,6 +3866,10 @@ func (ec *executionContext) marshalNPlayer2ᚖgithubᚗcomᚋalexhans1ᚋcertain
 		return graphql.Null
 	}
 	return ec._Player(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNPlayerInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐPlayerInput(ctx context.Context, v interface{}) (model.PlayerInput, error) {
+	return ec.unmarshalInputPlayerInput(ctx, v)
 }
 
 func (ec *executionContext) marshalNQuestionRound2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionRound(ctx context.Context, sel ast.SelectionSet, v model.QuestionRound) graphql.Marshaler {
