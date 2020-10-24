@@ -53,8 +53,11 @@ export const isPlayerDead = (
     player.id,
     currentQuestionRound
   );
-  const hasFolded = currentQuestionRound?.folderPlayerIds?.includes(player.id);
-  if (amountInQuestionRound && amountInQuestionRound > 0 && !hasFolded) {
+  if (
+    amountInQuestionRound &&
+    amountInQuestionRound > 0 &&
+    !hasFolded(currentQuestionRound, player.id)
+  ) {
     return false;
   }
   return true;
@@ -83,3 +86,8 @@ export const calculateAmountToCall = (
     amountSpentAlreadyInBettingRound
   );
 };
+
+export const hasFolded = (
+  currentQuestionRound: QuestionRound,
+  playerId: Player["id"]
+) => currentQuestionRound?.foldedPlayerIds.includes(playerId);

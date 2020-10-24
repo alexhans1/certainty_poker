@@ -29,7 +29,7 @@ export interface QuestionRound {
   question: Question;
   guesses: Guess[];
   bettingRounds: BettingRound[];
-  folderPlayerIds: Player["id"][];
+  foldedPlayerIds: Player["id"][];
 }
 
 export interface Game {
