@@ -6,7 +6,7 @@ $smallAvatar: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.3em;
+  font-size: 1.8em;
   vertical-align: middle;
   width: $smallAvatar;
   height: $smallAvatar;
@@ -14,7 +14,7 @@ $smallAvatar: 70px;
   background: #ebebeb;
 
   &.lg {
-    font-size: 2.3em;
+    font-size: 2.7em;
     width: $largeAvatar;
     height: $largeAvatar;
   }
@@ -45,7 +45,7 @@ $smallAvatar: 70px;
   position: absolute;
   top: 0.5em;
   left: -0.2em;
-  font-size: 1.3em;
+  font-size: 1.1em;
 }
 .skull {
   margin-left: 0.6em;

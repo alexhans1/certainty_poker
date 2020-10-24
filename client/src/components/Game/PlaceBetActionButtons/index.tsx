@@ -1,11 +1,18 @@
 import React from "react";
 import { QuestionRound, Player, Game, BettingRound } from "../../../interfaces";
-import { PlaceBet, check, call, raise, fold, haveAllPlayersPlacedTheirBets } from "../helpers";
+import {
+  PlaceBet,
+  check,
+  call,
+  raise,
+  fold,
+  haveAllPlayersPlacedTheirBets,
+} from "../helpers";
 import ActionButton from "./ActionButton";
 
 interface ActionButtonsProps {
   game: Game;
-  currentQuestionRound?: QuestionRound;
+  currentQuestionRound: QuestionRound;
   currentBettingRound?: BettingRound;
   playerId: Player["id"];
   placeBet: PlaceBet;

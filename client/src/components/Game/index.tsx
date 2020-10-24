@@ -14,6 +14,7 @@ import PlayerTable from "./PlayerTable";
 import Question from "./Question";
 import Hints from "./Hints";
 import Pot from "./Pot";
+import AnswerDrawer from "./AnswerDrawer";
 import ActionButtons from "./PlaceBetActionButtons";
 import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 
@@ -123,8 +124,13 @@ function GameComponent() {
         startGameLoading ||
         placeBetLoading ||
         addGuessLoading) && <p>Loading...</p>}
-
-      <div className="d-flex flex-row mt-3">
+      <div className="d-flex flex-column mt-3" style={{ fontWeight: 300 }}>
+        {currentQuestionRound && (
+          <div>
+            <Question currentQuestionRound={currentQuestionRound} />
+            <Hints currentQuestionRound={currentQuestionRound} />
+          </div>
+        )}
         <PlayerTable
           {...{
             players: game?.players,
@@ -133,39 +139,32 @@ function GameComponent() {
             currentBettingRound,
           }}
         />
-        {currentQuestionRound && (
-          <div className="ml-5">
-            <Question
+      </div>
+      {currentQuestionRound && (
+        <>
+          <Pot
+            playerId={playerId}
+            currentQuestionRound={currentQuestionRound}
+          />
+          <div className="d-flex flex-row">
+            <ActionButtons
               {...{
                 game,
                 currentQuestionRound,
+                currentBettingRound,
+                placeBet,
                 playerId,
-                addGuessMutation: addGuess,
               }}
             />
-            <Hints
-              currentQuestionRound={currentQuestionRound}
-              hints={currentQuestionRound.question.hints}
-            />
-            <Pot
-              playerId={playerId}
-              currentQuestionRound={currentQuestionRound}
-            />
           </div>
-        )}
-      </div>
-      <div className="d-flex flex-row">
-        <ActionButtons
-          {...{
-            game,
-            currentQuestionRound,
-            currentBettingRound,
-            placeBet,
-            playerId,
-          }}
-        />
-      </div>
-
+          <AnswerDrawer
+            game={game}
+            addGuessMutation={addGuess}
+            currentQuestionRound={currentQuestionRound}
+            playerId={playerId}
+          />
+        </>
+      )}
       {!game.questionRounds.length && (
         <button
           className="btn btn-lg btn-primary mt-auto mb-3 mx-5"
