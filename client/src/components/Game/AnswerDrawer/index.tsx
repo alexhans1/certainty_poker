@@ -57,7 +57,7 @@ export default ({
               className="submitButton btn btn-primary"
               disabled={!canAddGuess}
               onClick={(e) => {
-                if (guess) {
+                if (guess || guess === 0) {
                   addGuess(addGuessMutation, game, guess, playerId);
                 }
               }}
