@@ -32,7 +32,7 @@ export default ({
   const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
   return (
     <div
-      className="d-flex w-100 flex-row  justify-content-between pb-3"
+      className="d-flex w-100 flex-row  justify-content-between pb-3 px-1"
       style={styles}
     >
       <span>
