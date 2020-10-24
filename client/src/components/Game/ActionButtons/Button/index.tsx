@@ -9,7 +9,7 @@ interface ActionButtonProps {
 export default ({ text, handleOnClick, isDisabled }: ActionButtonProps) => {
   return (
     <button
-      className="btn btn-dark mt-4 mx-1"
+      className="btn btn-primary mx-2"
       onClick={handleOnClick}
       disabled={isDisabled}
     >

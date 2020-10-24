@@ -8,9 +8,9 @@ import {
   fold,
   haveAllPlayersPlacedTheirBets,
 } from "../helpers";
-import ActionButton from "./ActionButton";
+import ActionButton from "./Button";
 
-interface ActionButtonsProps {
+export interface ActionButtonsProps {
   game: Game;
   currentQuestionRound: QuestionRound;
   currentBettingRound?: BettingRound;
@@ -29,7 +29,7 @@ export default ({
     return null;
   }
   return (
-    <>
+    <div className="d-flex flex-row w-100 justify-content-around">
       {[
         {
           text: "Check",
@@ -65,6 +65,6 @@ export default ({
           }
         />
       ))}
-    </>
+    </div>
   );
 };
