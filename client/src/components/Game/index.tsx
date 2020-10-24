@@ -124,19 +124,6 @@ function GameComponent() {
         placeBetLoading ||
         addGuessLoading) && <p>Loading...</p>}
 
-      {!game.questionRounds.length && (
-        <button
-          className="btn btn-primary mx-3"
-          onClick={() => {
-            startGame({
-              variables: { gameId },
-            });
-          }}
-        >
-          Start Game
-        </button>
-      )}
-
       <div className="d-flex flex-row mt-3">
         <PlayerTable
           {...{
@@ -178,6 +165,19 @@ function GameComponent() {
           }}
         />
       </div>
+
+      {!game.questionRounds.length && (
+        <button
+          className="btn btn-lg btn-primary mt-auto mb-3 mx-5"
+          onClick={() => {
+            startGame({
+              variables: { gameId },
+            });
+          }}
+        >
+          Start Game
+        </button>
+      )}
     </>
   );
 }
