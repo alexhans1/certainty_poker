@@ -1,5 +1,5 @@
 import React from "react";
-import { QuestionRound, Game, BettingRound } from "../../../interfaces";
+import { QuestionRound, Game, BettingRound, Player } from "../../../interfaces";
 import ActionButtons, { ActionButtonsProps } from "../ActionButtons";
 import Pot from "../Pot";
 
@@ -11,8 +11,10 @@ type StartGame = ({
   variables: { gameId: Game["id"] };
 }) => void;
 
-interface FooterProps extends Omit<ActionButtonsProps, "currentQuestionRound"> {
+interface FooterProps
+  extends Omit<ActionButtonsProps, "currentQuestionRound" | "playerId"> {
   startGame: StartGame;
+  playerId?: Player["id"];
   currentQuestionRound?: QuestionRound;
   currentBettingRound?: BettingRound;
 }
@@ -41,7 +43,7 @@ export default ({
             Start Game
           </button>
         )}
-        {currentQuestionRound && currentBettingRound && (
+        {currentQuestionRound && currentBettingRound && playerId && (
           <>
             <Pot
               playerId={playerId}

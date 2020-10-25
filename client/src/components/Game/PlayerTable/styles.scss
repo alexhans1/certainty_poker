@@ -26,6 +26,10 @@ $smallAvatar: 70px;
   &.dead {
     background: #bebebe;
   }
+
+  span {
+    color: #393d4e;
+  }
 }
 .money {
   font-size: 1.2em;
