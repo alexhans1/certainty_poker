@@ -14,6 +14,7 @@ import PlayerTable from "./PlayerTable";
 import Question from "./Question";
 import Hints from "./Hints";
 import AnswerDrawer from "./AnswerDrawer";
+import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
 import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 
@@ -55,7 +56,7 @@ function GameComponent() {
         variables: { gameId },
       });
     }, 500);
-  }, []);
+  }, [fetchGame, gameId]);
 
   useEffect(() => {
     if (gameId) {
@@ -69,32 +70,6 @@ function GameComponent() {
       if (newPlayerId) {
         setPlayerIdToStorage(gameId, newPlayerId);
         setPlayerId(newPlayerId);
-      }
-
-      if (!storedPlayerId && !newPlayerId) {
-        createPlayer({
-          variables: {
-            input: {
-              gameId,
-              playerName: [
-                "🧟‍♂️",
-                "⛹🏻‍♀️",
-                "🏈",
-                "🍪",
-                "🍆",
-                "🍑",
-                "🌈",
-                "🦔",
-                "🦧",
-                "🦊",
-                "💆‍♀️",
-                "🤷🏻‍♂️",
-                "🧝🏽‍♂️",
-                "🦹🏿‍♀️",
-              ][Math.floor(Math.random() * 14)],
-            },
-          },
-        });
       }
     }
 
@@ -112,9 +87,10 @@ function GameComponent() {
     fetchGameData,
     startGameData,
     placeBetData,
+    addGuessData,
   ]);
 
-  if (!game || !playerId) {
+  if (!game) {
     return <h3>Loading...</h3>;
   }
 
@@ -147,7 +123,7 @@ function GameComponent() {
         className="d-flex flex-column mt-3"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
       >
-        {currentQuestionRound && (
+        {currentQuestionRound && playerId && (
           <div>
             <Question
               game={game}
@@ -167,7 +143,7 @@ function GameComponent() {
           }}
         />
       </div>
-      {currentQuestionRound && (
+      {currentQuestionRound && playerId && (
         <AnswerDrawer
           game={game}
           addGuessMutation={addGuess}
@@ -185,6 +161,7 @@ function GameComponent() {
           startGame,
         }}
       />
+      <NameInputDrawer {...{ gameId, createPlayer, playerId }} />
     </>
   );
 }
