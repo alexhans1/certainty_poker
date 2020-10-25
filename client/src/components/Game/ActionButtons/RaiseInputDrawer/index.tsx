@@ -57,9 +57,10 @@ export default ({
           <input
             value={amount}
             onChange={(e) => {
-              setAmount(parseFloat(e.target.value));
+              setAmount(Math.round(parseFloat(e.target.value)));
             }}
             type="number"
+            pattern="[0-9]"
             min={amountToCall}
             max={moneyRemaining}
             className="form-control form-control-lg"
@@ -69,7 +70,10 @@ export default ({
           />
           <div className="input-group-append">
             <button
-              disabled={amount < amountToCall}
+              disabled={
+                !!moneyRemaining &&
+                (amount < amountToCall || amount > moneyRemaining)
+              }
               className="btn btn-primary"
               onClick={handleSubmit}
             >
