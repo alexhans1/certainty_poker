@@ -1,9 +1,5 @@
 import { Player, Game, BetInput } from "../../../interfaces";
-import {
-  calculateBettingRoundSpendingForPlayer,
-  getCurrentQuestionRound,
-  getCurrentBettingRound,
-} from ".";
+import { getCurrentQuestionRound, getCurrentBettingRound } from ".";
 import { calculateAmountToCall } from "./helpers";
 
 export type PlaceBet = ({
