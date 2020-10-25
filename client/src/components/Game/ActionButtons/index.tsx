@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { QuestionRound, Player, Game, BettingRound } from "../../../interfaces";
 import {
   PlaceBet,
@@ -10,6 +10,7 @@ import {
   calculateAmountToCall,
 } from "../helpers";
 import ActionButton from "./Button";
+import RaiseInputDrawer from "./RaiseInputDrawer";
 
 export interface ActionButtonsProps {
   game: Game;
@@ -29,6 +30,9 @@ export default ({
   if (!currentQuestionRound || !currentBettingRound) {
     return null;
   }
+
+  const [showRaiseDrawer, setShowRaiseDrawer] = useState(false);
+
   return (
     <div className="d-flex flex-row w-100 justify-content-between">
       {[
@@ -48,7 +52,7 @@ export default ({
         {
           text: "Raise",
           handleOnClick: () => {
-            raise(50, placeBet, game, playerId);
+            setShowRaiseDrawer(true);
           },
         },
         {
@@ -68,6 +72,17 @@ export default ({
           }
         />
       ))}
+      <RaiseInputDrawer
+        {...{
+          game,
+          placeBet,
+          playerId,
+          currentBettingRound,
+          handleRaise: raise,
+          showRaiseDrawer,
+          setShowRaiseDrawer,
+        }}
+      />
     </div>
   );
 };

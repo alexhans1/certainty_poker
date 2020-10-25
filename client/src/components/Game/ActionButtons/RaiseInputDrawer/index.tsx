@@ -1,0 +1,83 @@
+import React, { useState } from "react";
+import Drawer from "../../../Drawer";
+import { BettingRound, Game, Player } from "../../../../interfaces";
+import { calculateAmountToCall, PlaceBet, raise } from "../../helpers";
+
+type CreatePlayer = ({
+  variables: {
+    input: { gameId, playerName },
+  },
+}: {
+  variables: { input: { gameId: Game["id"]; playerName: Player["name"] } };
+}) => void;
+
+interface Props {
+  currentBettingRound: BettingRound;
+  game: Game;
+  handleRaise: typeof raise;
+  placeBet: PlaceBet;
+  playerId: Player["id"];
+  showRaiseDrawer: boolean;
+  setShowRaiseDrawer: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default ({
+  currentBettingRound,
+  game,
+  handleRaise,
+  placeBet,
+  playerId,
+  showRaiseDrawer,
+  setShowRaiseDrawer,
+}: Props) => {
+  const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
+  const moneyRemaining = game.players.find(({ id }) => id === playerId)?.money;
+  const [amount, setAmount] = useState(amountToCall);
+
+  const handleSubmit = () => {
+    handleRaise(amount, placeBet, game, playerId);
+    setShowRaiseDrawer(false);
+  };
+
+  return (
+    <Drawer
+      title="Raise by how much?"
+      isCollapseAble={false}
+      anchor={"bottom"}
+      open={showRaiseDrawer}
+      onClose={() => {
+        setShowRaiseDrawer(false);
+      }}
+      variant="temporary"
+      className="drawer"
+    >
+      <>
+        <p>Raise by how much?</p>
+        <div className="input-group mb-3">
+          <input
+            value={amount}
+            onChange={(e) => {
+              setAmount(parseFloat(e.target.value));
+            }}
+            type="number"
+            min={amountToCall}
+            max={moneyRemaining}
+            className="form-control form-control-lg"
+            placeholder="Type an emoji or letter"
+            aria-label="Your answer"
+            aria-describedby="basic-addon2"
+          />
+          <div className="input-group-append">
+            <button
+              disabled={amount < amountToCall}
+              className="btn btn-primary"
+              onClick={handleSubmit}
+            >
+              ⮑
+            </button>
+          </div>
+        </div>
+      </>
+    </Drawer>
+  );
+};

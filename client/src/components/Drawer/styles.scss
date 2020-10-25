@@ -11,6 +11,9 @@
     visibility: unset !important;
     transform: translateY(736px) translateY(-536px) !important;
   }
+  .MuiBackdrop-root {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+  }
 }
 .container {
   max-width: 700px;
