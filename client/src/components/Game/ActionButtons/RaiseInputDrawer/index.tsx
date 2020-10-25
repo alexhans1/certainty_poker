@@ -41,7 +41,7 @@ export default ({
 
   return (
     <Drawer
-      title="Raise by how much?"
+      title="Raise"
       isCollapseAble={false}
       anchor={"bottom"}
       open={showRaiseDrawer}
@@ -63,8 +63,8 @@ export default ({
             min={amountToCall}
             max={moneyRemaining}
             className="form-control form-control-lg"
-            placeholder="Type an emoji or letter"
-            aria-label="Your answer"
+            placeholder="Amount to raise"
+            aria-label="Amount to raise"
             aria-describedby="basic-addon2"
           />
           <div className="input-group-append">
@@ -77,6 +77,15 @@ export default ({
             </button>
           </div>
         </div>
+        {moneyRemaining && (
+          <span
+            style={{ cursor: "pointer" }}
+            onClick={() => setAmount(moneyRemaining)}
+            className="badge badge-pill badge-primary mr-auto px-4"
+          >
+            All in
+          </span>
+        )}
       </>
     </Drawer>
   );
