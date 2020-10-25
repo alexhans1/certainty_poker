@@ -9,7 +9,7 @@
   }
   &.collapsed > div {
     visibility: unset !important;
-    transform: translateY(736px) translateY(-552px) !important;
+    transform: translateY(736px) translateY(-536px) !important;
   }
 }
 .container {
@@ -31,8 +31,4 @@
     cursor: pointer;
     outline: inherit;
   }
-}
-.submitButton {
-  margin-left: 1em;
-  font-weight: 400;
 }
