@@ -60,7 +60,7 @@ export default ({
   )?.guess;
   return (
     <div>
-      {(players || []).map(({ id, money }) => {
+      {(players || []).map(({ id, money, name }) => {
         const isDead =
           currentQuestionRound &&
           isPlayerDead(currentQuestionRound, { id, money });
@@ -73,7 +73,7 @@ export default ({
                 isDead || isFolded ? "dead" : ""
               }`}
             >
-              <span>🧟‍♂️</span>
+              <span>{name}</span>
               {currentBettingRound?.currentPlayer.id === id && (
                 <span className="dice" role="img" aria-label="dice">
                   🎲

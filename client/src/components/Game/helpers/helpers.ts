@@ -44,7 +44,7 @@ export const haveAllPlayersPlacedTheirBets = (
 
 export const isPlayerDead = (
   currentQuestionRound: QuestionRound,
-  player: Player
+  player: Omit<Player, "name">
 ) => {
   if (player.money > 0) {
     return false;

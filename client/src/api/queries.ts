@@ -29,6 +29,7 @@ export const GET_GAME_BY_ID = gql`
       players {
         id
         money
+        name
       }
       dealerId
     }
@@ -36,10 +37,11 @@ export const GET_GAME_BY_ID = gql`
 `;
 
 export const CREATE_PLAYER = gql`
-  mutation addPlayer($gameId: ID!) {
-    addPlayer(gameId: $gameId) {
+  mutation addPlayer($input: PlayerInput!) {
+    addPlayer(input: $input) {
       id
       money
+      name
     }
   }
 `;
@@ -73,6 +75,7 @@ export const START_GAME = gql`
       players {
         id
         money
+        name
       }
       dealerId
     }
@@ -108,6 +111,7 @@ export const PLACE_BET = gql`
       players {
         id
         money
+        name
       }
       dealerId
     }
@@ -143,6 +147,7 @@ export const ADD_GUESS = gql`
       players {
         id
         money
+        name
       }
       dealerId
     }

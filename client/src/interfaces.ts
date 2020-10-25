@@ -1,6 +1,7 @@
 export interface Player {
   id: string;
   money: number;
+  name: string;
 }
 
 export interface Question {

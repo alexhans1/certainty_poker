@@ -73,7 +73,27 @@ function GameComponent() {
 
       if (!storedPlayerId && !newPlayerId) {
         createPlayer({
-          variables: { gameId },
+          variables: {
+            input: {
+              gameId,
+              playerName: [
+                "🧟‍♂️",
+                "⛹🏻‍♀️",
+                "🏈",
+                "🍪",
+                "🍆",
+                "🍑",
+                "🌈",
+                "🦔",
+                "🦧",
+                "🦊",
+                "💆‍♀️",
+                "🤷🏻‍♂️",
+                "🧝🏽‍♂️",
+                "🦹🏿‍♀️",
+              ][Math.floor(Math.random() * 14)],
+            },
+          },
         });
       }
     }
