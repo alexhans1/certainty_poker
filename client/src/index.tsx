@@ -6,9 +6,11 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import "./index.scss";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
+import { SERVER_URL } from "./config";
+console.log("SERVER_URL", SERVER_URL);
 
 const client = new ApolloClient({
-  uri: "http://localhost:8080/query",
+  uri: `${SERVER_URL}/query`,
 });
 
 ReactDOM.render(
