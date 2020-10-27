@@ -12,7 +12,7 @@ import (
 
 // LoadQuestions loads the questions from json file
 func LoadQuestions() []*Question {
-	questionsJSON, _ := os.Open("../questions.json")
+	questionsJSON, _ := os.Open("./questions.json")
 
 	defer questionsJSON.Close()
 	byteValue, _ := ioutil.ReadAll(questionsJSON)
