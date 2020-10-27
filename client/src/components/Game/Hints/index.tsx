@@ -3,8 +3,10 @@ import { QuestionRound } from "../../../interfaces";
 
 const styles = {
   title: {
+    fontSize: "0.8em",
     borderTop: "1px solid #ebebeb",
-    marginTop: "0.4em",
+    marginTop: "0.3em",
+    paddingTop: "1em",
   },
   currentHint: {
     fontSize: "1.5em",
