@@ -57,6 +57,7 @@ type ComplexityRoot struct {
 	Game struct {
 		DealerID       func(childComplexity int) int
 		ID             func(childComplexity int) int
+		IsOver         func(childComplexity int) int
 		Players        func(childComplexity int) int
 		QuestionRounds func(childComplexity int) int
 		Questions      func(childComplexity int) int
@@ -177,6 +178,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Game.ID(childComplexity), true
+
+	case "Game.isOver":
+		if e.complexity.Game.IsOver == nil {
+			break
+		}
+
+		return e.complexity.Game.IsOver(childComplexity), true
 
 	case "Game.players":
 		if e.complexity.Game.Players == nil {
@@ -449,6 +457,7 @@ type Game {
   questionRounds: [QuestionRound!]!
   dealerId: ID!
   questions: [Question]!
+  isOver: Boolean!
 }
 
 type Player {
@@ -986,6 +995,40 @@ func (ec *executionContext) _Game_questions(ctx context.Context, field graphql.C
 	res := resTmp.([]*model.Question)
 	fc.Result = res
 	return ec.marshalNQuestion2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Game_isOver(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Game",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsOver, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Guess_guess(ctx context.Context, field graphql.CollectedField, obj *model.Guess) (ret graphql.Marshaler) {
@@ -3086,6 +3129,11 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "questions":
 			out.Values[i] = ec._Game_questions(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "isOver":
+			out.Values[i] = ec._Game_isOver(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

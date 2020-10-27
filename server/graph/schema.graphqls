@@ -5,6 +5,7 @@ type Game {
   questionRounds: [QuestionRound!]!
   dealerId: ID!
   questions: [Question]!
+  isOver: Boolean!
 }
 
 type Player {

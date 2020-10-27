@@ -25,6 +25,7 @@ type Game struct {
 	QuestionRounds []*QuestionRound `json:"questionRounds"`
 	DealerID       string           `json:"dealerId"`
 	Questions      []*Question      `json:"questions"`
+	IsOver         bool             `json:"isOver"`
 }
 
 type Guess struct {
