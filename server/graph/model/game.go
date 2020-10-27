@@ -13,7 +13,9 @@ func (g *Game) CurrentQuestionRound() *QuestionRound {
 
 // IsFinished returns true if there is only one player left in the game
 func (g *Game) IsFinished() bool {
-	return len(g.Questions) < 1 || len(g.InPlayers()) <= 1
+	isOver := len(g.Questions) < 1 || len(g.InPlayers()) <= 1
+	g.IsOver = isOver
+	return isOver
 }
 
 // Dealer returns the dealer player object

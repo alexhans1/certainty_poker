@@ -21,6 +21,7 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 		Players:        make([]*model.Player, 0),
 		DealerID:       "dealerId",
 		Questions:      model.LoadQuestions(),
+		IsOver:         false,
 	}
 
 	r.games[gameID] = &game
