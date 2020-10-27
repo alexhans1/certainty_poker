@@ -11,6 +11,9 @@ const styles = {
   question: {
     fontSize: "2em",
   },
+  title: {
+    fontSize: "0.7em",
+  },
 };
 
 export default ({ game, currentQuestionRound, playerId }: QuestionProps) => {
@@ -29,10 +32,17 @@ export default ({ game, currentQuestionRound, playerId }: QuestionProps) => {
       </>
     );
   }
+
   const noHints = currentQuestionRound.bettingRounds.length <= 1;
+  const totalQuestions = game.questionRounds.length + game.questions.length;
   return (
-    <span style={(noHints && styles.question) || {}}>
-      {currentQuestionRound.question.question}
-    </span>
+    <>
+      <p className="mb-0" style={(!noHints && { fontSize: "0.6em" }) || {}}>
+        Question ({game.questionRounds.length}/{totalQuestions}):
+      </p>
+      <span style={(noHints && styles.question) || {}}>
+        {currentQuestionRound.question.question}
+      </span>
+    </>
   );
 };

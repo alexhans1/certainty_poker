@@ -32,6 +32,9 @@ export const GET_GAME_BY_ID = gql`
         name
       }
       dealerId
+      questions {
+        id
+      }
     }
   }
 `;
@@ -78,6 +81,9 @@ export const START_GAME = gql`
         name
       }
       dealerId
+      questions {
+        id
+      }
     }
   }
 `;
@@ -114,6 +120,9 @@ export const PLACE_BET = gql`
         name
       }
       dealerId
+      questions {
+        id
+      }
     }
   }
 `;
@@ -150,6 +159,9 @@ export const ADD_GUESS = gql`
         name
       }
       dealerId
+      questions {
+        id
+      }
     }
   }
 `;
