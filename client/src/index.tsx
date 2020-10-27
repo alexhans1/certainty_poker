@@ -7,7 +7,6 @@ import "./index.scss";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import { SERVER_URL } from "./config";
-console.log("SERVER_URL", SERVER_URL);
 
 const client = new ApolloClient({
   uri: `${SERVER_URL}/query`,
