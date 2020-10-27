@@ -50,12 +50,10 @@ type PlayerInput struct {
 }
 
 type Question struct {
-	ID       string    `json:"id"`
-	Question string    `json:"question"`
-	Answer   float64   `json:"answer"`
-	Hints    []string  `json:"hints"`
-	Explanation string `json: "explanation"`
-	Language: string   `json: "language"`
+	ID       string   `json:"id"`
+	Question string   `json:"question"`
+	Answer   float64  `json:"answer"`
+	Hints    []string `json:"hints"`
 }
 
 type QuestionRound struct {

@@ -2,9 +2,6 @@ package model
 
 import (
 	"errors"
-	"math/rand"
-	"strconv"
-
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
@@ -34,21 +31,11 @@ func (g *Game) BigBlindPlayer() *Player {
 }
 
 // AddNewQuestionRound adds a new question round
-func (g *Game) AddNewQuestionRound() {
-	newQuestionRoundIndex := len(g.QuestionRounds) + 1
-	hints := make([]string, 0)
-
-	for i := 0; i < 3; i++ {
-		hints = append(hints, "Test Hint "+strconv.Itoa(i+1)+" for Question "+strconv.Itoa(newQuestionRoundIndex))
-	}
-
+func (g *Game) AddNewQuestionRound() {	
+	question := DrawQuestion(g.Questions());
+	
 	newQuestionRound := &QuestionRound{
-		Question: &Question{
-			ID:       helpers.CreateID(),
-			Question: "Test Question " + strconv.Itoa(newQuestionRoundIndex),
-			Answer:   rand.Float64() * 1000,
-			Hints:    hints,
-		},
+		Question:		 question,
 		Guesses:         make([]*Guess, 0),
 		BettingRounds:   make([]*BettingRound, 0),
 		FoldedPlayerIds: make([]string, 0),
@@ -146,6 +133,17 @@ func (g *Game) PlayerIds() []string {
 	}
 
 	return playerIds
+}
+
+// Questions returns a slice of all questions already asked in the Game
+func (g *Game) Questions() []string {
+	questions := make([]string, 0)
+
+	for _, questionRound := range g.QuestionRounds {
+		questions = append(questions, questionRound.Question.Question)
+	}
+
+	return questions
 }
 
 // HasStarted returns true if there are 1 or more question rounds already
