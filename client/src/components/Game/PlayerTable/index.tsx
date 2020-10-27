@@ -83,13 +83,12 @@ export default ({
               }`}
             >
               <span>{name}</span>
-              {!isResultList && currentBettingRound?.currentPlayer.id === id && (
-                <span className="turn" role="img" aria-label="turn">
-                  {">"}
-                </span>
-              )}
+              {!isResultList &&
+                currentBettingRound?.currentPlayer.id === id && (
+                  <span className="turn">{">"}</span>
+                )}
               {isResultList && i === 0 && (
-                <span className="dice" role="img" aria-label="dice">
+                <span className="turn trophy" role="img" aria-label="trophy">
                   🏆
                 </span>
               )}
