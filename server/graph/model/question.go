@@ -26,7 +26,7 @@ func LoadQuestions() []*Question {
 	return allQuestions
 }
 
-// DrawQuestion draws a random Question which is not burnt yet
+// DrawQuestion draws a random Question and removes it from the slice
 func DrawQuestion(g *Game) *Question {
 	rand.Seed(time.Now().UnixNano())
 	randomIndex := rand.Intn(len(g.Questions))
