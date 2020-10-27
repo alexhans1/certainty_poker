@@ -20,6 +20,7 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 		QuestionRounds: make([]*model.QuestionRound, 0),
 		Players:        make([]*model.Player, 0),
 		DealerID:       "dealerId",
+		Questions:      model.LoadQuestions(),
 	}
 
 	r.games[gameID] = &game
@@ -117,10 +118,10 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	if bettingRound.IsFinished() {
 		if questionRound.IsFinished() {
 			questionRound.DistributePot()
-			if !game.IsFinished() {
-				game.AddNewQuestionRound()
-			} else {
+			if game.IsFinished() {
 				fmt.Println("game is finished")
+			} else {
+				game.AddNewQuestionRound()
 			}
 		} else {
 			questionRound.AddNewBettingRound()

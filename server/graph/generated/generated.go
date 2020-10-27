@@ -59,6 +59,7 @@ type ComplexityRoot struct {
 		ID             func(childComplexity int) int
 		Players        func(childComplexity int) int
 		QuestionRounds func(childComplexity int) int
+		Questions      func(childComplexity int) int
 	}
 
 	Guess struct {
@@ -190,6 +191,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Game.QuestionRounds(childComplexity), true
+
+	case "Game.questions":
+		if e.complexity.Game.Questions == nil {
+			break
+		}
+
+		return e.complexity.Game.Questions(childComplexity), true
 
 	case "Guess.guess":
 		if e.complexity.Guess.Guess == nil {
@@ -440,6 +448,7 @@ type Game {
   players: [Player!]!
   questionRounds: [QuestionRound!]!
   dealerId: ID!
+  questions: [Question]!
 }
 
 type Player {
@@ -943,6 +952,40 @@ func (ec *executionContext) _Game_dealerId(ctx context.Context, field graphql.Co
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Game_questions(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Game",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Questions, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Question)
+	fc.Result = res
+	return ec.marshalNQuestion2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Guess_guess(ctx context.Context, field graphql.CollectedField, obj *model.Guess) (ret graphql.Marshaler) {
@@ -3041,6 +3084,11 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "questions":
+			out.Values[i] = ec._Game_questions(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3870,6 +3918,43 @@ func (ec *executionContext) marshalNPlayer2ᚖgithubᚗcomᚋalexhans1ᚋcertain
 
 func (ec *executionContext) unmarshalNPlayerInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐPlayerInput(ctx context.Context, v interface{}) (model.PlayerInput, error) {
 	return ec.unmarshalInputPlayerInput(ctx, v)
+}
+
+func (ec *executionContext) marshalNQuestion2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestion(ctx context.Context, sel ast.SelectionSet, v []*model.Question) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOQuestion2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestion(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalNQuestionRound2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionRound(ctx context.Context, sel ast.SelectionSet, v model.QuestionRound) graphql.Marshaler {
