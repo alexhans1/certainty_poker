@@ -10,12 +10,13 @@ import {
 
 import "./styles.scss";
 
-interface PlayerTableProps {
+export interface PlayerTableProps {
   players?: Player[];
   playerId?: Player["id"];
   currentBettingRound?: BettingRound;
   currentQuestionRound?: QuestionRound;
   game?: Game;
+  isResultList?: boolean;
 }
 
 const moveAppPlayerToTop = (players: Player[], playerId: Player["id"]) =>
@@ -34,11 +35,16 @@ export default ({
   currentBettingRound,
   currentQuestionRound,
   game,
+  isResultList,
 }: PlayerTableProps) => {
   if (!players?.length || !playerId) {
     return null;
   }
-  moveAppPlayerToTop(players, playerId);
+  if (isResultList) {
+    players = players.sort((p1, p2) => p2.money - p1.money);
+  } else {
+    moveAppPlayerToTop(players, playerId);
+  }
 
   const revealPreviousAnswers =
     game &&
@@ -60,7 +66,7 @@ export default ({
   )?.guess;
   return (
     <div>
-      {(players || []).map(({ id, money, name }) => {
+      {(players || []).map(({ id, money, name }, i) => {
         const isDead =
           currentQuestionRound &&
           isPlayerDead(currentQuestionRound, { id, money });
@@ -69,27 +75,32 @@ export default ({
         return (
           <div key={id} className="d-flex align-items-center pt-4 ml-4">
             <div
-              className={`avatar ${id === playerId ? "lg" : "md"} ${
-                isDead || isFolded ? "dead" : ""
+              className={`avatar ${i === 0 ? "lg" : "md"} ${
+                (isDead || isFolded) && !isResultList ? "dead" : ""
               }`}
             >
               <span>{name}</span>
-              {currentBettingRound?.currentPlayer.id === id && (
+              {!isResultList && currentBettingRound?.currentPlayer.id === id && (
                 <span className="turn" role="img" aria-label="turn">
                   {">"}
+                </span>
+              )}
+              {isResultList && i === 0 && (
+                <span className="dice" role="img" aria-label="dice">
+                  🏆
                 </span>
               )}
             </div>
             <div>
               <div
                 className={`money ${id === playerId ? "" : "md"} ${
-                  isDead || isFolded ? "dead" : ""
+                  (isDead || isFolded) && !isResultList ? "dead" : ""
                 }`}
               >
                 {revealPreviousAnswers ? (
                   <span>{previousQuestionRoundGuesses[id]}</span>
                 ) : (
-                  id === playerId && <span>{playerGuess}</span>
+                  id === playerId && !isResultList && <span>{playerGuess}</span>
                 )}
                 <span role="img" aria-label="money">
                   💰{money}

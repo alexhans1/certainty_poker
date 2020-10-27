@@ -35,6 +35,7 @@ export const GET_GAME_BY_ID = gql`
       questions {
         id
       }
+      isOver
     }
   }
 `;
@@ -84,6 +85,7 @@ export const START_GAME = gql`
       questions {
         id
       }
+      isOver
     }
   }
 `;
@@ -123,6 +125,7 @@ export const PLACE_BET = gql`
       questions {
         id
       }
+      isOver
     }
   }
 `;
@@ -162,6 +165,7 @@ export const ADD_GUESS = gql`
       questions {
         id
       }
+      isOver
     }
   }
 `;

@@ -39,6 +39,7 @@ export interface Game {
   questionRounds: QuestionRound[];
   dealerId: Player["id"];
   questions: Omit<Question, "question" | "answer" | "hints">[];
+  isOver: boolean;
 }
 
 export interface BetInput {
