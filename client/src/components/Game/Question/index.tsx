@@ -20,15 +20,20 @@ export default ({ game, currentQuestionRound, playerId }: QuestionProps) => {
   // if the user has not yet placed a bet,
   // show the result of the previous round if their is one
   if (
-    game.questionRounds.length > 1 &&
-    !currentQuestionRound.guesses.find((guess) => guess.playerId === playerId)
+    game.isOver ||
+    (game.questionRounds.length > 1 &&
+      !currentQuestionRound.guesses.find(
+        (guess) => guess.playerId === playerId
+      ))
   ) {
     const previousQuestionRound =
-      game.questionRounds[game.questionRounds.length - 2];
+      game.questionRounds[game.questionRounds.length - (game.isOver ? 1 : 2)];
     return (
       <>
         <p>{previousQuestionRound.question.question}</p>
-        <p>Answer: {previousQuestionRound.question.answer}</p>
+        <p>
+          Answer: <b>{previousQuestionRound.question.answer}</b>
+        </p>
       </>
     );
   }
