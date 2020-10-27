@@ -4,6 +4,7 @@ type Game {
   players: [Player!]!
   questionRounds: [QuestionRound!]!
   dealerId: ID!
+  questions: [Question]!
 }
 
 type Player {

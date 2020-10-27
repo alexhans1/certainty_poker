@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
@@ -12,7 +13,7 @@ func (g *Game) CurrentQuestionRound() *QuestionRound {
 
 // IsFinished returns true if there is only one player left in the game
 func (g *Game) IsFinished() bool {
-	return len(g.InPlayers()) <= 1
+	return len(g.Questions) < 1 || len(g.InPlayers()) <= 1
 }
 
 // Dealer returns the dealer player object
@@ -31,11 +32,11 @@ func (g *Game) BigBlindPlayer() *Player {
 }
 
 // AddNewQuestionRound adds a new question round
-func (g *Game) AddNewQuestionRound() {	
-	question := DrawQuestion(g.Questions());
-	
+func (g *Game) AddNewQuestionRound() {
+	question := DrawQuestion(g)
+
 	newQuestionRound := &QuestionRound{
-		Question:		 question,
+		Question:        question,
 		Guesses:         make([]*Guess, 0),
 		BettingRounds:   make([]*BettingRound, 0),
 		FoldedPlayerIds: make([]string, 0),
@@ -133,17 +134,6 @@ func (g *Game) PlayerIds() []string {
 	}
 
 	return playerIds
-}
-
-// Questions returns a slice of all questions already asked in the Game
-func (g *Game) Questions() []string {
-	questions := make([]string, 0)
-
-	for _, questionRound := range g.QuestionRounds {
-		questions = append(questions, questionRound.Question.Question)
-	}
-
-	return questions
 }
 
 // HasStarted returns true if there are 1 or more question rounds already
