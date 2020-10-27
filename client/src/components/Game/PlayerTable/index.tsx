@@ -47,14 +47,17 @@ export default ({
   }
 
   const revealPreviousAnswers =
-    game &&
-    game.questionRounds.length > 1 &&
-    !currentQuestionRound?.guesses.find((guess) => guess.playerId === playerId);
+    game?.isOver ||
+    (game &&
+      game.questionRounds.length > 1 &&
+      !currentQuestionRound?.guesses.find(
+        (guess) => guess.playerId === playerId
+      ));
 
   let previousQuestionRoundGuesses: { [key: string]: Guess["guess"] };
   if (game && revealPreviousAnswers) {
     previousQuestionRoundGuesses = game.questionRounds[
-      game.questionRounds.length - 2
+      game.questionRounds.length - (game.isOver ? 1 : 2)
     ].guesses.reduce(
       (acc, guess) => ({ ...acc, [guess.playerId]: guess.guess }),
       {}
@@ -97,11 +100,12 @@ export default ({
                   (isDead || isFolded) && !isResultList ? "dead" : ""
                 }`}
               >
-                {revealPreviousAnswers ? (
-                  <span>{previousQuestionRoundGuesses[id]}</span>
-                ) : (
-                  id === playerId && !isResultList && <span>{playerGuess}</span>
-                )}
+                {!isResultList &&
+                  (revealPreviousAnswers ? (
+                    <span>{previousQuestionRoundGuesses[id]}</span>
+                  ) : (
+                    id === playerId && <span>{playerGuess}</span>
+                  ))}
                 <span role="img" aria-label="money">
                   💰{money}
                 </span>

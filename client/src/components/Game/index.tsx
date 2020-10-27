@@ -22,6 +22,7 @@ import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
   const [game, setGame] = useState<Game | undefined>(undefined);
+  const [showResultList, setShowResultList] = useState(true);
   const { game_id: gameId } = useParams<{ game_id: string }>();
 
   const [
@@ -143,6 +144,14 @@ function GameComponent() {
             game,
           }}
         />
+        {game.isOver && (
+          <button
+            className="btn btn-primary mx-auto mt-5"
+            onClick={() => setShowResultList(true)}
+          >
+            See results
+          </button>
+        )}
       </div>
       {currentQuestionRound && playerId && (
         <AnswerDrawer
@@ -171,6 +180,8 @@ function GameComponent() {
             currentQuestionRound,
             currentBettingRound,
             game,
+            open: showResultList,
+            setOpen: setShowResultList,
           }}
         />
       )}
