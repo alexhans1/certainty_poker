@@ -27,7 +27,7 @@
     "start": "react-scripts start",
     "start:prod": "REACT_APP_SERVER_URL=https://certainty-poker.herokuapp.com react-scripts start",
     "build": "react-scripts build",
-    "build:prod": "REACT_APP_SERVER_URL=https://certainty-poker.herokuapp.com react-scripts build",
+    "build:prod": "REACT_APP_SERVER_URL=https://certainty-poker.herokuapp.com react-scripts build && cp build/index.html build/404.html",
     "predeploy": "npm run build:prod && echo certainty.poker >> build/CNAME",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
