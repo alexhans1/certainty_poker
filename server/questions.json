@@ -1,191 +1,191 @@
 [
-	{		
-		"question": "How many red blood cells are in 1 ml (one mililitre) of human blood?",
-		"answer": 5000000000,
-		"hints": [
-			"Red blood cells make up 99 %of all cells in the blood.", 
-			"A red bood cell has a volume of 90 femto liters.", 
-			"An adult human being has around 300.000.000.000.000 (300 trilion, i.e. 300 million million) blood cells."
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["biology", "human"]
-	},
-	{		
-		"question": "How many functional tram cars does the BVG (Berliner Verkehrsgesellschaft, the Berlin local traffic company) own?",
-		"answer": 600,
-		"hints": [
-			"In the western part of Berlin, all tram lines have been dismantled (and never been rebuilt) between 19454 and 1967.",
-			"In 1990, the BVG owned 1024 tram cars."
-			"In 2018, the BVG was transporting 204 million guests."
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["Berlin", "Germany", "Europe", "public transportation"]
-	},
-	{		
-		"question": "How many paintings can be found in the residue of Pablo Picasso?",
-		"answer": 1885,
-		"hints": [
-			"Picasso painted his first painting at the age of 9 and painted until his dead at the age of 91.",
-			"There are some 2500 paintings and drawings that are attributed to Claude Monet.",
-			"Picasso's residue contains 7089 drawings.",  
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["Picasso", "art", "culture", "Europe"]
-	},
-	{		
-		"question": "What is the amount of cash US $ in circulation? [in billions]",
-		"answer": 800,
-		"hints": [
-			"Every day, 16 million 1$-notes are printed and destroyed.", 
-			"A US-$-note is in circulation for about 20 months.",
-			"The highest US-$-note is a 100.000-$-note."
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["USA", "finance", "economy"]
-	},
-	{		
-		"question": "How many Rolls Royce cars have been sold in 2019?",
-		"answer": 5100,
-		"hints": [
-			"The United Kingdom’s potential departure from the European Union caused some worry amongst UK-based automakers.", 
-			"The price of the Rolls Royce Phantom, Rolls Royce's most sold car, starts from about 450.000 €."
-			"In 2007, Rolls Royce sold 1100 cars.", 
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["UK", "Europe", "luxury", "economy"]
-	},	
-	{		
-		"question": "How many popes have there ever been (as counted by the catholic church)?",
-		"answer": 266,
-		"hints": [
-			"The apostle St. Peter is considerd the first pope.", 
-			"88 popes came from Rome.", 
-			"Pius IX was the pope with the longest pontificate, being in office for 31 years, 7 months and 23 days."
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["religion", "history", "Europe"]
-	},
-	{		
-		"question": "How many inhabitants does Bangladesh have as of 2020? (in millions)",
-		"answer": 164.7,
-		"hints": [
-			"1969, Bangladesh had 62.68 million inhabitants.", 
-			"The density of population in Bangladesh was 1,116.1 inhabitants per square kilometer as of 2020.", 
-			"Bangladesh has an area of 147,570 square kilometers."
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["population", "Bangladesh", "Asia", ""]
-	},	
-	{		
-		"question": "What is the height of Angela Merkel? (in cm)",
-		"answer": 165,
-		"hints": [
-			"Donald Trump is 190 cm high.", 
-			"The average height of german women in the age between 18 and 40 is 166 cm.", 
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["Germany", "politics"]
-	},
-	{		
-		"question": "Which walking pace is assumed for pedestrians when programming the duration of green phases at traffic ligths in Germany? [in km/h]",
-		"answer": 4.32,
-		"hints": [
-			"Unhurried strolling has a walking pace of about 3 km/h.", 
-			"The German 'Behindertengleichstellungsgesetz' (Law for the Equalization of Persons with a handicap) defines accessibility as the state where the environment is shaped in a way that people with a handicap can use it in the same manner as people without a handicap."
-			"The average pace of a pedestrian is about 5 km/h.",
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": [""]
-	},	
-	{		
-		"question": "How many WhatsApp messages are sent per second? [as of June 2020]",
-		"answer": 750000,
-		"hints": [
-			"WhatsApp is the most used messenger app on the globe.",
-			"The logo of WhatsApp is a green speech ballon with a white earphone capsule."
-			"As of June 2020, there have been 2 billion WhatsApp users around the globe.",
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": [""]
-	},
-	{		
-		"question": "How many women are elected head of government (i.e. holding office of the Prime Minister or comparable office)? [as of September 1st 2020]",
-		"answer": 15,
-		"hints": [
-			"2015 we were living under a record-high number of simultanious female world leaders.", 
-			"Totally, 42 women have ever been heads of government.",
-		],
-		"explanation": "The full list is (ordered by length of duration in office): Angela Merkel (Germany), Sheikh Hasina (Bangladesh), Erna Solberg (Norway), Saara Kuugongelwa (Namibia), Aung San Suu Kyi (Myanmar), Tsai Ing-wen (Republic of China [Taiwan]), Ana Brnabić (Serbia), Jacinda Ardern (New Zealand), Katrín Jakobsdóttir (Iceland), Mia Mottley (Barbados), Mette Frederiksen (Denmark), Jeanine Áñez (Bolivia), Sanna Marin (Finland), Rose Christiane Raponda (Gabon), Victoire Tomegah Dogbé (Togo)",
-		"language": "en",
-		"tags": ["politics", "feminism"]
-	},
-	{		
-		"question": "How many black actors have been winning an Academy Award as Best Actor in a Leading Role? [as of 2019]",
-		"answer": 5,
-		"hints": [
-			"In 2019, the 91st Academy Awards ceremony has been held.",
-			"In 1958, Sidney Poitier was the first black Actore being nominated as Best Actor in a Leading Role.",
-			"The number can be counted by one hand."
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": [""]
-	},	
-	{		
-		"question": "How long was the longest movie winning an Oscar for Best Picture? [in minutes]",
-		"answer": 238,
-		"hints": [
-			"The longest movie to win an Oscar was 'War and Peace' and lasted 431 minutes.", 
-			"The shortes movie to win the Oscar for Best Picture took 94 minutes.", 
-			"The longest movie winning an Oscar for Best Picture is 1939's 'Gone with the Wind'."
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["culture", "movie", "duration"]
-	},
-	{		
-		"question": "In how many general elections did Queen Elizabeth II participate?",
-		"answer": 0,
-		"hints": [
-			"Queen Elizabeth II was born on 21 April 1926",
-			"There is nothing in written British law barring Queen Elizabeth II from voting in an election.", 
-		],
-		"explanation": "Although not prohibited by law, it is considered unconstitutional for the Monarch to vote in an election.",
-		"language": "en",
-		"tags": ["politics", "history", "UK", "Europe"]
-	},	
-	{		
-		"question": "How many years since the Nobel Peace Prize exists, has it not been awarded? [as of 2019]",
-		"answer": 19,
-		"hints": [
-			"In total, there are 134 Nobel Peace Prize Laureates.",
-			"The Nobel Peace Prize exists since 1901.",
-			"The last year the Nobel Peace Prize has not been awarded was 1972."
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": ["history", "politics"]
-	},
-	{		
-		"question": "How long is the German Highway ('Autobahn') net? [in km]",
-		"answer": 13000,
-		"hints": [
-			"The longest German highway is the Autobahn A7, with a length of 962 km.",
-			"",
-,			""
-		],
-		"explanation": "",
-		"language": "en",
-		"tags": [""]
-	}
+  {
+    "question": "How many red blood cells are in 1 ml (one mililitre) of human blood?",
+    "answer": 5000000000,
+    "hints": [
+      "Red blood cells make up 99 %of all cells in the blood.",
+      "A red bood cell has a volume of 90 femto liters.",
+      "An adult human being has around 300.000.000.000.000 (300 trilion, i.e. 300 million million) blood cells."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["biology", "human"]
+  },
+  {
+    "question": "How many functional tram cars does the BVG (Berliner Verkehrsgesellschaft, the Berlin local traffic company) own?",
+    "answer": 600,
+    "hints": [
+      "In the western part of Berlin, all tram lines have been dismantled (and never been rebuilt) between 19454 and 1967.",
+      "In 1990, the BVG owned 1024 tram cars.",
+      "In 2018, the BVG was transporting 204 million guests."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["Berlin", "Germany", "Europe", "public transportation"]
+  },
+  {
+    "question": "How many paintings can be found in the residue of Pablo Picasso?",
+    "answer": 1885,
+    "hints": [
+      "Picasso painted his first painting at the age of 9 and painted until his dead at the age of 91.",
+      "There are some 2500 paintings and drawings that are attributed to Claude Monet.",
+      "Picasso's residue contains 7089 drawings."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["Picasso", "art", "culture", "Europe"]
+  },
+  {
+    "question": "What is the amount of cash US $ in circulation? [in billions]",
+    "answer": 800,
+    "hints": [
+      "Every day, 16 million 1$-notes are printed and destroyed.",
+      "A US-$-note is in circulation for about 20 months.",
+      "The highest US-$-note is a 100.000-$-note."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["USA", "finance", "economy"]
+  },
+  {
+    "question": "How many Rolls Royce cars have been sold in 2019?",
+    "answer": 5100,
+    "hints": [
+      "The United Kingdom’s potential departure from the European Union caused some worry amongst UK-based automakers.",
+      "The price of the Rolls Royce Phantom, Rolls Royce's most sold car, starts from about 450.000 €.",
+      "In 2007, Rolls Royce sold 1100 cars."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["UK", "Europe", "luxury", "economy"]
+  },
+  {
+    "question": "How many popes have there ever been (as counted by the catholic church)?",
+    "answer": 266,
+    "hints": [
+      "The apostle St. Peter is considerd the first pope.",
+      "88 popes came from Rome.",
+      "Pius IX was the pope with the longest pontificate, being in office for 31 years, 7 months and 23 days."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["religion", "history", "Europe"]
+  },
+  {
+    "question": "How many inhabitants does Bangladesh have as of 2020? (in millions)",
+    "answer": 164.7,
+    "hints": [
+      "1969, Bangladesh had 62.68 million inhabitants.",
+      "The density of population in Bangladesh was 1,116.1 inhabitants per square kilometer as of 2020.",
+      "Bangladesh has an area of 147,570 square kilometers."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["population", "Bangladesh", "Asia", ""]
+  },
+  {
+    "question": "What is the height of Angela Merkel? (in cm)",
+    "answer": 165,
+    "hints": [
+      "Donald Trump is 190 cm high.",
+      "The average height of german women in the age between 18 and 40 is 166 cm."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["Germany", "politics"]
+  },
+  {
+    "question": "Which walking pace is assumed for pedestrians when programming the duration of green phases at traffic ligths in Germany? [in km/h]",
+    "answer": 4.32,
+    "hints": [
+      "Unhurried strolling has a walking pace of about 3 km/h.",
+      "The German 'Behindertengleichstellungsgesetz' (Law for the Equalization of Persons with a handicap) defines accessibility as the state where the environment is shaped in a way that people with a handicap can use it in the same manner as people without a handicap.",
+      "The average pace of a pedestrian is about 5 km/h."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": [""]
+  },
+  {
+    "question": "How many WhatsApp messages are sent per second? [as of June 2020]",
+    "answer": 750000,
+    "hints": [
+      "WhatsApp is the most used messenger app on the globe.",
+      "The logo of WhatsApp is a green speech ballon with a white earphone capsule.",
+      "As of June 2020, there have been 2 billion WhatsApp users around the globe."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": [""]
+  },
+  {
+    "question": "How many women are elected head of government (i.e. holding office of the Prime Minister or comparable office)? [as of September 1st 2020]",
+    "answer": 15,
+    "hints": [
+      "2015 we were living under a record-high number of simultanious female world leaders.",
+      "Totally, 42 women have ever been heads of government."
+    ],
+    "explanation": "The full list is (ordered by length of duration in office): Angela Merkel (Germany), Sheikh Hasina (Bangladesh), Erna Solberg (Norway), Saara Kuugongelwa (Namibia), Aung San Suu Kyi (Myanmar), Tsai Ing-wen (Republic of China [Taiwan]), Ana Brnabić (Serbia), Jacinda Ardern (New Zealand), Katrín Jakobsdóttir (Iceland), Mia Mottley (Barbados), Mette Frederiksen (Denmark), Jeanine Áñez (Bolivia), Sanna Marin (Finland), Rose Christiane Raponda (Gabon), Victoire Tomegah Dogbé (Togo)",
+    "language": "en",
+    "tags": ["politics", "feminism"]
+  },
+  {
+    "question": "How many black actors have been winning an Academy Award as Best Actor in a Leading Role? [as of 2019]",
+    "answer": 5,
+    "hints": [
+      "In 2019, the 91st Academy Awards ceremony has been held.",
+      "In 1958, Sidney Poitier was the first black Actore being nominated as Best Actor in a Leading Role.",
+      "The number can be counted by one hand."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": [""]
+  },
+  {
+    "question": "How long was the longest movie winning an Oscar for Best Picture? [in minutes]",
+    "answer": 238,
+    "hints": [
+      "The longest movie to win an Oscar was 'War and Peace' and lasted 431 minutes.",
+      "The shortes movie to win the Oscar for Best Picture took 94 minutes.",
+      "The longest movie winning an Oscar for Best Picture is 1939's 'Gone with the Wind'."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["culture", "movie", "duration"]
+  },
+  {
+    "question": "In how many general elections did Queen Elizabeth II participate?",
+    "answer": 0,
+    "hints": [
+      "Queen Elizabeth II was born on 21 April 1926",
+      "There is nothing in written British law barring Queen Elizabeth II from voting in an election."
+    ],
+    "explanation": "Although not prohibited by law, it is considered unconstitutional for the Monarch to vote in an election.",
+    "language": "en",
+    "tags": ["politics", "history", "UK", "Europe"]
+  },
+  {
+    "question": "How many years since the Nobel Peace Prize exists, has it not been awarded? [as of 2019]",
+    "answer": 19,
+    "hints": [
+      "In total, there are 134 Nobel Peace Prize Laureates.",
+      "The Nobel Peace Prize exists since 1901.",
+      "The last year the Nobel Peace Prize has not been awarded was 1972."
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": ["history", "politics"]
+  },
+  {
+    "question": "How long is the German Highway ('Autobahn') net? [in km]",
+    "answer": 13000,
+    "hints": [
+      "The longest German highway is the Autobahn A7, with a length of 962 km.",
+      "",
+      ""
+    ],
+    "explanation": "",
+    "language": "en",
+    "tags": [""]
+  }
 ]
