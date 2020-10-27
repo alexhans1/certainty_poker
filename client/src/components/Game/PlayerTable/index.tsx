@@ -75,8 +75,8 @@ export default ({
             >
               <span>{name}</span>
               {currentBettingRound?.currentPlayer.id === id && (
-                <span className="dice" role="img" aria-label="dice">
-                  🎲
+                <span className="turn" role="img" aria-label="turn">
+                  {">"}
                 </span>
               )}
             </div>
