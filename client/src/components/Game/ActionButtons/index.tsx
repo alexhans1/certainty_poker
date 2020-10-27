@@ -48,6 +48,7 @@ export default ({
           handleOnClick: () => {
             call(placeBet, game, playerId);
           },
+          isDisabled: calculateAmountToCall(currentBettingRound, playerId) <= 0,
         },
         {
           text: "Raise",
