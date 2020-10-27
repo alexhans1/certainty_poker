@@ -16,6 +16,7 @@ import Hints from "./Hints";
 import AnswerDrawer from "./AnswerDrawer";
 import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
+import Results from "./Results";
 import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 
 function GameComponent() {
@@ -162,6 +163,17 @@ function GameComponent() {
         }}
       />
       <NameInputDrawer {...{ gameId, createPlayer, playerId }} />
+      {game.isOver && (
+        <Results
+          {...{
+            players: game?.players,
+            playerId,
+            currentQuestionRound,
+            currentBettingRound,
+            game,
+          }}
+        />
+      )}
     </>
   );
 }
