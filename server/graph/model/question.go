@@ -1,10 +1,11 @@
 package model
 
 import (
-	"os"
-	"io/ioutil"
 	"encoding/json"
+	"io/ioutil"
 	"math/rand"
+	"os"
+
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
@@ -20,26 +21,26 @@ func NewQuestion(question string, answer float64, hints []string) *Question {
 	return q
 }
 
-// Load Questions from json file
+// LoadQuestions load questions from json file
 func LoadQuestions() []Question {
-	questionsJson, _ := os.Open("questions.json")
-	
-	defer questionsJson.Close()
-	byteValue, _ := ioutil.ReadAll(questionsJson)
+	questionsJSON, _ := os.Open("questions.json")
+
+	defer questionsJSON.Close()
+	byteValue, _ := ioutil.ReadAll(questionsJSON)
 
 	var allQuestions []Question
-	json.Unmarshal(byteValue, allQuestions)
+	json.Unmarshal(byteValue, &allQuestions)
 
 	return allQuestions
 }
 
-// Draw a random Question which is not burnt yets
+// DrawQuestion draws a random Question which is not burnt yet
 func DrawQuestion(burntQuestions []string) *Question {
 	allQuestions := LoadQuestions()
 	openQuestions := make([]Question, 0)
 
-	for _, question := range(allQuestions){
-		if helpers.ContainsString(burntQuestions, question.Question){
+	for _, question := range allQuestions {
+		if helpers.ContainsString(burntQuestions, question.Question) {
 			continue
 		} else {
 			openQuestions = append(openQuestions, question)
@@ -47,7 +48,7 @@ func DrawQuestion(burntQuestions []string) *Question {
 	}
 
 	randomIndex := rand.Intn(len(openQuestions))
-    drawnQuestion := &openQuestions[randomIndex]
+	drawnQuestion := &openQuestions[randomIndex]
 
-    return drawnQuestion
+	return drawnQuestion
 }
