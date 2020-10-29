@@ -19,15 +19,14 @@ export interface PlayerTableProps {
   isResultList?: boolean;
 }
 
-const moveAppPlayerToTop = (players: Player[], playerId: Player["id"]) =>
-  players.splice(
-    0,
-    0,
-    players.splice(
-      players.findIndex(({ id }) => id === playerId),
-      1
-    )[0]
+const moveAppPlayerToTop = (players: Player[], playerId: Player["id"]) => {
+  const players_ = [...players];
+  const a = players_.splice(
+    players_.findIndex(({ id }) => id === playerId),
+    players_.length
   );
+  return [...a, ...players_];
+};
 
 export default ({
   players,
@@ -43,7 +42,7 @@ export default ({
   if (isResultList) {
     players = players.sort((p1, p2) => p2.money - p1.money);
   } else {
-    moveAppPlayerToTop(players, playerId);
+    players = moveAppPlayerToTop(players, playerId);
   }
 
   const revealPreviousAnswers =
