@@ -10,12 +10,12 @@ export const calculateBettingRoundSpendingForPlayer = (
   );
 };
 
-const calculateSpendingRoundSpendingForPlayer = (
+const calculateQuestionRoundSpendingForPlayer = (
   playerId: Player["id"],
   questionRound?: QuestionRound
 ) => {
   return questionRound?.bettingRounds.reduce(
-    (sum, br) => calculateBettingRoundSpendingForPlayer(br, playerId),
+    (sum, br) => sum + calculateBettingRoundSpendingForPlayer(br, playerId),
     0
   );
 };
@@ -49,7 +49,7 @@ export const isPlayerDead = (
   if (player.money > 0) {
     return false;
   }
-  const amountInQuestionRound = calculateSpendingRoundSpendingForPlayer(
+  const amountInQuestionRound = calculateQuestionRoundSpendingForPlayer(
     player.id,
     currentQuestionRound
   );
