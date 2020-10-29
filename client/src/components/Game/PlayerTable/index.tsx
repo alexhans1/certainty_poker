@@ -58,11 +58,18 @@ export default ({
         (guess) => guess.playerId === playerId
       ));
 
+  let questionRoundGuesses: { [key: string]: Guess["guess"] };
   let previousQuestionRoundGuesses: { [key: string]: Guess["guess"] };
   if (game && revealPreviousAnswers) {
     previousQuestionRoundGuesses = game.questionRounds[
       game.questionRounds.length - (game.isOver ? 1 : 2)
     ].guesses.reduce(
+      (acc, guess) => ({ ...acc, [guess.playerId]: guess.guess }),
+      {}
+    );
+  }
+  if (currentQuestionRound) {
+    questionRoundGuesses = currentQuestionRound.guesses.reduce(
       (acc, guess) => ({ ...acc, [guess.playerId]: guess.guess }),
       {}
     );
@@ -83,9 +90,6 @@ export default ({
     )
     .map((p) => p.id);
 
-  const playerGuess = currentQuestionRound?.guesses.find(
-    (g) => g.playerId === playerId
-  )?.guess;
   return (
     <div>
       {(players || []).map(({ id, money, name, rank }, i) => {
@@ -117,12 +121,20 @@ export default ({
                 (previousQuestionRoundGuesses[id] ||
                   previousQuestionRoundGuesses[id] === 0) ? (
                   <span role="img" aria-label="answer">
-                    📣{previousQuestionRoundGuesses[id]}
+                    📣 {previousQuestionRoundGuesses[id]}
                   </span>
                 ) : (
-                  id === playerId && (
+                  currentQuestionRound && (
                     <span role="img" aria-label="answer">
-                      📣{playerGuess}
+                      📣{" "}
+                      <span className={id === playerId ? "" : "obfuscate"}>
+                        {!questionRoundGuesses[id] &&
+                        questionRoundGuesses[id] !== 0
+                          ? null
+                          : id === playerId
+                          ? questionRoundGuesses[id]
+                          : 432}
+                      </span>
                     </span>
                   )
                 )}
