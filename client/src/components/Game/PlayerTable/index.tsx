@@ -7,6 +7,7 @@ import {
   Game,
   Guess,
 } from "../../../interfaces";
+import Avatar, { Size } from "./Avatar";
 
 import "./styles.scss";
 
@@ -101,16 +102,18 @@ export default ({
         return (
           <div key={id} className="d-flex align-items-center pt-4 ml-4">
             {gameIsOver && <span className="rank">{rank}.</span>}
-            <div
-              className={`avatar ${i === 0 ? "lg" : "md"} ${
-                isDead || isFolded ? "dead" : ""
-              }`}
-            >
-              <span>{name}</span>
-              {!gameIsOver && currentBettingRound?.currentPlayer.id === id && (
-                <span className="turn">{">"}</span>
-              )}
-            </div>
+            <Avatar
+              {...{
+                id,
+                name,
+                currentBettingRound,
+                isDead,
+                isFolded,
+                gameIsOver,
+                isDealer: game?.dealerId === id,
+                size: i === 0 ? Size.lg : Size.md,
+              }}
+            />
             <div>
               <div
                 className={`money ${id === playerId ? "" : "md"} ${

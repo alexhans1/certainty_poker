@@ -5,49 +5,6 @@ $smallAvatar: 70px;
   font-size: 1.2em;
   margin-right: 0.4em;
 }
-.avatar {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.8em;
-  vertical-align: middle;
-  width: $smallAvatar;
-  height: $smallAvatar;
-  border-radius: 50%;
-  background: #ebebeb;
-
-  .turn {
-    position: absolute;
-    left: calc(#{$smallAvatar} / -2.7);
-    color: #c44444;
-    font-family: "Satisfy", cursive;
-    font-size: 2em;
-    text-shadow: 0px 0px 7px #c26464;
-  }
-
-  &.lg {
-    font-size: 2.7em;
-    width: $largeAvatar;
-    height: $largeAvatar;
-
-    .turn {
-      left: calc(#{$largeAvatar} / -3);
-    }
-  }
-
-  &.md {
-    margin-left: calc((#{$largeAvatar} - #{$smallAvatar}) / 2);
-  }
-
-  &.dead {
-    background: #bebebe;
-  }
-
-  span {
-    color: #393d4e;
-  }
-}
 .money {
   font-size: 1.2em;
   display: flex;
