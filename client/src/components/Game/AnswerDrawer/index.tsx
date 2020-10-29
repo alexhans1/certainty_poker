@@ -62,6 +62,7 @@ export default ({
               onClick={(e) => {
                 if ((guess || guess === 0) && typeof guess === "number") {
                   addGuess(addGuessMutation, game, guess, playerId);
+                  setGuess("");
                 }
               }}
             >
