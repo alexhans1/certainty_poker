@@ -21,7 +21,7 @@ export default ({
   if (isDead) {
     return null;
   }
-  const [guess, setGuess] = useState<number>();
+  const [guess, setGuess] = useState<number | string>("");
   const canAddGuess = !currentQuestionRound.guesses.find(
     (guess) => guess.playerId === playerId
   );
@@ -40,7 +40,8 @@ export default ({
           <input
             value={guess}
             onChange={(e) => {
-              setGuess(parseFloat(e.target.value) || 0);
+              const value = parseFloat(e.target.value);
+              setGuess(value || e.target.value);
             }}
             disabled={!canAddGuess}
             type="number"
@@ -53,9 +54,13 @@ export default ({
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={!canAddGuess || (!guess && guess !== 0)}
+              disabled={
+                !canAddGuess ||
+                typeof guess === "string" ||
+                (!guess && guess !== 0)
+              }
               onClick={(e) => {
-                if (guess || guess === 0) {
+                if ((guess || guess === 0) && typeof guess === "number") {
                   addGuess(addGuessMutation, game, guess, playerId);
                 }
               }}
