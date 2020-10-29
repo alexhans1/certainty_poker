@@ -6,7 +6,7 @@ import {
   call,
   raise,
   fold,
-  haveAllPlayersPlacedTheirBets,
+  haveAllPlayersPlacedTheirGuess,
   calculateAmountToCall,
 } from "../helpers";
 import ActionButton from "./Button";
@@ -69,7 +69,7 @@ export default ({
           isDisabled={
             actionButtonProps.isDisabled ||
             currentBettingRound?.currentPlayer.id !== playerId ||
-            !haveAllPlayersPlacedTheirBets(currentQuestionRound, game.players)
+            !haveAllPlayersPlacedTheirGuess(currentQuestionRound, game.players)
           }
         />
       ))}

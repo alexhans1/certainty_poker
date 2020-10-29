@@ -28,16 +28,12 @@ export const getCurrentBettingRound = (currentQuestionRound?: QuestionRound) =>
     currentQuestionRound?.bettingRounds?.length - 1
   ];
 
-export const haveAllPlayersPlacedTheirBets = (
+export const haveAllPlayersPlacedTheirGuess = (
   currentQuestionRound: QuestionRound,
   players: Player[]
 ) => {
-  const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   const remainingPlayers = players.filter(
-    (player) =>
-      currentBettingRound &&
-      (player.money > 0 ||
-        calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id))
+    (player) => !isPlayerDead(currentQuestionRound, player)
   );
   return currentQuestionRound.guesses.length === remainingPlayers.length;
 };
