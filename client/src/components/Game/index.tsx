@@ -151,16 +151,18 @@ function GameComponent() {
           playerId={playerId}
         />
       )}
-      <Footer
-        {...{
-          game,
-          currentQuestionRound,
-          currentBettingRound,
-          placeBet,
-          playerId,
-          startGame,
-        }}
-      />
+      {!game.isOver && (
+        <Footer
+          {...{
+            game,
+            currentQuestionRound,
+            currentBettingRound,
+            placeBet,
+            playerId,
+            startGame,
+          }}
+        />
+      )}
       <NameInputDrawer {...{ gameId, createPlayer, playerId }} />
     </>
   );
