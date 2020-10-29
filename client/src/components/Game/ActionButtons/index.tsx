@@ -32,6 +32,7 @@ export default ({
   }
 
   const [showRaiseDrawer, setShowRaiseDrawer] = useState(false);
+  const player = game.players.find((p) => p.id === playerId);
 
   return (
     <div className="d-flex flex-row w-100 justify-content-between">
@@ -55,6 +56,10 @@ export default ({
           handleOnClick: () => {
             setShowRaiseDrawer(true);
           },
+          isDisabled:
+            player?.money &&
+            calculateAmountToCall(currentBettingRound, playerId) >=
+              player?.money,
         },
         {
           text: "Fold",
