@@ -1,6 +1,10 @@
 $largeAvatar: 110px;
 $smallAvatar: 70px;
 
+.rank {
+  font-size: 1.2em;
+  margin-right: 0.4em;
+}
 .avatar {
   position: relative;
   display: flex;
@@ -22,12 +26,6 @@ $smallAvatar: 70px;
     text-shadow: 0px 0px 7px #c26464;
   }
 
-  .trophy {
-    top: 0;
-    font-size: 1.5em;
-    text-shadow: none;
-  }
-
   &.lg {
     font-size: 2.7em;
     width: $largeAvatar;
@@ -35,10 +33,6 @@ $smallAvatar: 70px;
 
     .turn {
       left: calc(#{$largeAvatar} / -3);
-    }
-
-    .trophy {
-      left: 3em;
     }
   }
 
@@ -71,4 +65,8 @@ $smallAvatar: 70px;
 .skull {
   margin-left: 0.6em;
   font-size: 2em;
+}
+.trophy {
+  margin-left: 0.6em;
+  font-size: 3.5em;
 }

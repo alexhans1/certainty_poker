@@ -10,13 +10,16 @@ import {
 
 import "./styles.scss";
 
+interface PlayerWithRank extends Player {
+  rank?: number;
+}
+
 export interface PlayerTableProps {
-  players?: Player[];
+  players?: PlayerWithRank[];
   playerId?: Player["id"];
   currentBettingRound?: BettingRound;
   currentQuestionRound?: QuestionRound;
   game?: Game;
-  isResultList?: boolean;
 }
 
 const moveAppPlayerToTop = (players: Player[], playerId: Player["id"]) => {
@@ -34,17 +37,19 @@ export default ({
   currentBettingRound,
   currentQuestionRound,
   game,
-  isResultList,
 }: PlayerTableProps) => {
   if (!players?.length || !playerId) {
     return null;
   }
-  if (isResultList) {
-    players = players.sort((p1, p2) => p2.money - p1.money);
-  } else {
-    players = moveAppPlayerToTop(players, playerId);
+  const { isOver: gameIsOver } = game || {};
+  if (gameIsOver) {
+    players
+      .sort((p1, p2) => p2.money - p1.money)
+      .forEach((player, i) => {
+        player.rank = i + 1;
+      });
   }
-
+  players = moveAppPlayerToTop(players, playerId);
   const revealPreviousAnswers =
     game?.isOver ||
     (game &&
@@ -62,13 +67,28 @@ export default ({
       {}
     );
   }
+  const winningPlayerIds = players
+    .reduce(
+      (winners, player, i) => {
+        if (i === 0) return winners;
+        if (winners[0].money < player.money) {
+          return [player];
+        }
+        if (winners[0].money === player.money) {
+          return [...winners, player];
+        }
+        return winners;
+      },
+      [players[0]]
+    )
+    .map((p) => p.id);
 
   const playerGuess = currentQuestionRound?.guesses.find(
     (g) => g.playerId === playerId
   )?.guess;
   return (
     <div>
-      {(players || []).map(({ id, money, name }, i) => {
+      {(players || []).map(({ id, money, name, rank }, i) => {
         const isDead =
           currentQuestionRound &&
           isPlayerDead(currentQuestionRound, { id, money });
@@ -76,40 +96,47 @@ export default ({
           currentQuestionRound && hasFolded(currentQuestionRound, id);
         return (
           <div key={id} className="d-flex align-items-center pt-4 ml-4">
+            {gameIsOver && <span className="rank">{rank}.</span>}
             <div
               className={`avatar ${i === 0 ? "lg" : "md"} ${
-                (isDead || isFolded) && !isResultList ? "dead" : ""
+                isDead || isFolded ? "dead" : ""
               }`}
             >
               <span>{name}</span>
-              {!isResultList &&
-                currentBettingRound?.currentPlayer.id === id && (
-                  <span className="turn">{">"}</span>
-                )}
-              {isResultList && i === 0 && (
-                <span className="turn trophy" role="img" aria-label="trophy">
-                  🏆
-                </span>
+              {!gameIsOver && currentBettingRound?.currentPlayer.id === id && (
+                <span className="turn">{">"}</span>
               )}
             </div>
             <div>
               <div
                 className={`money ${id === playerId ? "" : "md"} ${
-                  (isDead || isFolded) && !isResultList ? "dead" : ""
+                  (isDead || isFolded) && !gameIsOver ? "dead" : ""
                 }`}
               >
-                {!isResultList &&
-                  (revealPreviousAnswers ? (
-                    <span>{previousQuestionRoundGuesses[id]}</span>
-                  ) : (
-                    id === playerId && <span>{playerGuess}</span>
-                  ))}
+                {revealPreviousAnswers &&
+                (previousQuestionRoundGuesses[id] ||
+                  previousQuestionRoundGuesses[id] === 0) ? (
+                  <span role="img" aria-label="answer">
+                    📣{previousQuestionRoundGuesses[id]}
+                  </span>
+                ) : (
+                  id === playerId && (
+                    <span role="img" aria-label="answer">
+                      📣{playerGuess}
+                    </span>
+                  )
+                )}
                 <span role="img" aria-label="money">
                   💰{money}
                 </span>
               </div>
             </div>
-            {isDead && (
+            {gameIsOver && winningPlayerIds.includes(id) && (
+              <span className="trophy" role="img" aria-label="trophy">
+                🏆
+              </span>
+            )}
+            {isDead && !gameIsOver && (
               <span className="skull" role="img" aria-label="skull">
                 💀
               </span>
