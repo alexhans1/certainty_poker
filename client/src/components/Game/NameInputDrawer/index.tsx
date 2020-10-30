@@ -28,7 +28,6 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
   return (
     <Drawer
       title="Your avatar"
-      isCollapseAble={false}
       anchor={"bottom"}
       open={!playerId}
       variant="persistent"

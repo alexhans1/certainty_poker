@@ -114,37 +114,35 @@ export default ({
                 size: i === 0 ? Size.lg : Size.md,
               }}
             />
-            <div>
-              <div
-                className={`money ${id === playerId ? "" : "md"} ${
-                  (isDead || isFolded) && !gameIsOver ? "dead" : ""
-                }`}
-              >
-                {revealPreviousAnswers &&
-                (previousQuestionRoundGuesses[id] ||
-                  previousQuestionRoundGuesses[id] === 0) ? (
-                  <span role="img" aria-label="answer">
-                    📣 {previousQuestionRoundGuesses[id]}
-                  </span>
-                ) : (
-                  currentQuestionRound && (
-                    <span role="img" aria-label="answer">
-                      📣{" "}
-                      <span className={id === playerId ? "" : "obfuscate"}>
-                        {!questionRoundGuesses[id] &&
-                        questionRoundGuesses[id] !== 0
-                          ? null
-                          : id === playerId
-                          ? questionRoundGuesses[id]
-                          : 432}
-                      </span>
-                    </span>
-                  )
-                )}
-                <span role="img" aria-label="money">
-                  💰{money}
+            <div
+              className={`money ${id === playerId ? "" : "md"} ${
+                (isDead || isFolded) && !gameIsOver ? "dead" : ""
+              }`}
+            >
+              {revealPreviousAnswers &&
+              (previousQuestionRoundGuesses[id] ||
+                previousQuestionRoundGuesses[id] === 0) ? (
+                <span role="img" aria-label="answer">
+                  📣 {previousQuestionRoundGuesses[id]}
                 </span>
-              </div>
+              ) : (
+                currentQuestionRound && (
+                  <span role="img" aria-label="answer">
+                    📣{" "}
+                    <span className={id === playerId ? "" : "obfuscate"}>
+                      {!questionRoundGuesses[id] &&
+                      questionRoundGuesses[id] !== 0
+                        ? null
+                        : id === playerId
+                        ? questionRoundGuesses[id]
+                        : 432}
+                    </span>
+                  </span>
+                )
+              )}
+              <span role="img" aria-label="money">
+                💰{money}
+              </span>
             </div>
             {gameIsOver && winningPlayerIds.includes(id) && (
               <span className="trophy" role="img" aria-label="trophy">

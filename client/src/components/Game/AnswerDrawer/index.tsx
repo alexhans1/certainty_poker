@@ -8,6 +8,8 @@ interface QuestionProps {
   currentQuestionRound: QuestionRound;
   playerId: Player["id"];
   addGuessMutation: AddGuess;
+  showNewQuestionRound: boolean;
+  setShowNewQuestionRound: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default ({
@@ -15,6 +17,8 @@ export default ({
   playerId,
   addGuessMutation,
   game,
+  showNewQuestionRound,
+  setShowNewQuestionRound,
 }: QuestionProps) => {
   const player = game.players.find((p) => p.id === playerId);
   const isDead = player && isPlayerDead(currentQuestionRound, player);
@@ -28,10 +32,17 @@ export default ({
   return (
     <Drawer
       title="New Question"
-      isCollapseAble={true}
-      shouldBeCollapsed={canAddGuess}
+      onClose={() => {
+        setShowNewQuestionRound(false);
+      }}
       anchor={"bottom"}
-      open={canAddGuess}
+      open={
+        canAddGuess &&
+        showNewQuestionRound &&
+        !currentQuestionRound?.guesses.find(
+          (guess) => guess.playerId === playerId
+        )
+      }
       variant="persistent"
     >
       <>

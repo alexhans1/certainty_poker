@@ -42,7 +42,6 @@ export default ({
   return (
     <Drawer
       title="Raise"
-      isCollapseAble={false}
       anchor={"bottom"}
       open={showRaiseDrawer}
       onClose={() => {

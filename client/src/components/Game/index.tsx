@@ -21,6 +21,7 @@ import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
   const [game, setGame] = useState<Game | undefined>(undefined);
+  const [showNewQuestionRound, setShowNewQuestionRound] = useState(false);
   const { game_id: gameId } = useParams<{ game_id: string }>();
 
   const [
@@ -113,6 +114,7 @@ function GameComponent() {
 
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
+
   return (
     <>
       {(addPlayerLoading ||
@@ -126,9 +128,11 @@ function GameComponent() {
         {currentQuestionRound && playerId && (
           <div>
             <Question
-              game={game}
-              currentQuestionRound={currentQuestionRound}
-              playerId={playerId}
+              {...{
+                game,
+                currentQuestionRound,
+                playerId,
+              }}
             />
             <Hints currentQuestionRound={currentQuestionRound} />
           </div>
@@ -142,13 +146,30 @@ function GameComponent() {
             game,
           }}
         />
+        {!showNewQuestionRound &&
+          !currentQuestionRound?.guesses.find(
+            (guess) => guess.playerId === playerId
+          ) && (
+            <button
+              className="btn btn-primary mx-auto mt-5"
+              onClick={() => {
+                setShowNewQuestionRound(true);
+              }}
+            >
+              Next Question
+            </button>
+          )}
       </div>
       {currentQuestionRound && playerId && (
         <AnswerDrawer
-          game={game}
-          addGuessMutation={addGuess}
-          currentQuestionRound={currentQuestionRound}
-          playerId={playerId}
+          {...{
+            game,
+            addGuessMutation: addGuess,
+            currentQuestionRound,
+            playerId,
+            showNewQuestionRound,
+            setShowNewQuestionRound,
+          }}
         />
       )}
       {!game.isOver && (
