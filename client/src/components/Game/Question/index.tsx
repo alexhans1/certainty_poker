@@ -14,6 +14,9 @@ const styles = {
   title: {
     fontSize: "0.7em",
   },
+  answer: {
+    fontSize: "2em",
+  },
 };
 
 export default ({ game, currentQuestionRound, playerId }: QuestionProps) => {
@@ -31,7 +34,7 @@ export default ({ game, currentQuestionRound, playerId }: QuestionProps) => {
     return (
       <>
         <p>{previousQuestionRound.question.question}</p>
-        <p>
+        <p style={styles.answer}>
           Answer: <b>{previousQuestionRound.question.answer}</b>
         </p>
       </>
