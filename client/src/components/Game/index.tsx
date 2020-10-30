@@ -114,6 +114,15 @@ function GameComponent() {
 
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
+  const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
+    (guess) => guess.playerId === playerId
+  );
+  const hasPlayerPlacedGuessInCurrentQuestionRound =
+    !!playerGuessInCurrentQuestionRound ||
+    playerGuessInCurrentQuestionRound === 0;
+  const previousQuestionRound = !hasPlayerPlacedGuessInCurrentQuestionRound
+    ? game?.questionRounds[game?.questionRounds?.length - 2]
+    : undefined;
 
   return (
     <>
@@ -134,7 +143,7 @@ function GameComponent() {
                 playerId,
               }}
             />
-            <Hints currentQuestionRound={currentQuestionRound} />
+            <Hints {...{ currentQuestionRound, previousQuestionRound }} />
           </div>
         )}
         <PlayerTable
@@ -146,19 +155,16 @@ function GameComponent() {
             game,
           }}
         />
-        {!showNewQuestionRound &&
-          !currentQuestionRound?.guesses.find(
-            (guess) => guess.playerId === playerId
-          ) && (
-            <button
-              className="btn btn-primary mx-auto mt-5"
-              onClick={() => {
-                setShowNewQuestionRound(true);
-              }}
-            >
-              Next Question
-            </button>
-          )}
+        {!showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound && (
+          <button
+            className="btn btn-primary mx-auto mt-5"
+            onClick={() => {
+              setShowNewQuestionRound(true);
+            }}
+          >
+            Next Question
+          </button>
+        )}
       </div>
       {currentQuestionRound && playerId && (
         <AnswerDrawer

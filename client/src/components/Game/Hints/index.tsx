@@ -18,11 +18,18 @@ const styles = {
 
 interface HintsProps {
   currentQuestionRound: QuestionRound;
+  previousQuestionRound?: QuestionRound;
 }
 
-export default ({ currentQuestionRound }: HintsProps) => {
-  const hints = currentQuestionRound.question.hints;
-  const numberOfHints = currentQuestionRound.bettingRounds.length - 1;
+export default ({
+  currentQuestionRound,
+  previousQuestionRound,
+}: HintsProps) => {
+  const usedQuestionRound = previousQuestionRound
+    ? previousQuestionRound
+    : currentQuestionRound;
+  const hints = usedQuestionRound.question.hints;
+  const numberOfHints = usedQuestionRound.bettingRounds.length - 1;
   if (numberOfHints < 1) {
     return null;
   }
@@ -34,13 +41,15 @@ export default ({ currentQuestionRound }: HintsProps) => {
       <span style={styles.title}>
         Hint{numberOfHints > 1 && "s"} ({numberOfHints}/{hints.length}):
       </span>
-      {currentQuestionRound.question.hints
-        .slice(0, currentQuestionRound.bettingRounds.length - 1)
+      {usedQuestionRound.question.hints
+        .slice(0, usedQuestionRound.bettingRounds.length - 1)
         .map((hint, i) => (
           <span
             key={hint}
             style={
-              numberOfHints === i + 1 ? styles.currentHint : styles.oldHint
+              numberOfHints === i + 1 && !previousQuestionRound
+                ? styles.currentHint
+                : styles.oldHint
             }
           >
             {hint}
