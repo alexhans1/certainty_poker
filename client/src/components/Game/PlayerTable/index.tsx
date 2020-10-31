@@ -127,12 +127,12 @@ export default ({
               (previousQuestionRoundGuesses[id] ||
                 previousQuestionRoundGuesses[id] === 0) ? (
                 <span role="img" aria-label="answer">
-                  📣 {previousQuestionRoundGuesses[id]}
+                  💡 {previousQuestionRoundGuesses[id]}
                 </span>
               ) : (
                 currentQuestionRound && (
                   <span role="img" aria-label="answer">
-                    📣{" "}
+                    💡{" "}
                     <span className={id === playerId ? "" : "obfuscate"}>
                       {!questionRoundGuesses[id] &&
                       questionRoundGuesses[id] !== 0
