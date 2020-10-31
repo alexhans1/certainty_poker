@@ -23,8 +23,8 @@ export default ({
       }}
     >
       <div className="d-flex align-items-center flex-column">
-        <div className="d-flex" id="drawer-title">
-          <span className="ml-auto">{title}</span>
+        <div className="d-flex justify-content-center" id="drawer-title">
+          <span className={onClose ? "ml-auto" : ""}>{title}</span>
           {onClose && (
             <span id="drawer-close" className="ml-auto mr-3" onClick={onClose}>
               ╳
