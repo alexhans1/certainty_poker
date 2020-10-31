@@ -15,12 +15,12 @@ import * as serviceWorker from "./serviceWorker";
 import { SERVER_URL } from "./config";
 
 const httpLink = new HttpLink({
-  uri: `${SERVER_URL}/query`,
+  uri: `http${SERVER_URL}/query`,
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:8080/query`,
+  uri: `ws${SERVER_URL}/query`,
   options: {
     reconnect: true,
   },
