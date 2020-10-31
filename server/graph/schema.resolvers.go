@@ -13,6 +13,16 @@ import (
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
+func updateGameChannel(r *mutationResolver, game *model.Game) {
+	r.mutex.Lock()
+	for gameID, gameChannel := range r.gameChannels {
+		if gameID == game.ID {
+			gameChannel <- game
+		}
+	}
+	r.mutex.Unlock()
+}
+
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
 	gameID := helpers.CreateID()
 	game := model.Game{
@@ -46,6 +56,8 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 	model.ShufflePlayers(game.Players)
 	game.AddNewQuestionRound()
 
+	go updateGameChannel(r, game)
+
 	return game, nil
 }
 
@@ -58,6 +70,8 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, input model.PlayerInpu
 	if game.HasStarted() {
 		return nil, errors.New("cannot join game after it started")
 	}
+
+	go updateGameChannel(r, game)
 
 	return game.AddNewPlayer(input.PlayerName), nil
 }
@@ -72,6 +86,8 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 		PlayerID: input.PlayerID,
 		Guess:    input.Guess,
 	})
+
+	go updateGameChannel(r, game)
 
 	return game, nil
 }
@@ -131,11 +147,31 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 		bettingRound.MoveToNextPlayer()
 	}
 
+	go updateGameChannel(r, game)
+
 	return game, nil
 }
 
 func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, error) {
 	return model.FindGame(r.games, gameID)
+}
+
+func (r *subscriptionResolver) GameUpdated(ctx context.Context, gameID string) (<-chan *model.Game, error) {
+	// Create new channel for request
+	gameChannel := make(chan *model.Game, 1)
+	r.mutex.Lock()
+	r.gameChannels[gameID] = gameChannel
+	r.mutex.Unlock()
+
+	// Delete channel when done
+	go func() {
+		<-ctx.Done()
+		r.mutex.Lock()
+		delete(r.gameChannels, gameID)
+		r.mutex.Unlock()
+	}()
+
+	return gameChannel, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
@@ -144,5 +180,9 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Subscription returns generated.SubscriptionResolver implementation.
+func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subscriptionResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type subscriptionResolver struct{ *Resolver }

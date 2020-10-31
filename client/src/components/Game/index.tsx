@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useLazyQuery, useMutation } from "@apollo/react-hooks";
+import {
+  useLazyQuery,
+  useMutation,
+  useSubscription,
+} from "@apollo/react-hooks";
 import {
   GET_GAME_BY_ID,
   CREATE_PLAYER,
   START_GAME,
   PLACE_BET,
   ADD_GUESS,
+  SUBSCRIBE_TO_GAME_BY_ID,
 } from "../../api/queries";
 import { Game, Player } from "../../interfaces";
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
@@ -26,7 +31,7 @@ function GameComponent() {
   const [showNewQuestionRound, setShowNewQuestionRound] = useState(
     !!currentQuestionRound
   );
-  const { game_id: gameId } = useParams<{ game_id: string }>();
+  const { gameId } = useParams<{ gameId: string }>();
 
   const [
     fetchGame,
@@ -42,26 +47,34 @@ function GameComponent() {
 
   const [
     startGame,
-    { data: startGameData, loading: startGameLoading, error: startGameError },
+    { loading: startGameLoading, error: startGameError },
   ] = useMutation<{ startGame: Game }>(START_GAME);
 
   const [
     placeBet,
-    { data: placeBetData, loading: placeBetLoading, error: placeBetError },
+    { loading: placeBetLoading, error: placeBetError },
   ] = useMutation<{ placeBet: Game }>(PLACE_BET);
 
   const [
     addGuess,
-    { data: addGuessData, loading: addGuessLoading, error: addGuessError },
+    { loading: addGuessLoading, error: addGuessError },
   ] = useMutation<{ addGuess: Game }>(ADD_GUESS);
 
+  const { data: gameData, error: subscriptionError } = useSubscription<{
+    gameUpdated: Game;
+  }>(SUBSCRIBE_TO_GAME_BY_ID, {
+    variables: { gameId },
+  });
+
   useEffect(() => {
-    setInterval(() => {
-      fetchGame({
-        variables: { gameId },
-      });
-    }, 500);
+    fetchGame({
+      variables: { gameId },
+    });
   }, [fetchGame, gameId]);
+
+  useEffect(() => {
+    setGame(gameData?.gameUpdated || fetchGameData?.game);
+  }, [fetchGameData, gameData, setGame]);
 
   useEffect(() => {
     if (gameId) {
@@ -77,23 +90,7 @@ function GameComponent() {
         setPlayerId(newPlayerId);
       }
     }
-
-    setGame(
-      fetchGameData?.game ||
-        startGameData?.startGame ||
-        placeBetData?.placeBet ||
-        addGuessData?.addGuess
-    );
-  }, [
-    gameId,
-    playerId,
-    newPlayerData,
-    createPlayer,
-    fetchGameData,
-    startGameData,
-    placeBetData,
-    addGuessData,
-  ]);
+  }, [gameId, newPlayerData]);
 
   if (!game) {
     return <h3>Loading...</h3>;
@@ -104,6 +101,7 @@ function GameComponent() {
     addPlayerError ||
     startGameError ||
     placeBetError ||
+    subscriptionError ||
     addGuessError
   ) {
     console.error(
@@ -111,6 +109,7 @@ function GameComponent() {
         addPlayerError ||
         startGameError ||
         placeBetError ||
+        subscriptionError ||
         addGuessError
     );
     return <p>A technical error occurred. Try to refresh the page</p>;

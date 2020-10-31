@@ -17,7 +17,7 @@ function App() {
       </a>
       <Switch>
         <Route path="/" component={Lobby} exact />
-        <Route path="/:game_id" component={Game} exact />
+        <Route path="/:gameId" component={Game} exact />
         <Route component={PageNotFound} />
       </Switch>
     </div>
