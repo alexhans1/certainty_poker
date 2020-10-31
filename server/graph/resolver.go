@@ -15,7 +15,7 @@ import (
 
 type Resolver struct {
 	games        map[string]*model.Game
-	gameChannels map[string]chan *model.Game
+	gameChannels map[string]map[string]chan *model.Game
 	mutex        sync.Mutex
 }
 
@@ -23,8 +23,20 @@ func NewResolver() generated.Config {
 	return generated.Config{
 		Resolvers: &Resolver{
 			games:        map[string]*model.Game{},
-			gameChannels: map[string]chan *model.Game{},
+			gameChannels: map[string]map[string]chan *model.Game{},
 			mutex:        sync.Mutex{},
 		},
 	}
+}
+
+func updateGameChannel(r *mutationResolver, game *model.Game) {
+	r.mutex.Lock()
+	for gameID, channels := range r.gameChannels {
+		if gameID == game.ID {
+			for _, gameChannel := range channels {
+				gameChannel <- game
+			}
+		}
+	}
+	r.mutex.Unlock()
 }

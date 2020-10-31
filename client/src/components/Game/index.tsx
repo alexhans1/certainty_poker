@@ -14,7 +14,12 @@ import {
   SUBSCRIBE_TO_GAME_BY_ID,
 } from "../../api/queries";
 import { Game, Player } from "../../interfaces";
-import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage";
+import {
+  getFingerprintFromStorage,
+  getPlayerIdFromStorage,
+  setFingerprintToStorage,
+  setPlayerIdToStorage,
+} from "../../storage";
 import PlayerTable from "./PlayerTable";
 import Question from "./Question";
 import Hints from "./Hints";
@@ -63,7 +68,11 @@ function GameComponent() {
   const { data: gameData, error: subscriptionError } = useSubscription<{
     gameUpdated: Game;
   }>(SUBSCRIBE_TO_GAME_BY_ID, {
-    variables: { gameId },
+    variables: {
+      gameId,
+      hash:
+        getFingerprintFromStorage(gameId) || setFingerprintToStorage(gameId),
+    },
   });
 
   useEffect(() => {

@@ -106,7 +106,7 @@ type ComplexityRoot struct {
 	}
 
 	Subscription struct {
-		GameUpdated func(childComplexity int, gameID string) int
+		GameUpdated func(childComplexity int, gameID string, hash string) int
 	}
 }
 
@@ -121,7 +121,7 @@ type QueryResolver interface {
 	Game(ctx context.Context, gameID string) (*model.Game, error)
 }
 type SubscriptionResolver interface {
-	GameUpdated(ctx context.Context, gameID string) (<-chan *model.Game, error)
+	GameUpdated(ctx context.Context, gameID string, hash string) (<-chan *model.Game, error)
 }
 
 type executableSchema struct {
@@ -405,7 +405,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Subscription.GameUpdated(childComplexity, args["gameId"].(string)), true
+		return e.complexity.Subscription.GameUpdated(childComplexity, args["gameId"].(string), args["hash"].(string)), true
 
 	}
 	return 0, false
@@ -569,7 +569,7 @@ type Mutation {
 }
 
 type Subscription {
-  gameUpdated(gameId: ID!): Game
+  gameUpdated(gameId: ID!, hash: String!): Game
 }
 `, BuiltIn: false},
 }
@@ -674,6 +674,14 @@ func (ec *executionContext) field_Subscription_gameUpdated_args(ctx context.Cont
 		}
 	}
 	args["gameId"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["hash"]; ok {
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["hash"] = arg1
 	return args, nil
 }
 
@@ -1960,7 +1968,7 @@ func (ec *executionContext) _Subscription_gameUpdated(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Subscription().GameUpdated(rctx, args["gameId"].(string))
+		return ec.resolvers.Subscription().GameUpdated(rctx, args["gameId"].(string), args["hash"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

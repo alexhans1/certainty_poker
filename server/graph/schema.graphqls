@@ -79,5 +79,5 @@ type Mutation {
 }
 
 type Subscription {
-  gameUpdated(gameId: ID!): Game
+  gameUpdated(gameId: ID!, hash: String!): Game
 }

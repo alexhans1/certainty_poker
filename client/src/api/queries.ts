@@ -41,8 +41,8 @@ export const GET_GAME_BY_ID = gql`
 `;
 
 export const SUBSCRIBE_TO_GAME_BY_ID = gql`
-  subscription GameUpdated($gameId: ID!) {
-    gameUpdated(gameId: $gameId) {
+  subscription GameUpdated($gameId: ID!, $hash: String!) {
+    gameUpdated(gameId: $gameId, hash: $hash) {
       id
       questionRounds {
         question {

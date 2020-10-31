@@ -13,16 +13,6 @@ import (
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
-func updateGameChannel(r *mutationResolver, game *model.Game) {
-	r.mutex.Lock()
-	for gameID, gameChannel := range r.gameChannels {
-		if gameID == game.ID {
-			gameChannel <- game
-		}
-	}
-	r.mutex.Unlock()
-}
-
 func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
 	gameID := helpers.CreateID()
 	game := model.Game{
@@ -156,11 +146,14 @@ func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, e
 	return model.FindGame(r.games, gameID)
 }
 
-func (r *subscriptionResolver) GameUpdated(ctx context.Context, gameID string) (<-chan *model.Game, error) {
+func (r *subscriptionResolver) GameUpdated(ctx context.Context, gameID string, hash string) (<-chan *model.Game, error) {
 	// Create new channel for request
 	gameChannel := make(chan *model.Game, 1)
 	r.mutex.Lock()
-	r.gameChannels[gameID] = gameChannel
+	if r.gameChannels[gameID] == nil {
+		r.gameChannels[gameID] = map[string]chan *model.Game{}
+	}
+	r.gameChannels[gameID][hash] = gameChannel
 	r.mutex.Unlock()
 
 	// Delete channel when done
