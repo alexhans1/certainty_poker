@@ -10,26 +10,32 @@ interface PotProps {
   playerId: Player["id"];
   currentQuestionRound: QuestionRound;
   currentBettingRound: BettingRound;
+  revealPreviousAnswers: boolean;
 }
 
 export default ({
   currentQuestionRound,
   currentBettingRound,
   playerId,
+  revealPreviousAnswers,
 }: PotProps) => {
-  const [totalPot, playerPot] = currentQuestionRound.bettingRounds.reduce(
-    ([total, playerShare], br) => {
-      br.bets.forEach((bet) => {
-        total += bet.amount;
-        if (bet.playerId === playerId) {
-          playerShare += bet.amount;
-        }
-      });
-      return [total, playerShare];
-    },
-    [0, 0]
-  );
-  const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
+  const [totalPot, playerPot] = revealPreviousAnswers
+    ? [0, 0]
+    : currentQuestionRound.bettingRounds.reduce(
+        ([total, playerShare], br) => {
+          br.bets.forEach((bet) => {
+            total += bet.amount;
+            if (bet.playerId === playerId) {
+              playerShare += bet.amount;
+            }
+          });
+          return [total, playerShare];
+        },
+        [0, 0]
+      );
+  const amountToCall = revealPreviousAnswers
+    ? 0
+    : calculateAmountToCall(currentBettingRound, playerId);
   return (
     <div
       className="d-flex w-100 flex-row  justify-content-between pb-3 px-1"

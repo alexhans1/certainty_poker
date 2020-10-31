@@ -27,6 +27,14 @@ export default ({
   placeBet,
   startGame,
 }: FooterProps) => {
+  const revealPreviousAnswers =
+    game?.isOver ||
+    (game &&
+      game.questionRounds.length > 1 &&
+      !currentQuestionRound?.guesses.find(
+        (guess) => guess.playerId === playerId
+      ));
+
   return (
     <div className="footer">
       <div className="footer-content">
@@ -49,6 +57,7 @@ export default ({
               playerId={playerId}
               currentQuestionRound={currentQuestionRound}
               currentBettingRound={currentBettingRound}
+              revealPreviousAnswers={revealPreviousAnswers}
             />
             <ActionButtons
               {...{

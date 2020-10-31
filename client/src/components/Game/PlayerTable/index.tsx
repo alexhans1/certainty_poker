@@ -1,5 +1,9 @@
 import React from "react";
-import { isPlayerDead, hasFolded } from "../helpers";
+import {
+  isPlayerDead,
+  hasFolded,
+  calculateBettingRoundSpendingForPlayer,
+} from "../helpers";
 import {
   Player,
   BettingRound,
@@ -141,7 +145,14 @@ export default ({
                 )
               )}
               <span role="img" aria-label="money">
-                💰{money}
+                💰
+                {money +
+                  (revealPreviousAnswers && currentBettingRound
+                    ? calculateBettingRoundSpendingForPlayer(
+                        currentBettingRound,
+                        id
+                      )
+                    : 0)}
               </span>
             </div>
             {gameIsOver && winningPlayerIds.includes(id) && (
