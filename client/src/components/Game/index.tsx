@@ -21,7 +21,7 @@ import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
   const [game, setGame] = useState<Game | undefined>(undefined);
-  const [showNewQuestionRound, setShowNewQuestionRound] = useState(false);
+  const [showNewQuestionRound, setShowNewQuestionRound] = useState(true);
   const { game_id: gameId } = useParams<{ game_id: string }>();
 
   const [
@@ -162,7 +162,7 @@ function GameComponent() {
               setShowNewQuestionRound(true);
             }}
           >
-            Next Question
+            Answer New Question
           </button>
         )}
       </div>
