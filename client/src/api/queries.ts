@@ -92,18 +92,24 @@ export const CREATE_PLAYER = gql`
 
 export const START_GAME = gql`
   mutation startGame($gameId: ID!) {
-    startGame(gameId: $gameId) {}
+    startGame(gameId: $gameId) {
+      id
+    }
   }
 `;
 
 export const PLACE_BET = gql`
   mutation placeBet($input: BetInput!) {
-    placeBet(input: $input) {}
+    placeBet(input: $input) {
+      id
+    }
   }
 `;
 
 export const ADD_GUESS = gql`
   mutation addGuess($input: GuessInput!) {
-    addGuess(input: $input) {}
+    addGuess(input: $input) {
+      id
+    }
   }
 `;
