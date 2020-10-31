@@ -21,7 +21,11 @@ import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
   const [game, setGame] = useState<Game | undefined>(undefined);
-  const [showNewQuestionRound, setShowNewQuestionRound] = useState(true);
+  const currentQuestionRound = getCurrentQuestionRound(game);
+  const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
+  const [showNewQuestionRound, setShowNewQuestionRound] = useState(
+    !!currentQuestionRound
+  );
   const { game_id: gameId } = useParams<{ game_id: string }>();
 
   const [
@@ -112,8 +116,6 @@ function GameComponent() {
     return <p>A technical error occurred. Try to refresh the page</p>;
   }
 
-  const currentQuestionRound = getCurrentQuestionRound(game);
-  const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
     (guess) => guess.playerId === playerId
   );
