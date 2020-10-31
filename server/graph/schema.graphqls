@@ -72,10 +72,10 @@ input PlayerInput {
 
 type Mutation {
   createGame: Game!
-  startGame(gameId: ID!): Game!
+  startGame(gameId: ID!): Boolean!
   addPlayer(input: PlayerInput!): Player!
-  addGuess(input: GuessInput!): Game!
-  placeBet(input: BetInput!): Game!
+  addGuess(input: GuessInput!): Boolean!
+  placeBet(input: BetInput!): Boolean!
 }
 
 type Subscription {

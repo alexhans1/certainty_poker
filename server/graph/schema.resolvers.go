@@ -29,18 +29,18 @@ func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) 
 	return &game, nil
 }
 
-func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model.Game, error) {
+func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (bool, error) {
 	game, err := model.FindGame(r.games, gameID)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	if game.HasStarted() {
-		return nil, errors.New("cannot start game that is already in progress")
+		return false, errors.New("cannot start game that is already in progress")
 	}
 
 	if len(game.Players) < 2 {
-		return nil, errors.New("not enough players to start the game")
+		return false, errors.New("not enough players to start the game")
 	}
 
 	model.ShufflePlayers(game.Players)
@@ -48,7 +48,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (*model
 
 	go updateGameChannel(r, game)
 
-	return game, nil
+	return true, nil
 }
 
 func (r *mutationResolver) AddPlayer(ctx context.Context, input model.PlayerInput) (*model.Player, error) {
@@ -66,10 +66,10 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, input model.PlayerInpu
 	return game.AddNewPlayer(input.PlayerName), nil
 }
 
-func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (*model.Game, error) {
+func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (bool, error) {
 	game, err := model.FindGame(r.games, input.GameID)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	game.CurrentQuestionRound().AddGuess(model.Guess{
@@ -79,31 +79,31 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 
 	go updateGameChannel(r, game)
 
-	return game, nil
+	return true, nil
 }
 
-func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (*model.Game, error) {
+func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (bool, error) {
 	game, err := model.FindGame(r.games, input.GameID)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	questionRound := game.CurrentQuestionRound()
 	if len(questionRound.Guesses) < len(game.InPlayers()) {
-		return nil, errors.New("not all players have submitted their guess yet")
+		return false, errors.New("not all players have submitted their guess yet")
 	}
 
 	if questionRound.CurrentBettingRound().CurrentPlayer.ID != input.PlayerID {
-		return nil, errors.New("it's not the player's turn")
+		return false, errors.New("it's not the player's turn")
 	}
 
 	player := model.FindPlayer(game.Players, input.PlayerID)
 
 	if helpers.ContainsString(questionRound.FoldedPlayerIds, player.ID) {
-		return nil, errors.New("folded players cannot place another bet in current question round")
+		return false, errors.New("folded players cannot place another bet in current question round")
 	}
 	if player.ID == input.PlayerID && player.Money < input.Amount {
-		return nil, errors.New("player does not have enough money to place this bet")
+		return false, errors.New("player does not have enough money to place this bet")
 	}
 
 	bettingRound := questionRound.CurrentBettingRound()
@@ -113,7 +113,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	} else {
 		minimumAmount := bettingRound.AmountToCall() - player.MoneyInQuestionRound()
 		if input.Amount < minimumAmount && player.Money > input.Amount {
-			return nil, errors.New("amount is not enough to call and the player is not all in")
+			return false, errors.New("amount is not enough to call and the player is not all in")
 		}
 		newBet := model.Bet{
 			Amount:   input.Amount,
@@ -139,7 +139,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 
 	go updateGameChannel(r, game)
 
-	return game, nil
+	return true, nil
 }
 
 func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, error) {
