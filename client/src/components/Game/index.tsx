@@ -33,9 +33,7 @@ function GameComponent() {
   const [game, setGame] = useState<Game | undefined>(undefined);
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
-  const [showNewQuestionRound, setShowNewQuestionRound] = useState(
-    !!currentQuestionRound
-  );
+  const [showNewQuestionRound, setShowNewQuestionRound] = useState(true);
   const { gameId } = useParams<{ gameId: string }>();
 
   const [
@@ -165,18 +163,16 @@ function GameComponent() {
             game,
           }}
         />
-        {currentQuestionRound &&
-          !showNewQuestionRound &&
-          !hasPlayerPlacedGuessInCurrentQuestionRound && (
-            <button
-              className="btn btn-primary mx-auto mt-5"
-              onClick={() => {
-                setShowNewQuestionRound(true);
-              }}
-            >
-              Answer New Question
-            </button>
-          )}
+        {!showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound && (
+          <button
+            className="btn btn-primary mx-auto mt-5"
+            onClick={() => {
+              setShowNewQuestionRound(true);
+            }}
+          >
+            Answer New Question
+          </button>
+        )}
       </div>
       {currentQuestionRound && playerId && (
         <AnswerDrawer
