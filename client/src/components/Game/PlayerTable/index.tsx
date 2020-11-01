@@ -96,7 +96,7 @@ export default ({
     .map((p) => p.id);
 
   return (
-    <div>
+    <>
       {(players || []).map(({ id, money, name, rank }, i) => {
         const isDead =
           currentQuestionRound &&
@@ -183,6 +183,6 @@ export default ({
           </div>
         );
       })}
-    </div>
+    </>
   );
 };

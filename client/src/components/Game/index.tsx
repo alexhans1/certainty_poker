@@ -28,6 +28,8 @@ import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
 import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
 
+import "./styles.scss";
+
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
   const [game, setGame] = useState<Game | undefined>(undefined);
@@ -139,7 +141,7 @@ function GameComponent() {
         placeBetLoading ||
         addGuessLoading) && <p>Loading...</p>}
       <div
-        className="d-flex flex-column mt-3"
+        className="grid mt-3"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
       >
         {currentQuestionRound && playerId && (
@@ -154,19 +156,21 @@ function GameComponent() {
             <Hints {...{ currentQuestionRound, previousQuestionRound }} />
           </div>
         )}
-        <PlayerTable
-          {...{
-            players: game?.players,
-            playerId,
-            currentQuestionRound,
-            currentBettingRound,
-            previousQuestionRound,
-            game,
-          }}
-        />
+        <div className="d-flex flex-column align-items-center align-items-sm-start align-items-md-center">
+          <PlayerTable
+            {...{
+              players: game?.players,
+              playerId,
+              currentQuestionRound,
+              currentBettingRound,
+              previousQuestionRound,
+              game,
+            }}
+          />
+        </div>
         {!showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound && (
           <button
-            className="btn btn-primary mx-auto mt-5"
+            className="new-question-button btn btn-primary mx-auto mt-5"
             onClick={() => {
               setShowNewQuestionRound(true);
             }}

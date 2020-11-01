@@ -11,7 +11,7 @@ function PageNotFound() {
 
 function App() {
   return (
-    <div id="app" className="container py-2">
+    <div id="app" className="container-sm py-2">
       <a href="/" id="title">
         Certainty Poker
       </a>
