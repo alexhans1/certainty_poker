@@ -29,6 +29,7 @@ export const GET_GAME_BY_ID = gql`
           playerId
           changeInMoney
         }
+        isOver
       }
       players {
         id
@@ -73,6 +74,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
           playerId
           changeInMoney
         }
+        isOver
       }
       players {
         id

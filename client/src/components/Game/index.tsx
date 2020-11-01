@@ -127,12 +127,11 @@ function GameComponent() {
   const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
     (guess) => guess.playerId === playerId
   );
-  const hasPlayerPlacedGuessInCurrentQuestionRound =
-    !!playerGuessInCurrentQuestionRound ||
-    playerGuessInCurrentQuestionRound === 0;
-  const previousQuestionRound = !hasPlayerPlacedGuessInCurrentQuestionRound
-    ? game?.questionRounds[game?.questionRounds?.length - 2]
-    : undefined;
+  const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
+  const previousQuestionRound =
+    !hasPlayerPlacedGuessInCurrentQuestionRound || game.isOver
+      ? game?.questionRounds[game?.questionRounds?.length - 2]
+      : undefined;
 
   return (
     <>
@@ -149,11 +148,17 @@ function GameComponent() {
             <Question
               {...{
                 game,
-                currentQuestionRound,
+                usedQuestionRound:
+                  previousQuestionRound || currentQuestionRound,
                 playerId,
               }}
             />
-            <Hints {...{ currentQuestionRound, previousQuestionRound }} />
+            <Hints
+              {...{
+                usedQuestionRound:
+                  previousQuestionRound || currentQuestionRound,
+              }}
+            />
           </div>
         )}
         <div className="d-flex flex-column align-items-center align-items-sm-start align-items-md-center">

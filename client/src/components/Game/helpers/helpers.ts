@@ -87,3 +87,7 @@ export const hasFolded = (
   currentQuestionRound: QuestionRound,
   playerId: Player["id"]
 ) => currentQuestionRound?.foldedPlayerIds.includes(playerId);
+
+export const getRevealAnswer = (questionRound: QuestionRound) =>
+  questionRound.isOver ||
+  questionRound.question.hints.length + 1 < questionRound.bettingRounds.length;

@@ -37,6 +37,7 @@ export interface QuestionRound {
   bettingRounds: BettingRound[];
   foldedPlayerIds: Player["id"][];
   results?: QuestionRoundResult[];
+  isOver: boolean;
 }
 
 export interface Game {
