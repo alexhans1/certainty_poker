@@ -25,6 +25,10 @@ export const GET_GAME_BY_ID = gql`
           guess
           playerId
         }
+        results {
+          playerId
+          changeInMoney
+        }
       }
       players {
         id
@@ -64,6 +68,10 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
         guesses {
           guess
           playerId
+        }
+        results {
+          playerId
+          changeInMoney
         }
       }
       players {

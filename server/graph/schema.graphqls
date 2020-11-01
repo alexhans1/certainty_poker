@@ -15,6 +15,11 @@ type Player {
   game: Game!
 }
 
+type QuestionRoundResult {
+  playerId: ID!
+  changeInMoney: Int!
+}
+
 type QuestionRound {
   game: Game!
   question: Question
@@ -22,6 +27,7 @@ type QuestionRound {
   bettingRounds: [BettingRound!]!
   foldedPlayerIds: [ID!]!
   isOver: Boolean!
+  results: [QuestionRoundResult!]
 }
 
 type Question {

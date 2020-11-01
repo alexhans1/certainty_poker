@@ -103,6 +103,12 @@ type ComplexityRoot struct {
 		Guesses         func(childComplexity int) int
 		IsOver          func(childComplexity int) int
 		Question        func(childComplexity int) int
+		Results         func(childComplexity int) int
+	}
+
+	QuestionRoundResult struct {
+		ChangeInMoney func(childComplexity int) int
+		PlayerID      func(childComplexity int) int
 	}
 
 	Subscription struct {
@@ -395,6 +401,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.QuestionRound.Question(childComplexity), true
 
+	case "QuestionRound.results":
+		if e.complexity.QuestionRound.Results == nil {
+			break
+		}
+
+		return e.complexity.QuestionRound.Results(childComplexity), true
+
+	case "QuestionRoundResult.changeInMoney":
+		if e.complexity.QuestionRoundResult.ChangeInMoney == nil {
+			break
+		}
+
+		return e.complexity.QuestionRoundResult.ChangeInMoney(childComplexity), true
+
+	case "QuestionRoundResult.playerId":
+		if e.complexity.QuestionRoundResult.PlayerID == nil {
+			break
+		}
+
+		return e.complexity.QuestionRoundResult.PlayerID(childComplexity), true
+
 	case "Subscription.gameUpdated":
 		if e.complexity.Subscription.GameUpdated == nil {
 			break
@@ -505,6 +532,11 @@ type Player {
   game: Game!
 }
 
+type QuestionRoundResult {
+  playerId: ID!
+  changeInMoney: Int!
+}
+
 type QuestionRound {
   game: Game!
   question: Question
@@ -512,6 +544,7 @@ type QuestionRound {
   bettingRounds: [BettingRound!]!
   foldedPlayerIds: [ID!]!
   isOver: Boolean!
+  results: [QuestionRoundResult!]
 }
 
 type Question {
@@ -1942,6 +1975,105 @@ func (ec *executionContext) _QuestionRound_isOver(ctx context.Context, field gra
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _QuestionRound_results(ctx context.Context, field graphql.CollectedField, obj *model.QuestionRound) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "QuestionRound",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Results, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.QuestionRoundResult)
+	fc.Result = res
+	return ec.marshalOQuestionRoundResult2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionRoundResultᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _QuestionRoundResult_playerId(ctx context.Context, field graphql.CollectedField, obj *model.QuestionRoundResult) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "QuestionRoundResult",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PlayerID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _QuestionRoundResult_changeInMoney(ctx context.Context, field graphql.CollectedField, obj *model.QuestionRoundResult) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "QuestionRoundResult",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ChangeInMoney, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Subscription_gameUpdated(ctx context.Context, field graphql.CollectedField) (ret func() graphql.Marshaler) {
@@ -3509,6 +3641,40 @@ func (ec *executionContext) _QuestionRound(ctx context.Context, sel ast.Selectio
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "results":
+			out.Values[i] = ec._QuestionRound_results(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var questionRoundResultImplementors = []string{"QuestionRoundResult"}
+
+func (ec *executionContext) _QuestionRoundResult(ctx context.Context, sel ast.SelectionSet, obj *model.QuestionRoundResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, questionRoundResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("QuestionRoundResult")
+		case "playerId":
+			out.Values[i] = ec._QuestionRoundResult_playerId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "changeInMoney":
+			out.Values[i] = ec._QuestionRoundResult_changeInMoney(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4188,6 +4354,20 @@ func (ec *executionContext) marshalNQuestionRound2ᚖgithubᚗcomᚋalexhans1ᚋ
 	return ec._QuestionRound(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNQuestionRoundResult2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionRoundResult(ctx context.Context, sel ast.SelectionSet, v model.QuestionRoundResult) graphql.Marshaler {
+	return ec._QuestionRoundResult(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNQuestionRoundResult2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionRoundResult(ctx context.Context, sel ast.SelectionSet, v *model.QuestionRoundResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._QuestionRoundResult(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	return graphql.UnmarshalString(v)
 }
@@ -4500,6 +4680,46 @@ func (ec *executionContext) marshalOQuestion2ᚖgithubᚗcomᚋalexhans1ᚋcerta
 		return graphql.Null
 	}
 	return ec._Question(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOQuestionRoundResult2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionRoundResultᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.QuestionRoundResult) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNQuestionRoundResult2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionRoundResult(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

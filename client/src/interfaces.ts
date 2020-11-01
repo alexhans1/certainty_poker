@@ -26,11 +26,17 @@ export interface BettingRound {
   currentPlayer: Player;
 }
 
+interface QuestionRoundResult {
+  playerId: Player["id"];
+  changeInMoney: number;
+}
+
 export interface QuestionRound {
   question: Question;
   guesses: Guess[];
   bettingRounds: BettingRound[];
   foldedPlayerIds: Player["id"][];
+  results?: QuestionRoundResult[];
 }
 
 export interface Game {

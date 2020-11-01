@@ -24,6 +24,7 @@ export interface PlayerTableProps {
   playerId?: Player["id"];
   currentBettingRound?: BettingRound;
   currentQuestionRound?: QuestionRound;
+  previousQuestionRound?: QuestionRound;
   game?: Game;
 }
 
@@ -41,6 +42,7 @@ export default ({
   playerId,
   currentBettingRound,
   currentQuestionRound,
+  previousQuestionRound,
   game,
 }: PlayerTableProps) => {
   if (!players?.length || !playerId) {
@@ -65,10 +67,8 @@ export default ({
 
   let questionRoundGuesses: { [key: string]: Guess["guess"] };
   let previousQuestionRoundGuesses: { [key: string]: Guess["guess"] };
-  if (game && revealPreviousAnswers) {
-    previousQuestionRoundGuesses = game.questionRounds[
-      game.questionRounds.length - (game.isOver ? 1 : 2)
-    ].guesses.reduce(
+  if (previousQuestionRound && revealPreviousAnswers) {
+    previousQuestionRoundGuesses = previousQuestionRound.guesses.reduce(
       (acc, guess) => ({ ...acc, [guess.playerId]: guess.guess }),
       {}
     );
@@ -103,6 +103,10 @@ export default ({
           isPlayerDead(currentQuestionRound, { id, money });
         const isFolded =
           currentQuestionRound && hasFolded(currentQuestionRound, id);
+        const moneyDiff = previousQuestionRound?.results?.find(
+          ({ playerId }) => id === playerId
+        )?.changeInMoney;
+
         return (
           <div key={id} className="d-flex align-items-center pt-4 ml-4">
             {gameIsOver && <span className="rank">{rank}.</span>}
@@ -144,16 +148,27 @@ export default ({
                   </span>
                 )
               )}
-              <span role="img" aria-label="money">
-                💰
-                {money +
-                  (revealPreviousAnswers && currentBettingRound
-                    ? calculateBettingRoundSpendingForPlayer(
-                        currentBettingRound,
-                        id
-                      )
-                    : 0)}
-              </span>
+              <div className="d-flex">
+                <span role="img" aria-label="money">
+                  💰
+                  {money +
+                    (revealPreviousAnswers && currentBettingRound
+                      ? calculateBettingRoundSpendingForPlayer(
+                          currentBettingRound,
+                          id
+                        )
+                      : 0)}
+                </span>
+                {revealPreviousAnswers && moneyDiff && (
+                  <span
+                    className={`ml-2 ${
+                      moneyDiff > 0 ? "text-success" : "text-danger"
+                    }`}
+                  >
+                    {moneyDiff}
+                  </span>
+                )}
+              </div>
             </div>
             {gameIsOver && winningPlayerIds.includes(id) && (
               <span className="trophy" role="img" aria-label="trophy">

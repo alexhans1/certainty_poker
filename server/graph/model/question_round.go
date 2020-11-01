@@ -78,8 +78,16 @@ func (q *QuestionRound) DistributePot() {
 	playerBets := q.playerBets()
 	rank := q.Rank()
 
+	q.Results = make([]*QuestionRoundResult, 0)
 	winnings := poker.Allocate(rank, playerBets)
 	for playerID, amountWon := range winnings {
+		moneyDiff := amountWon - FindPlayer(q.Game.Players, playerID).MoneyInQuestionRound()
+		if moneyDiff != 0 {
+			q.Results = append(q.Results, &QuestionRoundResult{
+				PlayerID:      playerID,
+				ChangeInMoney: moneyDiff,
+			})
+		}
 		if amountWon > 0 {
 			player := FindPlayer(q.Game.Players, playerID)
 			player.Money += amountWon

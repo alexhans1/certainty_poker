@@ -59,10 +59,16 @@ type Question struct {
 }
 
 type QuestionRound struct {
-	Game            *Game           `json:"game"`
-	Question        *Question       `json:"question"`
-	Guesses         []*Guess        `json:"guesses"`
-	BettingRounds   []*BettingRound `json:"bettingRounds"`
-	FoldedPlayerIds []string        `json:"foldedPlayerIds"`
-	IsOver          bool            `json:"isOver"`
+	Game            *Game                  `json:"game"`
+	Question        *Question              `json:"question"`
+	Guesses         []*Guess               `json:"guesses"`
+	BettingRounds   []*BettingRound        `json:"bettingRounds"`
+	FoldedPlayerIds []string               `json:"foldedPlayerIds"`
+	IsOver          bool                   `json:"isOver"`
+	Results         []*QuestionRoundResult `json:"results"`
+}
+
+type QuestionRoundResult struct {
+	PlayerID      string `json:"playerId"`
+	ChangeInMoney int    `json:"changeInMoney"`
 }

@@ -160,6 +160,7 @@ function GameComponent() {
             playerId,
             currentQuestionRound,
             currentBettingRound,
+            previousQuestionRound,
             game,
           }}
         />
