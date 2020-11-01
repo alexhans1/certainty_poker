@@ -165,16 +165,18 @@ function GameComponent() {
             game,
           }}
         />
-        {!showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound && (
-          <button
-            className="btn btn-primary mx-auto mt-5"
-            onClick={() => {
-              setShowNewQuestionRound(true);
-            }}
-          >
-            Answer New Question
-          </button>
-        )}
+        {currentQuestionRound &&
+          !showNewQuestionRound &&
+          !hasPlayerPlacedGuessInCurrentQuestionRound && (
+            <button
+              className="btn btn-primary mx-auto mt-5"
+              onClick={() => {
+                setShowNewQuestionRound(true);
+              }}
+            >
+              Answer New Question
+            </button>
+          )}
       </div>
       {currentQuestionRound && playerId && (
         <AnswerDrawer
