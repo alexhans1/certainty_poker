@@ -161,6 +161,9 @@ func (r *subscriptionResolver) GameUpdated(ctx context.Context, gameID string, h
 		<-ctx.Done()
 		r.mutex.Lock()
 		delete(r.gameChannels[gameID], hash)
+		if len(r.gameChannels[gameID]) == 0 {
+			delete(r.gameChannels, gameID)
+		}
 		r.mutex.Unlock()
 	}()
 
