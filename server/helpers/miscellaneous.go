@@ -88,7 +88,6 @@ func SliceIntEqual(sliceOne []int, sliceTwo []int) bool {
 	return true
 }
 
-
 func SliceSliceStringEqual(sliceOne [][]string, sliceTwo [][]string) bool {
 	if len(sliceOne) != len(sliceTwo) {
 		return false

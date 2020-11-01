@@ -4,6 +4,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
+
+	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/lru"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/gorilla/websocket"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -21,15 +27,30 @@ func main() {
 		port = defaultPort
 	}
 
-	server := handler.NewDefaultServer(generated.NewExecutableSchema(graph.NewResolver()))
+	server := handler.New(generated.NewExecutableSchema(graph.NewResolver()))
+
+	server.AddTransport(transport.Websocket{
+		KeepAlivePingInterval: 10 * time.Second,
+		Upgrader: websocket.Upgrader{
+			CheckOrigin: func(r *http.Request) bool {
+				return true
+			},
+		},
+	})
+	server.AddTransport(transport.POST{})
+	server.AddTransport(transport.Options{})
+	server.SetQueryCache(lru.New(1000))
+	server.Use(extension.Introspection{})
+	server.Use(extension.AutomaticPersistedQuery{
+		Cache: lru.New(100),
+	})
 
 	mux := http.NewServeMux()
+	c := cors.Default().Handler(mux)
 
 	mux.HandleFunc("/", playground.Handler("GraphQL playground", "/query"))
 	mux.Handle("/query", server)
 
-	handler := cors.Default().Handler(mux)
-
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, handler))
+	log.Fatal(http.ListenAndServe(":"+port, c))
 }
