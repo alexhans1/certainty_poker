@@ -13,6 +13,7 @@ type Player {
   money: Int!
   name: String!
   game: Game!
+  isDead: Boolean!
 }
 
 type QuestionRoundResult {

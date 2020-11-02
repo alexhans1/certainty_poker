@@ -2,6 +2,7 @@ export interface Player {
   id: string;
   money: number;
   name: string;
+  isDead: boolean;
 }
 
 export interface Question {

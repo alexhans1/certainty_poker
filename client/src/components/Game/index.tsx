@@ -26,7 +26,11 @@ import Hints from "./Hints";
 import AnswerDrawer from "./AnswerDrawer";
 import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
-import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
+import {
+  getCurrentQuestionRound,
+  getCurrentBettingRound,
+  getPreviousQuestionRound,
+} from "./helpers";
 
 import "./styles.scss";
 
@@ -128,10 +132,9 @@ function GameComponent() {
     (guess) => guess.playerId === playerId
   );
   const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
-  const previousQuestionRound =
-    !hasPlayerPlacedGuessInCurrentQuestionRound || game.isOver
-      ? game?.questionRounds[game?.questionRounds?.length - 2]
-      : undefined;
+  const previousQuestionRound = !hasPlayerPlacedGuessInCurrentQuestionRound
+    ? getPreviousQuestionRound(game)
+    : undefined;
 
   return (
     <>
@@ -161,14 +164,14 @@ function GameComponent() {
             />
           </div>
         )}
-        <div className="d-flex flex-column align-items-center align-items-sm-start align-items-md-center">
+        <div className="d-flex flex-column">
           <PlayerTable
             {...{
               players: game?.players,
               playerId,
-              currentQuestionRound,
+              usedQuestionRound: previousQuestionRound || currentQuestionRound,
               currentBettingRound,
-              previousQuestionRound,
+              revealAnswers: game.isOver || !!previousQuestionRound,
               game,
             }}
           />

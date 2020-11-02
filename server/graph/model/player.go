@@ -44,6 +44,7 @@ func (p *Player) IsOutGame() bool {
 	if p.MoneyInQuestionRound() > 0 && !p.HasFolded() && !p.Game.CurrentQuestionRound().IsOver {
 		return false
 	}
+	p.IsDead = true
 	return true
 }
 
