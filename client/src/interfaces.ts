@@ -2,6 +2,7 @@ export interface Player {
   id: string;
   money: number;
   name: string;
+  isDead: boolean;
 }
 
 export interface Question {
@@ -37,6 +38,7 @@ export interface QuestionRound {
   bettingRounds: BettingRound[];
   foldedPlayerIds: Player["id"][];
   results?: QuestionRoundResult[];
+  isOver: boolean;
 }
 
 export interface Game {

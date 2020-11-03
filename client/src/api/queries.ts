@@ -29,11 +29,13 @@ export const GET_GAME_BY_ID = gql`
           playerId
           changeInMoney
         }
+        isOver
       }
       players {
         id
         money
         name
+        isDead
       }
       dealerId
       questions {
@@ -73,11 +75,13 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
           playerId
           changeInMoney
         }
+        isOver
       }
       players {
         id
         money
         name
+        isDead
       }
       dealerId
       questions {

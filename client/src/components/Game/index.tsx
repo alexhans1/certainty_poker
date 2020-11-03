@@ -26,7 +26,13 @@ import Hints from "./Hints";
 import AnswerDrawer from "./AnswerDrawer";
 import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
-import { getCurrentQuestionRound, getCurrentBettingRound } from "./helpers";
+import {
+  getCurrentQuestionRound,
+  getCurrentBettingRound,
+  getPreviousQuestionRound,
+} from "./helpers";
+
+import "./styles.scss";
 
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
@@ -125,11 +131,9 @@ function GameComponent() {
   const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
     (guess) => guess.playerId === playerId
   );
-  const hasPlayerPlacedGuessInCurrentQuestionRound =
-    !!playerGuessInCurrentQuestionRound ||
-    playerGuessInCurrentQuestionRound === 0;
+  const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
   const previousQuestionRound = !hasPlayerPlacedGuessInCurrentQuestionRound
-    ? game?.questionRounds[game?.questionRounds?.length - 2]
+    ? getPreviousQuestionRound(game)
     : undefined;
 
   return (
@@ -139,7 +143,7 @@ function GameComponent() {
         placeBetLoading ||
         addGuessLoading) && <p>Loading...</p>}
       <div
-        className="d-flex flex-column mt-3"
+        className="grid mt-3"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
       >
         {currentQuestionRound && playerId && (
@@ -147,26 +151,34 @@ function GameComponent() {
             <Question
               {...{
                 game,
-                currentQuestionRound,
+                usedQuestionRound:
+                  previousQuestionRound || currentQuestionRound,
                 playerId,
               }}
             />
-            <Hints {...{ currentQuestionRound, previousQuestionRound }} />
+            <Hints
+              {...{
+                usedQuestionRound:
+                  previousQuestionRound || currentQuestionRound,
+              }}
+            />
           </div>
         )}
-        <PlayerTable
-          {...{
-            players: game?.players,
-            playerId,
-            currentQuestionRound,
-            currentBettingRound,
-            previousQuestionRound,
-            game,
-          }}
-        />
+        <div className="d-flex flex-column">
+          <PlayerTable
+            {...{
+              players: game?.players,
+              playerId,
+              usedQuestionRound: previousQuestionRound || currentQuestionRound,
+              currentBettingRound,
+              revealAnswers: game.isOver || !!previousQuestionRound,
+              game,
+            }}
+          />
+        </div>
         {!showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound && (
           <button
-            className="btn btn-primary mx-auto mt-5"
+            className="new-question-button btn btn-primary mx-auto mt-5"
             onClick={() => {
               setShowNewQuestionRound(true);
             }}

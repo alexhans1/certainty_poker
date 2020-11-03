@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Drawer from "../../Drawer";
 import { Game, Player, QuestionRound } from "../../../interfaces";
-import { AddGuess, addGuess, isPlayerDead } from "../helpers";
+import { AddGuess, addGuess } from "../helpers";
 
 interface QuestionProps {
   game: Game;
@@ -21,8 +21,7 @@ export default ({
   setShowNewQuestionRound,
 }: QuestionProps) => {
   const player = game.players.find((p) => p.id === playerId);
-  const isDead = player && isPlayerDead(currentQuestionRound, player);
-  if (isDead) {
+  if (player?.isDead) {
     return null;
   }
   const [guess, setGuess] = useState<number | string>("");

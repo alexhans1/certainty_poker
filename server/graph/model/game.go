@@ -63,10 +63,11 @@ func (g *Game) AddNewQuestionRound() {
 // AddNewPlayer adds a new player
 func (g *Game) AddNewPlayer(name string) *Player {
 	newPlayer := &Player{
-		ID:    helpers.CreateID(),
-		Money: 100,
-		Name:  name,
-		Game:  g,
+		ID:     helpers.CreateID(),
+		Money:  100,
+		Name:   name,
+		Game:   g,
+		IsDead: false,
 	}
 	g.Players = append(g.Players, newPlayer)
 	return newPlayer

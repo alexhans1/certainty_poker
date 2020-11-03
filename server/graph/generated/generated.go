@@ -79,10 +79,11 @@ type ComplexityRoot struct {
 	}
 
 	Player struct {
-		Game  func(childComplexity int) int
-		ID    func(childComplexity int) int
-		Money func(childComplexity int) int
-		Name  func(childComplexity int) int
+		Game   func(childComplexity int) int
+		ID     func(childComplexity int) int
+		IsDead func(childComplexity int) int
+		Money  func(childComplexity int) int
+		Name   func(childComplexity int) int
 	}
 
 	Query struct {
@@ -304,6 +305,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Player.ID(childComplexity), true
+
+	case "Player.isDead":
+		if e.complexity.Player.IsDead == nil {
+			break
+		}
+
+		return e.complexity.Player.IsDead(childComplexity), true
 
 	case "Player.money":
 		if e.complexity.Player.Money == nil {
@@ -530,6 +538,7 @@ type Player {
   money: Int!
   name: String!
   game: Game!
+  isDead: Boolean!
 }
 
 type QuestionRoundResult {
@@ -1528,6 +1537,40 @@ func (ec *executionContext) _Player_game(ctx context.Context, field graphql.Coll
 	res := resTmp.(*model.Game)
 	fc.Result = res
 	return ec.marshalNGame2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGame(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Player_isDead(ctx context.Context, field graphql.CollectedField, obj *model.Player) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Player",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsDead, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_game(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3503,6 +3546,11 @@ func (ec *executionContext) _Player(ctx context.Context, sel ast.SelectionSet, o
 			}
 		case "game":
 			out.Values[i] = ec._Player_game(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "isDead":
+			out.Values[i] = ec._Player_isDead(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

@@ -1,7 +1,6 @@
 import React from "react";
 import {
-  isPlayerDead,
-  hasFolded,
+  hasPlayerFolded,
   calculateBettingRoundSpendingForPlayer,
 } from "../helpers";
 import {
@@ -20,12 +19,12 @@ interface PlayerWithRank extends Player {
 }
 
 export interface PlayerTableProps {
-  players?: PlayerWithRank[];
+  players: PlayerWithRank[];
   playerId?: Player["id"];
   currentBettingRound?: BettingRound;
-  currentQuestionRound?: QuestionRound;
-  previousQuestionRound?: QuestionRound;
-  game?: Game;
+  usedQuestionRound?: QuestionRound;
+  revealAnswers: boolean;
+  game: Game;
 }
 
 const moveAppPlayerToTop = (players: Player[], playerId: Player["id"]) => {
@@ -41,108 +40,98 @@ export default ({
   players,
   playerId,
   currentBettingRound,
-  currentQuestionRound,
-  previousQuestionRound,
+  usedQuestionRound,
+  revealAnswers,
   game,
 }: PlayerTableProps) => {
-  if (!players?.length || !playerId) {
+  if (!players.length) {
     return null;
   }
-  const { isOver: gameIsOver } = game || {};
-  if (gameIsOver) {
+  if (game.isOver) {
+    // todo: check if this changes the order of the player list after the game is over
     players
       .sort((p1, p2) => p2.money - p1.money)
       .forEach((player, i) => {
         player.rank = i + 1;
       });
   }
-  players = moveAppPlayerToTop(players, playerId);
-  const revealPreviousAnswers =
-    game?.isOver ||
-    (game &&
-      game.questionRounds.length > 1 &&
-      !currentQuestionRound?.guesses.find(
-        (guess) => guess.playerId === playerId
-      ));
+  if (playerId) {
+    players = moveAppPlayerToTop(players, playerId);
+  }
 
-  let questionRoundGuesses: { [key: string]: Guess["guess"] };
-  let previousQuestionRoundGuesses: { [key: string]: Guess["guess"] };
-  if (previousQuestionRound && revealPreviousAnswers) {
-    previousQuestionRoundGuesses = previousQuestionRound.guesses.reduce(
+  let guesses: { [key: string]: Guess["guess"] };
+  if (usedQuestionRound) {
+    guesses = usedQuestionRound?.guesses.reduce(
       (acc, guess) => ({ ...acc, [guess.playerId]: guess.guess }),
       {}
     );
   }
-  if (currentQuestionRound) {
-    questionRoundGuesses = currentQuestionRound.guesses.reduce(
-      (acc, guess) => ({ ...acc, [guess.playerId]: guess.guess }),
-      {}
-    );
+  let winningPlayerIds: Player["id"][];
+  if (game.isOver) {
+    winningPlayerIds = players
+      .reduce(
+        (winners, player, i) => {
+          if (i === 0) return winners;
+          if (winners[0].money < player.money) {
+            return [player];
+          }
+          if (winners[0].money === player.money) {
+            return [...winners, player];
+          }
+          return winners;
+        },
+        [players[0]]
+      )
+      .map((p) => p.id);
   }
-  const winningPlayerIds = players
-    .reduce(
-      (winners, player, i) => {
-        if (i === 0) return winners;
-        if (winners[0].money < player.money) {
-          return [player];
-        }
-        if (winners[0].money === player.money) {
-          return [...winners, player];
-        }
-        return winners;
-      },
-      [players[0]]
-    )
-    .map((p) => p.id);
 
   return (
-    <div>
-      {(players || []).map(({ id, money, name, rank }, i) => {
-        const isDead =
-          currentQuestionRound &&
-          isPlayerDead(currentQuestionRound, { id, money });
-        const isFolded =
-          currentQuestionRound && hasFolded(currentQuestionRound, id);
-        const moneyDiff = previousQuestionRound?.results?.find(
+    <>
+      {players.map(({ id, money, name, rank, isDead }, i) => {
+        const hasFolded =
+          usedQuestionRound && hasPlayerFolded(usedQuestionRound, id);
+        const moneyDiff = usedQuestionRound?.results?.find(
           ({ playerId }) => id === playerId
         )?.changeInMoney;
+        const bettingRoundSpending = currentBettingRound
+          ? calculateBettingRoundSpendingForPlayer(currentBettingRound, id)
+          : 0;
 
         return (
           <div key={id} className="d-flex align-items-center pt-4 ml-4">
-            {gameIsOver && <span className="rank">{rank}.</span>}
+            {game.isOver && <span className="rank">{rank}.</span>}
             <Avatar
               {...{
                 id,
                 name,
                 currentBettingRound,
                 isDead,
-                isFolded,
-                gameIsOver,
+                isFolded: hasFolded,
+                gameIsOver: game.isOver,
                 isDealer: game?.dealerId === id,
-                size: i === 0 ? Size.lg : Size.md,
+                size: i === 0 && playerId ? Size.lg : Size.md,
               }}
             />
             <div
               className={`money ${id === playerId ? "" : "md"} ${
-                (isDead || isFolded) && !gameIsOver ? "dead" : ""
+                (isDead || hasFolded) && !usedQuestionRound?.isOver
+                  ? "dead"
+                  : ""
               }`}
             >
-              {revealPreviousAnswers &&
-              (previousQuestionRoundGuesses[id] ||
-                previousQuestionRoundGuesses[id] === 0) ? (
+              {revealAnswers ? (
                 <span role="img" aria-label="answer">
-                  💡 {previousQuestionRoundGuesses[id]}
+                  💡 {guesses[id]}
                 </span>
               ) : (
-                currentQuestionRound && (
+                guesses && (
                   <span role="img" aria-label="answer">
                     💡{" "}
                     <span className={id === playerId ? "" : "obfuscate"}>
-                      {!questionRoundGuesses[id] &&
-                      questionRoundGuesses[id] !== 0
+                      {!guesses[id] && guesses[id] !== 0
                         ? null
                         : id === playerId
-                        ? questionRoundGuesses[id]
+                        ? guesses[id]
                         : 432}
                     </span>
                   </span>
@@ -152,14 +141,12 @@ export default ({
                 <span role="img" aria-label="money">
                   💰
                   {money +
-                    (revealPreviousAnswers && currentBettingRound
-                      ? calculateBettingRoundSpendingForPlayer(
-                          currentBettingRound,
-                          id
-                        )
-                      : 0)}
+                    (revealAnswers && !game.isOver ? bettingRoundSpending : 0)}
                 </span>
-                {revealPreviousAnswers && moneyDiff && (
+                {!revealAnswers && (
+                  <span className="ml-4">{bettingRoundSpending * -1}</span>
+                )}
+                {revealAnswers && moneyDiff && (
                   <span
                     className={`ml-2 ${
                       moneyDiff > 0 ? "text-success" : "text-danger"
@@ -170,12 +157,12 @@ export default ({
                 )}
               </div>
             </div>
-            {gameIsOver && winningPlayerIds.includes(id) && (
+            {winningPlayerIds?.includes(id) && (
               <span className="trophy" role="img" aria-label="trophy">
                 🏆
               </span>
             )}
-            {isDead && !gameIsOver && (
+            {isDead && !game.isOver && (
               <span className="skull" role="img" aria-label="skull">
                 💀
               </span>
@@ -183,6 +170,6 @@ export default ({
           </div>
         );
       })}
-    </div>
+    </>
   );
 };

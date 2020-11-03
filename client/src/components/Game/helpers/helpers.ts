@@ -10,18 +10,11 @@ export const calculateBettingRoundSpendingForPlayer = (
   );
 };
 
-const calculateQuestionRoundSpendingForPlayer = (
-  playerId: Player["id"],
-  questionRound?: QuestionRound
-) => {
-  return questionRound?.bettingRounds.reduce(
-    (sum, br) => sum + calculateBettingRoundSpendingForPlayer(br, playerId),
-    0
-  );
-};
-
 export const getCurrentQuestionRound = (game?: Game) =>
   game?.questionRounds[game?.questionRounds?.length - 1];
+
+export const getPreviousQuestionRound = (game?: Game) =>
+  game?.questionRounds[game?.questionRounds?.length - (game.isOver ? 1 : 2)];
 
 export const getCurrentBettingRound = (currentQuestionRound?: QuestionRound) =>
   currentQuestionRound?.bettingRounds[
@@ -32,31 +25,8 @@ export const haveAllPlayersPlacedTheirGuess = (
   currentQuestionRound: QuestionRound,
   players: Player[]
 ) => {
-  const remainingPlayers = players.filter(
-    (player) => !isPlayerDead(currentQuestionRound, player)
-  );
+  const remainingPlayers = players.filter((player) => !player.isDead);
   return currentQuestionRound.guesses.length === remainingPlayers.length;
-};
-
-export const isPlayerDead = (
-  currentQuestionRound: QuestionRound,
-  player: Omit<Player, "name">
-) => {
-  if (player.money > 0) {
-    return false;
-  }
-  const amountInQuestionRound = calculateQuestionRoundSpendingForPlayer(
-    player.id,
-    currentQuestionRound
-  );
-  if (
-    amountInQuestionRound &&
-    amountInQuestionRound > 0 &&
-    !hasFolded(currentQuestionRound, player.id)
-  ) {
-    return false;
-  }
-  return true;
 };
 
 export const calculateAmountToCall = (
@@ -83,7 +53,11 @@ export const calculateAmountToCall = (
   );
 };
 
-export const hasFolded = (
+export const hasPlayerFolded = (
   currentQuestionRound: QuestionRound,
   playerId: Player["id"]
 ) => currentQuestionRound?.foldedPlayerIds.includes(playerId);
+
+export const getRevealAnswer = (questionRound: QuestionRound) =>
+  questionRound.isOver ||
+  questionRound.question.hints.length + 1 < questionRound.bettingRounds.length;

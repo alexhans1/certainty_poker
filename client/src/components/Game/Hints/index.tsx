@@ -1,5 +1,6 @@
 import React from "react";
 import { QuestionRound } from "../../../interfaces";
+import { getRevealAnswer } from "../helpers";
 
 const styles = {
   title: {
@@ -17,19 +18,14 @@ const styles = {
 };
 
 interface HintsProps {
-  currentQuestionRound: QuestionRound;
-  previousQuestionRound?: QuestionRound;
+  usedQuestionRound: QuestionRound;
 }
 
-export default ({
-  currentQuestionRound,
-  previousQuestionRound,
-}: HintsProps) => {
-  const usedQuestionRound = previousQuestionRound
-    ? previousQuestionRound
-    : currentQuestionRound;
+export default ({ usedQuestionRound }: HintsProps) => {
   const hints = usedQuestionRound.question.hints;
-  const numberOfHints = usedQuestionRound.bettingRounds.length - 1;
+  const numberOfHints = usedQuestionRound.isOver
+    ? hints.length
+    : Math.min(usedQuestionRound.bettingRounds.length - 1, hints.length);
   if (numberOfHints < 1) {
     return null;
   }
@@ -41,20 +37,22 @@ export default ({
       <span style={styles.title}>
         Hint{numberOfHints > 1 && "s"} ({numberOfHints}/{hints.length}):
       </span>
-      {usedQuestionRound.question.hints
-        .slice(0, usedQuestionRound.bettingRounds.length - 1)
-        .map((hint, i) => (
-          <span
-            key={hint}
-            style={
-              numberOfHints === i + 1 && !previousQuestionRound
-                ? styles.currentHint
-                : styles.oldHint
-            }
-          >
-            {hint}
-          </span>
-        ))}
+      <ol>
+        {usedQuestionRound.question.hints
+          .slice(0, numberOfHints)
+          .map((hint, i) => (
+            <li
+              key={hint}
+              style={
+                numberOfHints === i + 1 && !getRevealAnswer(usedQuestionRound)
+                  ? styles.currentHint
+                  : styles.oldHint
+              }
+            >
+              {hint}
+            </li>
+          ))}
+      </ol>
     </div>
   );
 };
