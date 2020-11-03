@@ -3,7 +3,7 @@
   grid-template-columns: auto;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .grid {
     grid-template-columns: auto minmax(40%, auto);
     grid-column-gap: 40px;
