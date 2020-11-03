@@ -128,13 +128,17 @@ function GameComponent() {
     return <p>A technical error occurred. Try to refresh the page</p>;
   }
 
+  const player = game.players.find((p) => p.id === playerId);
   const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
     (guess) => guess.playerId === playerId
   );
   const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
-  const previousQuestionRound = !hasPlayerPlacedGuessInCurrentQuestionRound
-    ? getPreviousQuestionRound(game)
-    : undefined;
+  const previousQuestionRound =
+    (!hasPlayerPlacedGuessInCurrentQuestionRound && !player?.isDead) ||
+    (!((currentQuestionRound?.bettingRounds[0].bets.length || 0) > 2) &&
+      player?.isDead)
+      ? getPreviousQuestionRound(game)
+      : undefined;
 
   return (
     <>
@@ -176,16 +180,18 @@ function GameComponent() {
             }}
           />
         </div>
-        {!showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound && (
-          <button
-            className="new-question-button btn btn-primary mx-auto mt-5"
-            onClick={() => {
-              setShowNewQuestionRound(true);
-            }}
-          >
-            Answer New Question
-          </button>
-        )}
+        {!showNewQuestionRound &&
+          !hasPlayerPlacedGuessInCurrentQuestionRound &&
+          !player?.isDead && (
+            <button
+              className="new-question-button btn btn-primary mx-auto mt-5"
+              onClick={() => {
+                setShowNewQuestionRound(true);
+              }}
+            >
+              Answer New Question
+            </button>
+          )}
       </div>
       {currentQuestionRound && playerId && (
         <AnswerDrawer
