@@ -22,7 +22,6 @@ import {
 } from "../../storage";
 import PlayerTable from "./PlayerTable";
 import Question from "./Question";
-import Hints from "./Hints";
 import AnswerDrawer from "./AnswerDrawer";
 import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
@@ -151,22 +150,13 @@ function GameComponent() {
         style={{ fontWeight: 300, paddingBottom: "130px" }}
       >
         {currentQuestionRound && playerId && (
-          <div>
-            <Question
-              {...{
-                game,
-                usedQuestionRound:
-                  previousQuestionRound || currentQuestionRound,
-                playerId,
-              }}
-            />
-            <Hints
-              {...{
-                usedQuestionRound:
-                  previousQuestionRound || currentQuestionRound,
-              }}
-            />
-          </div>
+          <Question
+            {...{
+              game,
+              usedQuestionRound: previousQuestionRound || currentQuestionRound,
+              playerId,
+            }}
+          />
         )}
         <div className="d-flex flex-column">
           <PlayerTable

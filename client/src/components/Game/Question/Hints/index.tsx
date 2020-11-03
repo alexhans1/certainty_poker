@@ -1,6 +1,6 @@
 import React from "react";
-import { QuestionRound } from "../../../interfaces";
-import { getRevealAnswer } from "../helpers";
+import { QuestionRound } from "../../../../interfaces";
+import { getRevealAnswer } from "../../helpers";
 
 const styles = {
   title: {

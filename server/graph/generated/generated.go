@@ -91,10 +91,11 @@ type ComplexityRoot struct {
 	}
 
 	Question struct {
-		Answer   func(childComplexity int) int
-		Hints    func(childComplexity int) int
-		ID       func(childComplexity int) int
-		Question func(childComplexity int) int
+		Answer      func(childComplexity int) int
+		Explanation func(childComplexity int) int
+		Hints       func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Question    func(childComplexity int) int
 	}
 
 	QuestionRound struct {
@@ -346,6 +347,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Question.Answer(childComplexity), true
 
+	case "Question.explanation":
+		if e.complexity.Question.Explanation == nil {
+			break
+		}
+
+		return e.complexity.Question.Explanation(childComplexity), true
+
 	case "Question.hints":
 		if e.complexity.Question.Hints == nil {
 			break
@@ -561,6 +569,7 @@ type Question {
   question: String!
   answer: Float!
   hints: [String!]!
+  explanation: String
 }
 
 type Guess {
@@ -1817,6 +1826,37 @@ func (ec *executionContext) _Question_hints(ctx context.Context, field graphql.C
 	res := resTmp.([]string)
 	fc.Result = res
 	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Question_explanation(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Question",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Explanation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _QuestionRound_game(ctx context.Context, field graphql.CollectedField, obj *model.QuestionRound) (ret graphql.Marshaler) {
@@ -3640,6 +3680,8 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "explanation":
+			out.Values[i] = ec._Question_explanation(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

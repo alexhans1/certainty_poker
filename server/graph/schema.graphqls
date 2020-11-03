@@ -36,6 +36,7 @@ type Question {
   question: String!
   answer: Float!
   hints: [String!]!
+  explanation: String
 }
 
 type Guess {

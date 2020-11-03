@@ -7,7 +7,6 @@
       "A red bood cell has a volume of 90 femto liters.",
       "An adult human being has around 300.000.000.000.000 (300 trilion, i.e. 300 million million) blood cells."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["biology", "human"]
   },
@@ -19,7 +18,6 @@
       "In 1990, the BVG owned 1024 tram cars.",
       "In 2018, the BVG was transporting 204 million guests."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["Berlin", "Germany", "Europe", "public transportation"]
   },
@@ -31,7 +29,6 @@
       "There are some 2500 paintings and drawings that are attributed to Claude Monet.",
       "Picasso's residue contains 7089 drawings."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["Picasso", "art", "culture", "Europe"]
   },
@@ -43,7 +40,6 @@
       "A US-$-note is in circulation for about 20 months.",
       "The highest US-$-note is a 100.000-$-note."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["USA", "finance", "economy"]
   },
@@ -55,7 +51,6 @@
       "The price of the Rolls Royce Phantom, Rolls Royce's most sold car, starts from about 450.000 €.",
       "In 2007, Rolls Royce sold 1100 cars."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["UK", "Europe", "luxury", "economy"]
   },
@@ -67,7 +62,6 @@
       "88 popes came from Rome.",
       "Pius IX was the pope with the longest pontificate, being in office for 31 years, 7 months and 23 days."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["religion", "history", "Europe"]
   },
@@ -79,7 +73,6 @@
       "The density of population in Bangladesh was 1,116.1 inhabitants per square kilometer as of 2020.",
       "Bangladesh has an area of 147,570 square kilometers."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["population", "Bangladesh", "Asia", ""]
   },
@@ -90,7 +83,6 @@
       "Donald Trump is 190 cm high.",
       "The average height of german women in the age between 18 and 40 is 166 cm."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["Germany", "politics"]
   },
@@ -102,9 +94,8 @@
       "The German 'Behindertengleichstellungsgesetz' (Law for the Equalization of Persons with a handicap) defines accessibility as the state where the environment is shaped in a way that people with a handicap can use it in the same manner as people without a handicap.",
       "The average pace of a pedestrian is about 5 km/h."
     ],
-    "explanation": "",
     "language": "en",
-    "tags": [""]
+    "tags": []
   },
   {
     "question": "How many WhatsApp messages are sent per second? [as of June 2020]",
@@ -114,9 +105,8 @@
       "The logo of WhatsApp is a green speech ballon with a white earphone capsule.",
       "As of June 2020, there have been 2 billion WhatsApp users around the globe."
     ],
-    "explanation": "",
     "language": "en",
-    "tags": [""]
+    "tags": []
   },
   {
     "question": "How many women are elected head of government (i.e. holding office of the Prime Minister or comparable office)? [as of September 1st 2020]",
@@ -137,9 +127,8 @@
       "In 1958, Sidney Poitier was the first black Actore being nominated as Best Actor in a Leading Role.",
       "The number can be counted by one hand."
     ],
-    "explanation": "",
     "language": "en",
-    "tags": [""]
+    "tags": []
   },
   {
     "question": "How long was the longest movie winning an Oscar for Best Picture? [in minutes]",
@@ -149,7 +138,6 @@
       "The shortes movie to win the Oscar for Best Picture took 94 minutes.",
       "The longest movie winning an Oscar for Best Picture is 1939's 'Gone with the Wind'."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["culture", "movie", "duration"]
   },
@@ -172,7 +160,6 @@
       "The Nobel Peace Prize exists since 1901.",
       "The last year the Nobel Peace Prize has not been awarded was 1972."
     ],
-    "explanation": "",
     "language": "en",
     "tags": ["history", "politics"]
   },
@@ -184,8 +171,7 @@
       "",
       ""
     ],
-    "explanation": "",
     "language": "en",
-    "tags": [""]
+    "tags": []
   }
 ]

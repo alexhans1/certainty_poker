@@ -10,6 +10,7 @@ export interface Question {
   question: string;
   answer: number;
   hints: string[];
+  explanation?: string;
 }
 
 export interface Guess {

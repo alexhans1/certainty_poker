@@ -10,6 +10,7 @@ export const GET_GAME_BY_ID = gql`
           hints
           answer
           question
+          explanation
         }
         foldedPlayerIds
         bettingRounds {
@@ -56,6 +57,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
           hints
           answer
           question
+          explanation
         }
         foldedPlayerIds
         bettingRounds {
