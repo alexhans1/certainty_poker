@@ -60,7 +60,8 @@ export default ({
             value={guess}
             onChange={(e) => {
               const value = parseFloat(e.target.value);
-              setGuess(value || e.target.value);
+              if (value === 0) setGuess(0);
+              else setGuess(value || e.target.value);
             }}
             onKeyUp={(e) => {
               if (e.which === 13) {
