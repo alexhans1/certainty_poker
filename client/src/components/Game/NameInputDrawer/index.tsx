@@ -43,6 +43,11 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
               const match = newName.match(emojiRegex);
               setName(match ? newName : newName.substring(0, 2));
             }}
+            onKeyUp={(e) => {
+              if (e.which === 13) {
+                handleSubmit();
+              }
+            }}
             type="text"
             className="form-control form-control-lg"
             placeholder="Type an emoji or letter"
@@ -51,6 +56,7 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
           />
           <div className="input-group-append">
             <button
+              type="submit"
               disabled={!name.length}
               className="btn btn-primary"
               onClick={handleSubmit}

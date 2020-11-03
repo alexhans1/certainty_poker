@@ -58,6 +58,11 @@ export default ({
             onChange={(e) => {
               setAmount(Math.round(parseFloat(e.target.value)));
             }}
+            onKeyUp={(e) => {
+              if (e.which === 13) {
+                handleSubmit();
+              }
+            }}
             type="number"
             pattern="[0-9]"
             min={amountToCall}

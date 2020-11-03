@@ -28,6 +28,15 @@ export default ({
   const canAddGuess = !currentQuestionRound.guesses.find(
     (guess) => guess.playerId === playerId
   );
+
+  const handleSubmit = () => {
+    if ((guess || guess === 0) && typeof guess === "number") {
+      addGuess(addGuessMutation, game, guess, playerId);
+      setGuess("");
+      setShowNewQuestionRound(false);
+    }
+  };
+
   return (
     <Drawer
       title="New Question"
@@ -53,6 +62,11 @@ export default ({
               const value = parseFloat(e.target.value);
               setGuess(value || e.target.value);
             }}
+            onKeyUp={(e) => {
+              if (e.which === 13) {
+                handleSubmit();
+              }
+            }}
             disabled={!canAddGuess}
             type="number"
             className="form-control form-control-lg"
@@ -69,13 +83,7 @@ export default ({
                 typeof guess === "string" ||
                 (!guess && guess !== 0)
               }
-              onClick={(e) => {
-                if ((guess || guess === 0) && typeof guess === "number") {
-                  addGuess(addGuessMutation, game, guess, playerId);
-                  setGuess("");
-                  setShowNewQuestionRound(false);
-                }
-              }}
+              onClick={handleSubmit}
             >
               ⮑
             </button>
