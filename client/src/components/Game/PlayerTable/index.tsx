@@ -143,7 +143,7 @@ export default ({
                   {money +
                     (revealAnswers && !game.isOver ? bettingRoundSpending : 0)}
                 </span>
-                {!revealAnswers && (
+                {!revealAnswers && !!bettingRoundSpending && (
                   <span className="ml-4">{bettingRoundSpending * -1}</span>
                 )}
                 {revealAnswers && moneyDiff && (
