@@ -1,44 +1,20 @@
 [
   {
-    "question": "How many red blood cells are in 1 ml (one mililitre) of human blood?",
-    "answer": 5000000000,
-    "hints": [
-      "Red blood cells make up 99 %of all cells in the blood.",
-      "A red bood cell has a volume of 90 femto liters.",
-      "An adult human being has around 300.000.000.000.000 (300 trilion, i.e. 300 million million) blood cells."
-    ],
-    "language": "en",
-    "tags": ["biology", "human"]
-  },
-  {
-    "question": "How many functional tram cars does the BVG (Berliner Verkehrsgesellschaft, the Berlin local traffic company) own?",
+    "question": "How many functional tram cars does the BVG ('Berliner Verkehrsgesellschaft', the Berlin local traffic company) own?",
     "answer": 600,
     "hints": [
-      "In the western part of Berlin, all tram lines have been dismantled (and never been rebuilt) between 19454 and 1967.",
-      "In 1990, the BVG owned 1024 tram cars.",
-      "In 2018, the BVG was transporting 204 million guests."
+      "In 2018, the BVG was transporting 204 million guests.",
+      "In 1990, the BVG owned 1024 tram cars."
     ],
     "language": "en",
-    "tags": ["Berlin", "Germany", "Europe", "public transportation"]
-  },
-  {
-    "question": "How many paintings can be found in the residue of Pablo Picasso?",
-    "answer": 1885,
-    "hints": [
-      "Picasso painted his first painting at the age of 9 and painted until his dead at the age of 91.",
-      "There are some 2500 paintings and drawings that are attributed to Claude Monet.",
-      "Picasso's residue contains 7089 drawings."
-    ],
-    "language": "en",
-    "tags": ["Picasso", "art", "culture", "Europe"]
+    "tags": ["Berlin", "public transportation"]
   },
   {
     "question": "What is the amount of cash US $ in circulation? [in billions]",
     "answer": 800,
     "hints": [
       "Every day, 16 million 1$-notes are printed and destroyed.",
-      "A US-$-note is in circulation for about 20 months.",
-      "The highest US-$-note is a 100.000-$-note."
+      "A US-$-note is in circulation for about 20 months."
     ],
     "language": "en",
     "tags": ["USA", "finance", "economy"]
@@ -47,7 +23,6 @@
     "question": "How many Rolls Royce cars have been sold in 2019?",
     "answer": 5100,
     "hints": [
-      "The United Kingdom’s potential departure from the European Union caused some worry amongst UK-based automakers.",
       "The price of the Rolls Royce Phantom, Rolls Royce's most sold car, starts from about 450.000 €.",
       "In 2007, Rolls Royce sold 1100 cars."
     ],
@@ -59,7 +34,6 @@
     "answer": 266,
     "hints": [
       "The apostle St. Peter is considerd the first pope.",
-      "88 popes came from Rome.",
       "Pius IX was the pope with the longest pontificate, being in office for 31 years, 7 months and 23 days."
     ],
     "language": "en",
@@ -70,8 +44,7 @@
     "answer": 164.7,
     "hints": [
       "1969, Bangladesh had 62.68 million inhabitants.",
-      "The density of population in Bangladesh was 1,116.1 inhabitants per square kilometer as of 2020.",
-      "Bangladesh has an area of 147,570 square kilometers."
+      "The density of population in Bangladesh was 1,116.1 inhabitants per square kilometer as of 2020."
     ],
     "language": "en",
     "tags": ["population", "Bangladesh", "Asia", ""]
@@ -87,11 +60,10 @@
     "tags": ["Germany", "politics"]
   },
   {
-    "question": "Which walking pace is assumed for pedestrians when programming the duration of green phases at traffic ligths in Germany? [in km/h]",
+    "question": "Which walking pace is assumed for pedestrians when programming the duration of green phases at traffic lights in Germany? [in km/h]",
     "answer": 4.32,
     "hints": [
       "Unhurried strolling has a walking pace of about 3 km/h.",
-      "The German 'Behindertengleichstellungsgesetz' (Law for the Equalization of Persons with a handicap) defines accessibility as the state where the environment is shaped in a way that people with a handicap can use it in the same manner as people without a handicap.",
       "The average pace of a pedestrian is about 5 km/h."
     ],
     "language": "en",
@@ -102,7 +74,6 @@
     "answer": 750000,
     "hints": [
       "WhatsApp is the most used messenger app on the globe.",
-      "The logo of WhatsApp is a green speech ballon with a white earphone capsule.",
       "As of June 2020, there have been 2 billion WhatsApp users around the globe."
     ],
     "language": "en",
@@ -120,11 +91,10 @@
     "tags": ["politics", "feminism"]
   },
   {
-    "question": "How many black actors have been winning an Academy Award as Best Actor in a Leading Role? [as of 2019]",
+    "question": "How many black actors or actresses have been winning an Academy Award as Best Actor in a Leading Role? [as of 2019]",
     "answer": 5,
     "hints": [
       "In 2019, the 91st Academy Awards ceremony has been held.",
-      "In 1958, Sidney Poitier was the first black Actore being nominated as Best Actor in a Leading Role.",
       "The number can be counted by one hand."
     ],
     "language": "en",
@@ -135,7 +105,6 @@
     "answer": 238,
     "hints": [
       "The longest movie to win an Oscar was 'War and Peace' and lasted 431 minutes.",
-      "The shortes movie to win the Oscar for Best Picture took 94 minutes.",
       "The longest movie winning an Oscar for Best Picture is 1939's 'Gone with the Wind'."
     ],
     "language": "en",
@@ -157,8 +126,7 @@
     "answer": 19,
     "hints": [
       "In total, there are 134 Nobel Peace Prize Laureates.",
-      "The Nobel Peace Prize exists since 1901.",
-      "The last year the Nobel Peace Prize has not been awarded was 1972."
+      "The Nobel Peace Prize exists since 1901."
     ],
     "language": "en",
     "tags": ["history", "politics"]
@@ -168,10 +136,80 @@
     "answer": 13000,
     "hints": [
       "The longest German highway is the Autobahn A7, with a length of 962 km.",
-      "",
-      ""
+      "The Autobahn is the federal controlled-access highway system in Germany."
     ],
     "language": "en",
-    "tags": []
+    "tags": ["Germany", "public transportation"]
+  },
+  {
+    "question": "What is the beer consumption per year per capita in the United States? (as of 2019) [in litres]",
+    "answer": 73.5,
+    "hints": [
+      "The country with the highest beer consumption per capita is Czech Republic, with 191.8 litres.",
+      "In 2010, the United States the consumption of pure alcohol per year per capita was 9.2 litres."
+    ],
+    "language": "en",
+    "tags": ["USA"]
+  },
+  {
+    "question": "How many human beings (homo sapiens sapiens) have ever lived on earth (in total)? [in billions]",
+    "answer": 108,
+    "hints": [
+      "Modern homo sapiens sapiens first walked the earth about 50,000 years ago.",
+      "The current human population is about 7 billion."
+    ],
+    "language": "en",
+    "tags": ["biology", "history", "population"]
+  },
+  {
+    "question": "How many pigs have being slaughtered in Germany in 2019?",
+    "answer": 55000000,
+    "hints": [
+      "In 2019, Germany has produced 119 % of the number of pigs sold on the domestic market.",
+      "In 2019, 20,575 goats have been slaughtered in Germany."
+    ],
+    "language": "en",
+    "tags": ["Germany", "food", "consumption"]
+  },
+  {
+    "question": "How many action force police officers are working in Berlin? (as of 2019)",
+    "answer": 17000,
+    "hints": [
+      "As of 2019, Germany had a total of 319,400 police officers.",
+      "In 2018, 748,000 police-patrol-car actions have been carried out."
+    ],
+    "language": "en",
+    "tags": ["Germany", "police", "politics"]
+  },
+  {
+    "question": "How many babies have been born in Germany in 2019?",
+    "answer": 778090,
+    "hints": [
+      "In 1990, 830019 babies have been born in Germany.",
+      "The number is lower for 2019 than for 1990."
+    ],
+    "language": "en",
+    "tags": ["Germany", "population"]
+  },
+  {
+    "question": "How many cells are in a chicken-egg?",
+    "answer": 1,
+    "hints": [
+      "The yellow of the egg weighs about 30% of the egg.",
+      "Think twice."
+    ],
+    "explanation": "As long as the egg is not fertilized, it's just the ovule.",
+    "language": "en",
+    "tags": ["biology"]
+  },
+  {
+    "question": "How many people live in Africa? (as of 2020) [in millions]",
+    "answer": 1216,
+    "hints": [
+      "Nigeria, the biggest African country by population, has about 206 million inhabitants.",
+      "Europe has about 741 million inhabitants."
+    ],
+    "language": "en",
+    "tags": ["Africa", "population"]
   }
 ]
