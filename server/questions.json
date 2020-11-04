@@ -107,6 +107,7 @@
       "The longest movie to win an Oscar was 'War and Peace' and lasted 431 minutes.",
       "The longest movie winning an Oscar for Best Picture is 1939's 'Gone with the Wind'."
     ],
+    "explanation": "Gone with the Wind, 1939",
     "language": "en",
     "tags": ["culture", "movie", "duration"]
   },
@@ -133,10 +134,10 @@
   },
   {
     "question": "How long is the German Highway ('Autobahn') net? [in km]",
-    "answer": 13000,
+    "answer": 12993,
     "hints": [
       "The longest German highway is the Autobahn A7, with a length of 962 km.",
-      "The Autobahn is the federal controlled-access highway system in Germany."
+      "The 1974 album \"Autobahn\" from the band Kraftwerk made it to made it number five on the US billboard charts."
     ],
     "language": "en",
     "tags": ["Germany", "public transportation"]
@@ -145,8 +146,8 @@
     "question": "What is the beer consumption per year per capita in the United States? (as of 2019) [in litres]",
     "answer": 73.5,
     "hints": [
-      "The country with the highest beer consumption per capita is Czech Republic, with 191.8 litres.",
-      "In 2010, the United States the consumption of pure alcohol per year per capita was 9.2 litres."
+      "The country with the highest beer consumption per capita is the Czech Republic, with 191.8 litres.",
+      "In 2010, the US consumption of pure alcohol per year per capita was 9.2 litres."
     ],
     "language": "en",
     "tags": ["USA"]
@@ -162,7 +163,7 @@
     "tags": ["biology", "history", "population"]
   },
   {
-    "question": "How many pigs have being slaughtered in Germany in 2019?",
+    "question": "How many pigs have been slaughtered in Germany in 2019?",
     "answer": 55000000,
     "hints": [
       "In 2019, Germany has produced 119 % of the number of pigs sold on the domestic market.",
@@ -172,7 +173,7 @@
     "tags": ["Germany", "food", "consumption"]
   },
   {
-    "question": "How many action force police officers are working in Berlin? (as of 2019)",
+    "question": "How many police officers Berlin does Berlin have? (as of 2019)",
     "answer": 17000,
     "hints": [
       "As of 2019, Germany had a total of 319,400 police officers.",
