@@ -212,5 +212,15 @@
     ],
     "language": "en",
     "tags": ["Africa", "population"]
+  },
+  {
+    "question": "The 2020 season of the Bachelorette features Clare Crawley, the oldest Bachelorette in the show's history. How old is she?",
+    "answer": 39,
+    "hints": [
+      "After just two weeks Clare stopped shooting cause she was already in love with Dale. She was replaced with 9 years younger Tayshia Adams.",
+      "After getting kicked out by Clare, Yosef yelled \"I expected way more from the OLDEST BACHELORETTE IN HISTORY!\" and \"Remember, you're almost 40!\"."
+    ],
+    "language": "en",
+    "tags": []
   }
 ]
