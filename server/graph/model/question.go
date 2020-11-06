@@ -3,9 +3,7 @@ package model
 import (
 	"encoding/json"
 	"io/ioutil"
-	"math/rand"
 	"os"
-	"time"
 
 	"github.com/alexhans1/certainty_poker/helpers"
 )
@@ -28,10 +26,8 @@ func LoadQuestions() []*Question {
 
 // DrawQuestion draws a random Question and removes it from the slice
 func DrawQuestion(g *Game) *Question {
-	rand.Seed(time.Now().UnixNano())
-	randomIndex := rand.Intn(len(g.Questions))
-	drawnQuestion := g.Questions[randomIndex]
-	g.Questions = append(g.Questions[:randomIndex], g.Questions[randomIndex+1:]...)
+	drawnQuestion := g.Questions[0]
+	g.Questions = g.Questions[1:]
 
 	return drawnQuestion
 }
