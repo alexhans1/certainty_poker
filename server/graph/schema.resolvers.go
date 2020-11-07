@@ -13,14 +13,19 @@ import (
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
-func (r *mutationResolver) CreateGame(ctx context.Context) (*model.Game, error) {
+func (r *mutationResolver) CreateGame(ctx context.Context, setName string) (*model.Game, error) {
+	questions, err := model.LoadQuestions(r.redisClient, setName)
+	if err != nil {
+		return nil, err
+	}
+
 	gameID := helpers.CreateID()
 	game := model.Game{
 		ID:             gameID,
 		QuestionRounds: make([]*model.QuestionRound, 0),
 		Players:        make([]*model.Player, 0),
 		DealerID:       "dealerId",
-		Questions:      model.LoadQuestions(),
+		Questions:      questions,
 		IsOver:         false,
 	}
 
@@ -138,6 +143,15 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	}
 
 	go updateGameChannel(r, game)
+
+	return true, nil
+}
+
+func (r *mutationResolver) UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string) (bool, error) {
+	err := model.UploadQuestions(r.redisClient, setName, questions)
+	if err != nil {
+		return false, err
+	}
 
 	return true, nil
 }

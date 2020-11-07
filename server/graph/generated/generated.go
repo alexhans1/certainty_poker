@@ -71,11 +71,12 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddGuess   func(childComplexity int, input model.GuessInput) int
-		AddPlayer  func(childComplexity int, input model.PlayerInput) int
-		CreateGame func(childComplexity int) int
-		PlaceBet   func(childComplexity int, input model.BetInput) int
-		StartGame  func(childComplexity int, gameID string) int
+		AddGuess        func(childComplexity int, input model.GuessInput) int
+		AddPlayer       func(childComplexity int, input model.PlayerInput) int
+		CreateGame      func(childComplexity int, setName string) int
+		PlaceBet        func(childComplexity int, input model.BetInput) int
+		StartGame       func(childComplexity int, gameID string) int
+		UploadQuestions func(childComplexity int, questions []*model.QuestionInput, setName string) int
 	}
 
 	Player struct {
@@ -119,11 +120,12 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	CreateGame(ctx context.Context) (*model.Game, error)
+	CreateGame(ctx context.Context, setName string) (*model.Game, error)
 	StartGame(ctx context.Context, gameID string) (bool, error)
 	AddPlayer(ctx context.Context, input model.PlayerInput) (*model.Player, error)
 	AddGuess(ctx context.Context, input model.GuessInput) (bool, error)
 	PlaceBet(ctx context.Context, input model.BetInput) (bool, error)
+	UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string) (bool, error)
 }
 type QueryResolver interface {
 	Game(ctx context.Context, gameID string) (*model.Game, error)
@@ -267,7 +269,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Mutation.CreateGame(childComplexity), true
+		args, err := ec.field_Mutation_createGame_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateGame(childComplexity, args["setName"].(string)), true
 
 	case "Mutation.placeBet":
 		if e.complexity.Mutation.PlaceBet == nil {
@@ -292,6 +299,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.StartGame(childComplexity, args["gameId"].(string)), true
+
+	case "Mutation.uploadQuestions":
+		if e.complexity.Mutation.UploadQuestions == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_uploadQuestions_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UploadQuestions(childComplexity, args["questions"].([]*model.QuestionInput), args["setName"].(string)), true
 
 	case "Player.game":
 		if e.complexity.Player.Game == nil {
@@ -611,12 +630,20 @@ input PlayerInput {
   playerName: String!
 }
 
+input QuestionInput {
+  question: String!
+  answer: Float!
+  hints: [String!]!
+  explanation: String
+}
+
 type Mutation {
-  createGame: Game!
+  createGame(setName: String!): Game!
   startGame(gameId: ID!): Boolean!
   addPlayer(input: PlayerInput!): Player!
   addGuess(input: GuessInput!): Boolean!
   placeBet(input: BetInput!): Boolean!
+  uploadQuestions(questions: [QuestionInput!]!, setName: String!): Boolean!
 }
 
 type Subscription {
@@ -658,6 +685,20 @@ func (ec *executionContext) field_Mutation_addPlayer_args(ctx context.Context, r
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["setName"]; ok {
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["setName"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_placeBet_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -683,6 +724,28 @@ func (ec *executionContext) field_Mutation_startGame_args(ctx context.Context, r
 		}
 	}
 	args["gameId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_uploadQuestions_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 []*model.QuestionInput
+	if tmp, ok := rawArgs["questions"]; ok {
+		arg0, err = ec.unmarshalNQuestionInput2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionInputᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["questions"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["setName"]; ok {
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["setName"] = arg1
 	return args, nil
 }
 
@@ -1229,9 +1292,16 @@ func (ec *executionContext) _Mutation_createGame(ctx context.Context, field grap
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createGame_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateGame(rctx)
+		return ec.resolvers.Mutation().CreateGame(rctx, args["setName"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1396,6 +1466,47 @@ func (ec *executionContext) _Mutation_placeBet(ctx context.Context, field graphq
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().PlaceBet(rctx, args["input"].(model.BetInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_uploadQuestions(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_uploadQuestions_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UploadQuestions(rctx, args["questions"].([]*model.QuestionInput), args["setName"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3346,6 +3457,42 @@ func (ec *executionContext) unmarshalInputPlayerInput(ctx context.Context, obj i
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputQuestionInput(ctx context.Context, obj interface{}) (model.QuestionInput, error) {
+	var it model.QuestionInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "question":
+			var err error
+			it.Question, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "answer":
+			var err error
+			it.Answer, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "hints":
+			var err error
+			it.Hints, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "explanation":
+			var err error
+			it.Explanation, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -3544,6 +3691,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "placeBet":
 			out.Values[i] = ec._Mutation_placeBet(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "uploadQuestions":
+			out.Values[i] = ec._Mutation_uploadQuestions(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4391,6 +4543,38 @@ func (ec *executionContext) marshalNQuestion2ᚕᚖgithubᚗcomᚋalexhans1ᚋce
 	}
 	wg.Wait()
 	return ret
+}
+
+func (ec *executionContext) unmarshalNQuestionInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionInput(ctx context.Context, v interface{}) (model.QuestionInput, error) {
+	return ec.unmarshalInputQuestionInput(ctx, v)
+}
+
+func (ec *executionContext) unmarshalNQuestionInput2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionInputᚄ(ctx context.Context, v interface{}) ([]*model.QuestionInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]*model.QuestionInput, len(vSlice))
+	for i := range vSlice {
+		res[i], err = ec.unmarshalNQuestionInput2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNQuestionInput2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionInput(ctx context.Context, v interface{}) (*model.QuestionInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalNQuestionInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionInput(ctx, v)
+	return &res, err
 }
 
 func (ec *executionContext) marshalNQuestionRound2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionRound(ctx context.Context, sel ast.SelectionSet, v model.QuestionRound) graphql.Marshaler {

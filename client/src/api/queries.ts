@@ -1,5 +1,13 @@
 import { gql } from "apollo-boost";
 
+export const CREATE_GAME_QUERY = gql`
+  mutation createGame($setName: String!) {
+    createGame(setName: $setName) {
+      id
+    }
+  }
+`;
+
 export const GET_GAME_BY_ID = gql`
   query findGame($gameId: ID!) {
     game(gameId: $gameId) {
