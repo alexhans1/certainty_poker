@@ -60,6 +60,13 @@ type Question struct {
 	Explanation *string  `json:"explanation"`
 }
 
+type QuestionInput struct {
+	Question    string   `json:"question"`
+	Answer      float64  `json:"answer"`
+	Hints       []string `json:"hints"`
+	Explanation *string  `json:"explanation"`
+}
+
 type QuestionRound struct {
 	Game            *Game                  `json:"game"`
 	Question        *Question              `json:"question"`

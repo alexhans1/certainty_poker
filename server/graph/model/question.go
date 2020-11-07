@@ -2,26 +2,42 @@ package model
 
 import (
 	"encoding/json"
-	"io/ioutil"
-	"os"
+	"errors"
 
 	"github.com/alexhans1/certainty_poker/helpers"
+	"github.com/go-redis/redis"
 )
 
-// LoadQuestions loads the questions from json file
-func LoadQuestions() []*Question {
-	questionsJSON, _ := os.Open("./questions.json")
+// UploadQuestions uploads new questions to redis
+func UploadQuestions(redisClient *redis.Client, setName string, questions []*QuestionInput) error {
+	m, err := json.Marshal(questions)
+	if err != nil {
+		return err
+	}
+	status := redisClient.Set(setName, string(m), 0)
+	if status.Err() != nil {
+		return status.Err()
+	}
+	return nil
+}
 
-	defer questionsJSON.Close()
-	byteValue, _ := ioutil.ReadAll(questionsJSON)
+// LoadQuestions loads the questions a given set from redis db
+func LoadQuestions(redisClient *redis.Client, setName string) ([]*Question, error) {
+	stringifiedQuestions, err := redisClient.Get(setName).Result()
+	if err != nil {
+		if err.Error() == "redis: nil" {
+			return nil, errors.New("question set not found")
+		}
+		return nil, err
+	}
 
-	var allQuestions []*Question
-	json.Unmarshal(byteValue, &allQuestions)
-	for _, q := range allQuestions {
+	var questions []*Question
+	json.Unmarshal([]byte(stringifiedQuestions), &questions)
+	for _, q := range questions {
 		q.ID = helpers.CreateID()
 	}
 
-	return allQuestions
+	return questions, nil
 }
 
 // DrawQuestion draws a random Question and removes it from the slice

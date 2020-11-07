@@ -78,12 +78,20 @@ input PlayerInput {
   playerName: String!
 }
 
+input QuestionInput {
+  question: String!
+  answer: Float!
+  hints: [String!]!
+  explanation: String
+}
+
 type Mutation {
-  createGame: Game!
+  createGame(setName: String!): Game!
   startGame(gameId: ID!): Boolean!
   addPlayer(input: PlayerInput!): Player!
   addGuess(input: GuessInput!): Boolean!
   placeBet(input: BetInput!): Boolean!
+  uploadQuestions(questions: [QuestionInput!]!, setName: String!): Boolean!
 }
 
 type Subscription {
