@@ -26,7 +26,9 @@ type Resolver struct {
 func NewResolver() generated.Config {
 	// redis client
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: os.Getenv("REDISCLOUD_URL"),
+		Addr:     os.Getenv("REDISCLOUD_URL"),
+		Password: os.Getenv("REDISCLOUD_PASSWORD"),
+		DB:       0,
 	})
 
 	pong, err := redisClient.Ping().Result()
