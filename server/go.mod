@@ -11,6 +11,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/hashicorp/golang-lru v0.5.0
+	github.com/joho/godotenv v1.3.0
 	github.com/opentracing/opentracing-go v1.0.2
 	github.com/rs/cors v1.6.0
 	github.com/stretchr/testify v1.6.1
