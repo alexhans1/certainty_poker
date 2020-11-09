@@ -81,3 +81,8 @@ type QuestionRoundResult struct {
 	PlayerID      string `json:"playerId"`
 	ChangeInMoney int    `json:"changeInMoney"`
 }
+
+type Set struct {
+	SetName           string `json:"setName"`
+	NumberOfQuestions int    `json:"numberOfQuestions"`
+}

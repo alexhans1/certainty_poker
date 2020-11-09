@@ -89,6 +89,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Game func(childComplexity int, gameID string) int
+		Sets func(childComplexity int) int
 	}
 
 	Question struct {
@@ -114,6 +115,11 @@ type ComplexityRoot struct {
 		PlayerID      func(childComplexity int) int
 	}
 
+	Set struct {
+		NumberOfQuestions func(childComplexity int) int
+		SetName           func(childComplexity int) int
+	}
+
 	Subscription struct {
 		GameUpdated func(childComplexity int, gameID string, hash string) int
 	}
@@ -129,6 +135,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	Game(ctx context.Context, gameID string) (*model.Game, error)
+	Sets(ctx context.Context) ([]*model.Set, error)
 }
 type SubscriptionResolver interface {
 	GameUpdated(ctx context.Context, gameID string, hash string) (<-chan *model.Game, error)
@@ -359,6 +366,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Game(childComplexity, args["gameId"].(string)), true
 
+	case "Query.sets":
+		if e.complexity.Query.Sets == nil {
+			break
+		}
+
+		return e.complexity.Query.Sets(childComplexity), true
+
 	case "Question.answer":
 		if e.complexity.Question.Answer == nil {
 			break
@@ -456,6 +470,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.QuestionRoundResult.PlayerID(childComplexity), true
+
+	case "Set.numberOfQuestions":
+		if e.complexity.Set.NumberOfQuestions == nil {
+			break
+		}
+
+		return e.complexity.Set.NumberOfQuestions(childComplexity), true
+
+	case "Set.setName":
+		if e.complexity.Set.SetName == nil {
+			break
+		}
+
+		return e.complexity.Set.SetName(childComplexity), true
 
 	case "Subscription.gameUpdated":
 		if e.complexity.Subscription.GameUpdated == nil {
@@ -607,9 +635,15 @@ type Bet {
   amount: Int!
 }
 
+type Set {
+  setName: String!
+  numberOfQuestions: Int!
+}
+
 # Queries
 type Query {
   game(gameId: ID!): Game!
+  sets: [Set!]!
 }
 
 # Mutations
@@ -1734,6 +1768,40 @@ func (ec *executionContext) _Query_game(ctx context.Context, field graphql.Colle
 	return ec.marshalNGame2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGame(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_sets(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Sets(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Set)
+	fc.Result = res
+	return ec.marshalNSet2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐSetᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2254,6 +2322,74 @@ func (ec *executionContext) _QuestionRoundResult_changeInMoney(ctx context.Conte
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.ChangeInMoney, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Set_setName(ctx context.Context, field graphql.CollectedField, obj *model.Set) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Set",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SetName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Set_numberOfQuestions(ctx context.Context, field graphql.CollectedField, obj *model.Set) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Set",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumberOfQuestions, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3786,6 +3922,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "sets":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_sets(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -3914,6 +4064,38 @@ func (ec *executionContext) _QuestionRoundResult(ctx context.Context, sel ast.Se
 			}
 		case "changeInMoney":
 			out.Values[i] = ec._QuestionRoundResult_changeInMoney(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var setImplementors = []string{"Set"}
+
+func (ec *executionContext) _Set(ctx context.Context, sel ast.SelectionSet, obj *model.Set) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, setImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Set")
+		case "setName":
+			out.Values[i] = ec._Set_setName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "numberOfQuestions":
+			out.Values[i] = ec._Set_numberOfQuestions(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4640,6 +4822,57 @@ func (ec *executionContext) marshalNQuestionRoundResult2ᚖgithubᚗcomᚋalexha
 		return graphql.Null
 	}
 	return ec._QuestionRoundResult(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSet2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐSet(ctx context.Context, sel ast.SelectionSet, v model.Set) graphql.Marshaler {
+	return ec._Set(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSet2ᚕᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐSetᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Set) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSet2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐSet(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNSet2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐSet(ctx context.Context, sel ast.SelectionSet, v *model.Set) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Set(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

@@ -160,6 +160,22 @@ func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, e
 	return model.FindGame(r.games, gameID)
 }
 
+func (r *queryResolver) Sets(ctx context.Context) ([]*model.Set, error) {
+	var sets []*model.Set
+	keys := r.redisClient.Keys("*")
+	if keys.Err() != nil {
+		return nil, keys.Err()
+	}
+	for _, setName := range keys.Val() {
+		questions, err := model.LoadQuestions(r.redisClient, setName)
+		if err != nil {
+			return nil, err
+		}
+		sets = append(sets, &model.Set{SetName: setName, NumberOfQuestions: len(questions)})
+	}
+	return sets, nil
+}
+
 func (r *subscriptionResolver) GameUpdated(ctx context.Context, gameID string, hash string) (<-chan *model.Game, error) {
 	// Create new channel for request
 	gameChannel := make(chan *model.Game, 1)
