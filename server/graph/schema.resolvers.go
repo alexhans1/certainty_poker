@@ -13,10 +13,15 @@ import (
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
-func (r *mutationResolver) CreateGame(ctx context.Context, setName string) (*model.Game, error) {
-	questions, err := model.LoadQuestions(r.redisClient, setName)
-	if err != nil {
-		return nil, err
+func (r *mutationResolver) CreateGame(ctx context.Context, setNames []string) (*model.Game, error) {
+	gameQuestions := []*model.Question{}
+
+	for _, setName := range setNames {
+		questions, err := model.LoadQuestions(r.redisClient, setName)
+		if err != nil {
+			return nil, err
+		}
+		gameQuestions = append(gameQuestions, questions...)
 	}
 
 	gameID := helpers.CreateID()
@@ -25,7 +30,7 @@ func (r *mutationResolver) CreateGame(ctx context.Context, setName string) (*mod
 		QuestionRounds: make([]*model.QuestionRound, 0),
 		Players:        make([]*model.Player, 0),
 		DealerID:       "dealerId",
-		Questions:      questions,
+		Questions:      gameQuestions,
 		IsOver:         false,
 	}
 

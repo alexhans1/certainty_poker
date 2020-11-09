@@ -73,7 +73,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		AddGuess        func(childComplexity int, input model.GuessInput) int
 		AddPlayer       func(childComplexity int, input model.PlayerInput) int
-		CreateGame      func(childComplexity int, setName string) int
+		CreateGame      func(childComplexity int, setNames []string) int
 		PlaceBet        func(childComplexity int, input model.BetInput) int
 		StartGame       func(childComplexity int, gameID string) int
 		UploadQuestions func(childComplexity int, questions []*model.QuestionInput, setName string) int
@@ -126,7 +126,7 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	CreateGame(ctx context.Context, setName string) (*model.Game, error)
+	CreateGame(ctx context.Context, setNames []string) (*model.Game, error)
 	StartGame(ctx context.Context, gameID string) (bool, error)
 	AddPlayer(ctx context.Context, input model.PlayerInput) (*model.Player, error)
 	AddGuess(ctx context.Context, input model.GuessInput) (bool, error)
@@ -281,7 +281,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateGame(childComplexity, args["setName"].(string)), true
+		return e.complexity.Mutation.CreateGame(childComplexity, args["setNames"].([]string)), true
 
 	case "Mutation.placeBet":
 		if e.complexity.Mutation.PlaceBet == nil {
@@ -672,7 +672,7 @@ input QuestionInput {
 }
 
 type Mutation {
-  createGame(setName: String!): Game!
+  createGame(setNames: [String!]!): Game!
   startGame(gameId: ID!): Boolean!
   addPlayer(input: PlayerInput!): Player!
   addGuess(input: GuessInput!): Boolean!
@@ -722,14 +722,14 @@ func (ec *executionContext) field_Mutation_addPlayer_args(ctx context.Context, r
 func (ec *executionContext) field_Mutation_createGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["setName"]; ok {
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+	var arg0 []string
+	if tmp, ok := rawArgs["setNames"]; ok {
+		arg0, err = ec.unmarshalNString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["setName"] = arg0
+	args["setNames"] = arg0
 	return args, nil
 }
 
@@ -1335,7 +1335,7 @@ func (ec *executionContext) _Mutation_createGame(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateGame(rctx, args["setName"].(string))
+		return ec.resolvers.Mutation().CreateGame(rctx, args["setNames"].([]string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

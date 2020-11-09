@@ -92,7 +92,7 @@ input QuestionInput {
 }
 
 type Mutation {
-  createGame(setName: String!): Game!
+  createGame(setNames: [String!]!): Game!
   startGame(gameId: ID!): Boolean!
   addPlayer(input: PlayerInput!): Player!
   addGuess(input: GuessInput!): Boolean!
