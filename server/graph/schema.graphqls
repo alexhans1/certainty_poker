@@ -55,9 +55,15 @@ type Bet {
   amount: Int!
 }
 
+type Set {
+  setName: String!
+  numberOfQuestions: Int!
+}
+
 # Queries
 type Query {
   game(gameId: ID!): Game!
+  sets: [Set!]!
 }
 
 # Mutations
