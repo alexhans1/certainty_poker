@@ -1,5 +1,5 @@
 import React from "react";
-import { Game, Player, QuestionRound } from "../../../interfaces";
+import { Game, QuestionRound } from "../../../interfaces";
 import { getRevealAnswer } from "../helpers";
 import Hints from "./Hints";
 

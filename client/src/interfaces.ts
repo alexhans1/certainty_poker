@@ -62,3 +62,8 @@ export interface GuessInput {
   playerId: Player["id"];
   guess: number;
 }
+
+export interface Set {
+  setName: string;
+  numberOfQuestions: number;
+}

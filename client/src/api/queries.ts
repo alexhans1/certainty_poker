@@ -1,9 +1,18 @@
 import { gql } from "apollo-boost";
 
 export const CREATE_GAME_QUERY = gql`
-  mutation createGame($setName: String!) {
-    createGame(setName: $setName) {
+  mutation createGame($setNames: [String!]!) {
+    createGame(setNames: $setNames) {
       id
+    }
+  }
+`;
+
+export const GET_SETS_QUERY = gql`
+  query sets {
+    sets {
+      setName
+      numberOfQuestions
     }
   }
 `;
