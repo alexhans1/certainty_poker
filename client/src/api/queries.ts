@@ -7,6 +7,11 @@ export const CREATE_GAME_QUERY = gql`
     }
   }
 `;
+export const UPLOAD_QUESTION_SET = gql`
+  mutation uploadQuestions($questions: [QuestionInput!]!, $setName: String!) {
+    uploadQuestions(questions: $questions, setName: $setName)
+  }
+`;
 
 export const GET_SETS_QUERY = gql`
   query sets {
