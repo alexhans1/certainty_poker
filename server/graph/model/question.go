@@ -10,6 +10,14 @@ import (
 
 // UploadQuestions uploads new questions to redis
 func UploadQuestions(redisClient *redis.Client, setName string, questions []*QuestionInput) error {
+	exists := redisClient.Exists(setName)
+	if exists.Err() != nil {
+		return exists.Err()
+	}
+	if exists.Val() == 1 {
+		return errors.New("a question set already exists by that name")
+	}
+
 	m, err := json.Marshal(questions)
 	if err != nil {
 		return err
