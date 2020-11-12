@@ -23,6 +23,7 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
     variables: {
       setName,
       questions: data,
+      isPrivate: false,
     },
     onCompleted: () => {
       fetchSets();

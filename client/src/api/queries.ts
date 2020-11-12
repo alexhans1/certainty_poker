@@ -8,8 +8,16 @@ export const CREATE_GAME_QUERY = gql`
   }
 `;
 export const UPLOAD_QUESTION_SET = gql`
-  mutation uploadQuestions($questions: [QuestionInput!]!, $setName: String!) {
-    uploadQuestions(questions: $questions, setName: $setName)
+  mutation uploadQuestions(
+    $questions: [QuestionInput!]!
+    $setName: String!
+    $isPrivate: Boolean!
+  ) {
+    uploadQuestions(
+      questions: $questions
+      setName: $setName
+      isPrivate: $isPrivate
+    )
   }
 `;
 

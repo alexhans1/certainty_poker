@@ -76,7 +76,7 @@ type ComplexityRoot struct {
 		CreateGame      func(childComplexity int, setNames []string) int
 		PlaceBet        func(childComplexity int, input model.BetInput) int
 		StartGame       func(childComplexity int, gameID string) int
-		UploadQuestions func(childComplexity int, questions []*model.QuestionInput, setName string) int
+		UploadQuestions func(childComplexity int, questions []*model.QuestionInput, setName string, isPrivate bool) int
 	}
 
 	Player struct {
@@ -116,6 +116,7 @@ type ComplexityRoot struct {
 	}
 
 	Set struct {
+		IsPrivate         func(childComplexity int) int
 		NumberOfQuestions func(childComplexity int) int
 		SetName           func(childComplexity int) int
 	}
@@ -131,7 +132,7 @@ type MutationResolver interface {
 	AddPlayer(ctx context.Context, input model.PlayerInput) (*model.Player, error)
 	AddGuess(ctx context.Context, input model.GuessInput) (bool, error)
 	PlaceBet(ctx context.Context, input model.BetInput) (bool, error)
-	UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string) (bool, error)
+	UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string, isPrivate bool) (bool, error)
 }
 type QueryResolver interface {
 	Game(ctx context.Context, gameID string) (*model.Game, error)
@@ -317,7 +318,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UploadQuestions(childComplexity, args["questions"].([]*model.QuestionInput), args["setName"].(string)), true
+		return e.complexity.Mutation.UploadQuestions(childComplexity, args["questions"].([]*model.QuestionInput), args["setName"].(string), args["isPrivate"].(bool)), true
 
 	case "Player.game":
 		if e.complexity.Player.Game == nil {
@@ -470,6 +471,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.QuestionRoundResult.PlayerID(childComplexity), true
+
+	case "Set.isPrivate":
+		if e.complexity.Set.IsPrivate == nil {
+			break
+		}
+
+		return e.complexity.Set.IsPrivate(childComplexity), true
 
 	case "Set.numberOfQuestions":
 		if e.complexity.Set.NumberOfQuestions == nil {
@@ -638,6 +646,7 @@ type Bet {
 type Set {
   setName: String!
   numberOfQuestions: Int!
+  isPrivate: Boolean!
 }
 
 # Queries
@@ -677,7 +686,11 @@ type Mutation {
   addPlayer(input: PlayerInput!): Player!
   addGuess(input: GuessInput!): Boolean!
   placeBet(input: BetInput!): Boolean!
-  uploadQuestions(questions: [QuestionInput!]!, setName: String!): Boolean!
+  uploadQuestions(
+    questions: [QuestionInput!]!
+    setName: String!
+    isPrivate: Boolean!
+  ): Boolean!
 }
 
 type Subscription {
@@ -780,6 +793,14 @@ func (ec *executionContext) field_Mutation_uploadQuestions_args(ctx context.Cont
 		}
 	}
 	args["setName"] = arg1
+	var arg2 bool
+	if tmp, ok := rawArgs["isPrivate"]; ok {
+		arg2, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["isPrivate"] = arg2
 	return args, nil
 }
 
@@ -1540,7 +1561,7 @@ func (ec *executionContext) _Mutation_uploadQuestions(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UploadQuestions(rctx, args["questions"].([]*model.QuestionInput), args["setName"].(string))
+		return ec.resolvers.Mutation().UploadQuestions(rctx, args["questions"].([]*model.QuestionInput), args["setName"].(string), args["isPrivate"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2404,6 +2425,40 @@ func (ec *executionContext) _Set_numberOfQuestions(ctx context.Context, field gr
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Set_isPrivate(ctx context.Context, field graphql.CollectedField, obj *model.Set) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Set",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsPrivate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Subscription_gameUpdated(ctx context.Context, field graphql.CollectedField) (ret func() graphql.Marshaler) {
@@ -4096,6 +4151,11 @@ func (ec *executionContext) _Set(ctx context.Context, sel ast.SelectionSet, obj 
 			}
 		case "numberOfQuestions":
 			out.Values[i] = ec._Set_numberOfQuestions(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "isPrivate":
+			out.Values[i] = ec._Set_isPrivate(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

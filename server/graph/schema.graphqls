@@ -58,6 +58,7 @@ type Bet {
 type Set {
   setName: String!
   numberOfQuestions: Int!
+  isPrivate: Boolean!
 }
 
 # Queries
@@ -97,7 +98,11 @@ type Mutation {
   addPlayer(input: PlayerInput!): Player!
   addGuess(input: GuessInput!): Boolean!
   placeBet(input: BetInput!): Boolean!
-  uploadQuestions(questions: [QuestionInput!]!, setName: String!): Boolean!
+  uploadQuestions(
+    questions: [QuestionInput!]!
+    setName: String!
+    isPrivate: Boolean!
+  ): Boolean!
 }
 
 type Subscription {
