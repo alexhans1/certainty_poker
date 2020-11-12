@@ -32,6 +32,7 @@ import {
 } from "./helpers";
 
 import "./styles.scss";
+import errorLogger from "../../api/errorHandler";
 
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
@@ -40,35 +41,41 @@ function GameComponent() {
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   const [showNewQuestionRound, setShowNewQuestionRound] = useState(true);
   const { gameId } = useParams<{ gameId: string }>();
+  const [gqlErr, setGqlErr] = useState<Error>();
 
-  const [
-    fetchGame,
-    { data: fetchGameData, error: fetchGameError },
-  ] = useLazyQuery<{ game: Game }>(GET_GAME_BY_ID, {
+  const errorHandler = (err: Error) => {
+    errorLogger(err);
+    setGqlErr(err);
+  };
+
+  const [fetchGame] = useLazyQuery<{ game: Game }>(GET_GAME_BY_ID, {
     fetchPolicy: "cache-and-network",
+    onError: errorHandler,
+    onCompleted: ({ game }) => {
+      setGame(game);
+    },
   });
 
   const [
     createPlayer,
-    { data: newPlayerData, loading: addPlayerLoading, error: addPlayerError },
-  ] = useMutation<{ addPlayer: Player }>(CREATE_PLAYER);
+    { data: newPlayerData, loading: addPlayerLoading },
+  ] = useMutation<{ addPlayer: Player }>(CREATE_PLAYER, {
+    onError: errorHandler,
+  });
 
-  const [
-    startGame,
-    { loading: startGameLoading, error: startGameError },
-  ] = useMutation<{ startGame: Game }>(START_GAME);
+  const [startGame, { loading: startGameLoading }] = useMutation<{
+    startGame: Game;
+  }>(START_GAME, { onError: errorHandler });
 
-  const [
-    placeBet,
-    { loading: placeBetLoading, error: placeBetError },
-  ] = useMutation<{ placeBet: Game }>(PLACE_BET);
+  const [placeBet, { loading: placeBetLoading }] = useMutation<{
+    placeBet: Game;
+  }>(PLACE_BET, { onError: errorHandler });
 
-  const [
-    addGuess,
-    { loading: addGuessLoading, error: addGuessError },
-  ] = useMutation<{ addGuess: Game }>(ADD_GUESS);
+  const [addGuess, { loading: addGuessLoading }] = useMutation<{
+    addGuess: Game;
+  }>(ADD_GUESS, { onError: errorHandler });
 
-  const { data: gameData, error: subscriptionError } = useSubscription<{
+  const { error: subscriptionError } = useSubscription<{
     gameUpdated: Game;
   }>(SUBSCRIBE_TO_GAME_BY_ID, {
     variables: {
@@ -76,17 +83,22 @@ function GameComponent() {
       hash:
         getFingerprintFromStorage(gameId) || setFingerprintToStorage(gameId),
     },
+    onSubscriptionData: ({ subscriptionData }) => {
+      setGame(subscriptionData.data?.gameUpdated);
+    },
   });
+
+  useEffect(() => {
+    if (subscriptionError) {
+      errorHandler(subscriptionError);
+    }
+  }, [subscriptionError]);
 
   useEffect(() => {
     fetchGame({
       variables: { gameId },
     });
   }, [fetchGame, gameId]);
-
-  useEffect(() => {
-    setGame(gameData?.gameUpdated || fetchGameData?.game);
-  }, [fetchGameData, gameData, setGame]);
 
   useEffect(() => {
     if (gameId) {
@@ -108,22 +120,7 @@ function GameComponent() {
     return <h3>Loading...</h3>;
   }
 
-  if (
-    fetchGameError ||
-    addPlayerError ||
-    startGameError ||
-    placeBetError ||
-    subscriptionError ||
-    addGuessError
-  ) {
-    console.error(
-      fetchGameError ||
-        addPlayerError ||
-        startGameError ||
-        placeBetError ||
-        subscriptionError ||
-        addGuessError
-    );
+  if (gqlErr) {
     return <p>A technical error occurred. Try to refresh the page</p>;
   }
 
