@@ -152,8 +152,8 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	return true, nil
 }
 
-func (r *mutationResolver) UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string) (bool, error) {
-	err := model.UploadQuestions(r.redisClient, setName, questions)
+func (r *mutationResolver) UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string, isPrivate bool) (bool, error) {
+	err := model.UploadQuestions(r.redisClient, setName, questions, isPrivate)
 	if err != nil {
 		return false, err
 	}
@@ -172,11 +172,17 @@ func (r *queryResolver) Sets(ctx context.Context) ([]*model.Set, error) {
 		return nil, keys.Err()
 	}
 	for _, setName := range keys.Val() {
-		questions, err := model.LoadQuestions(r.redisClient, setName)
-		if err != nil {
-			return nil, err
+		isPrivate := r.redisClient.HGet(setName, "isPrivate")
+		if isPrivate.Err() != nil {
+			return nil, isPrivate.Err()
 		}
-		sets = append(sets, &model.Set{SetName: setName, NumberOfQuestions: len(questions)})
+		if isPrivate.Val() == "0" {
+			questions, err := model.LoadQuestions(r.redisClient, setName)
+			if err != nil {
+				return nil, err
+			}
+			sets = append(sets, &model.Set{SetName: setName, NumberOfQuestions: len(questions)})
+		}
 	}
 	return sets, nil
 }

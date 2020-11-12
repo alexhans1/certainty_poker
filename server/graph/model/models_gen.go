@@ -85,4 +85,5 @@ type QuestionRoundResult struct {
 type Set struct {
 	SetName           string `json:"setName"`
 	NumberOfQuestions int    `json:"numberOfQuestions"`
+	IsPrivate         bool   `json:"isPrivate"`
 }
