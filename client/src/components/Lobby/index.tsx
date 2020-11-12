@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useLazyQuery, useMutation } from "@apollo/react-hooks";
 import { Game, Set } from "../../interfaces";
 import { CREATE_GAME_QUERY, GET_SETS_QUERY } from "../../api/queries";
+import errorHandler from "../../api/errorHandler";
 import UploadModal from "./UploadModal";
 
 import "./styles.scss";
@@ -11,32 +12,31 @@ function Lobby() {
   const history = useHistory();
   const [selectedSets, setSelectedSets] = useState<string[]>([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [createGame, { loading, data, error }] = useMutation<{
+  const [createGame, { loading }] = useMutation<{
     createGame: Game;
   }>(CREATE_GAME_QUERY, {
     variables: {
       setNames: selectedSets,
     },
+    onCompleted: ({ createGame }) => {
+      history.push(`/${createGame.id}`);
+    },
+    onError: errorHandler,
   });
-  if (error) {
-    console.error(error);
-  }
-  const { error: setsError, data: sets } = useQuery<{ sets: Set[] }>(
-    GET_SETS_QUERY
-  );
-  if (setsError) {
-    console.error(setsError);
-  }
+  const [fetchSets, { data: sets }] = useLazyQuery<{
+    sets: Set[];
+  }>(GET_SETS_QUERY, { fetchPolicy: "no-cache", onError: errorHandler });
+
   useEffect(() => {
-    if (data && !loading) {
-      history.push(`/${data.createGame.id}`);
-    }
-  }, [history, data, loading]);
+    fetchSets();
+  }, [fetchSets]);
+
   const handleCreateGame = async () => {
     if (selectedSets.length) {
       createGame();
     }
   };
+
   return (
     <>
       <p className="mt-3">
@@ -93,6 +93,7 @@ function Lobby() {
         handleClose={() => {
           setIsUploadModalOpen(false);
         }}
+        fetchSets={fetchSets}
       />
     </>
   );
