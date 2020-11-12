@@ -1,34 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "@material-ui/core/Modal";
 import { Backdrop } from "@material-ui/core";
 import { CSVReader } from "react-papaparse";
 import { useMutation } from "react-apollo";
 import { UPLOAD_QUESTION_SET } from "../../../api/queries";
+import { QueryLazyOptions } from "@apollo/react-hooks";
 
 interface UploadModalProps {
   open: boolean;
   handleClose: () => void;
+  fetchSets: (
+    options?: QueryLazyOptions<Record<string, any>> | undefined
+  ) => void;
 }
 
-function UploadModal({ open, handleClose }: UploadModalProps) {
+function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
   const [showCSVInput, setShowCSVInput] = useState(true);
   const [data, setData] = useState();
   const [setName, setSetName] = useState("");
 
-  const [uploadQuestions, { data: result, error }] = useMutation(
-    UPLOAD_QUESTION_SET,
-    {
-      variables: {
-        setName,
-        questions: data,
-      },
-    }
-  );
-
-  useEffect(() => {
-    console.log(result);
-    handleClose();
-  }, [result]);
+  const [uploadQuestions, { error }] = useMutation(UPLOAD_QUESTION_SET, {
+    variables: {
+      setName,
+      questions: data,
+    },
+    onCompleted: () => {
+      fetchSets();
+      handleClose();
+      setSetName("");
+      setData(undefined);
+      setShowCSVInput(true);
+    },
+  });
 
   const handleOnDrop = (d: any) => {
     setShowCSVInput(false);
