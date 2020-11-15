@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useLazyQuery, useMutation } from "@apollo/react-hooks";
 import { Game, Set } from "../../interfaces";
 import { CREATE_GAME_QUERY, GET_SETS_QUERY } from "../../api/queries";
@@ -9,8 +9,11 @@ import UploadModal from "./UploadModal";
 import "./styles.scss";
 
 function Lobby() {
+  const { setName } = useParams<{ setName: string }>();
   const history = useHistory();
-  const [selectedSets, setSelectedSets] = useState<string[]>([]);
+  const [selectedSets, setSelectedSets] = useState<string[]>(
+    setName ? [setName] : []
+  );
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [createGame, { loading }] = useMutation<{
     createGame: Game;
@@ -25,11 +28,15 @@ function Lobby() {
   });
   const [fetchSets, { data: sets }] = useLazyQuery<{
     sets: Set[];
-  }>(GET_SETS_QUERY, { fetchPolicy: "no-cache", onError: errorHandler });
+  }>(GET_SETS_QUERY, {
+    fetchPolicy: "no-cache",
+    onError: errorHandler,
+    variables: { setName },
+  });
 
   useEffect(() => {
     fetchSets();
-  }, [fetchSets]);
+  }, [fetchSets, setName]);
 
   const handleCreateGame = async () => {
     if (selectedSets.length) {
@@ -39,32 +46,37 @@ function Lobby() {
 
   return (
     <>
-      <p className="mt-3">
-        Start by selecting one or more sets of trivia questions or upload your
-        own{" "}
-        <button
-          className="btn btn-primary"
-          onClick={() => {
-            setIsUploadModalOpen(true);
-          }}
-        >
-          here ⤴
-        </button>
-        .
-      </p>
+      {!setName && (
+        <p className="mt-3">
+          Start by selecting one or more sets of trivia questions or upload your
+          own{" "}
+          <button
+            className="btn btn-sm btn-outline-primary"
+            onClick={() => {
+              setIsUploadModalOpen(true);
+            }}
+          >
+            here ⤴
+          </button>
+          .
+        </p>
+      )}
       <div className="set-container my-4">
         {sets?.sets.map((set) => (
           <span
             key={set.setName}
-            className={`set badge  border-light ${
+            className={`set badge border-light ${
               selectedSets?.includes(set.setName) ? "badge-light" : ""
-            }`}
+            } ${selectedSets.length ? "mr-auto" : ""}`}
             style={{
               gridColumn: `span ${Math.round(
                 Math.pow(set.setName.length, 0.35)
               )}`,
             }}
             onClick={(e) => {
+              if (setName) {
+                return;
+              }
               if (selectedSets?.includes(set.setName)) {
                 setSelectedSets(
                   selectedSets.filter((setName) => set.setName !== setName)

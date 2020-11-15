@@ -22,8 +22,8 @@ export const UPLOAD_QUESTION_SET = gql`
 `;
 
 export const GET_SETS_QUERY = gql`
-  query sets {
-    sets {
+  query sets($setName: String) {
+    sets(setName: $setName) {
       setName
       numberOfQuestions
     }

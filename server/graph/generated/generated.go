@@ -89,7 +89,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Game func(childComplexity int, gameID string) int
-		Sets func(childComplexity int) int
+		Sets func(childComplexity int, setName *string) int
 	}
 
 	Question struct {
@@ -136,7 +136,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	Game(ctx context.Context, gameID string) (*model.Game, error)
-	Sets(ctx context.Context) ([]*model.Set, error)
+	Sets(ctx context.Context, setName *string) ([]*model.Set, error)
 }
 type SubscriptionResolver interface {
 	GameUpdated(ctx context.Context, gameID string, hash string) (<-chan *model.Game, error)
@@ -372,7 +372,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.Sets(childComplexity), true
+		args, err := ec.field_Query_sets_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Sets(childComplexity, args["setName"].(*string)), true
 
 	case "Question.answer":
 		if e.complexity.Question.Answer == nil {
@@ -652,7 +657,7 @@ type Set {
 # Queries
 type Query {
   game(gameId: ID!): Game!
-  sets: [Set!]!
+  sets(setName: String): [Set!]!
 }
 
 # Mutations
@@ -829,6 +834,20 @@ func (ec *executionContext) field_Query_game_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["gameId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_sets_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["setName"]; ok {
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["setName"] = arg0
 	return args, nil
 }
 
@@ -1804,9 +1823,16 @@ func (ec *executionContext) _Query_sets(ctx context.Context, field graphql.Colle
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_sets_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Sets(rctx)
+		return ec.resolvers.Query().Sets(rctx, args["setName"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
