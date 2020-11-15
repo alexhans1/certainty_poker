@@ -51,7 +51,7 @@ function Lobby() {
           Start by selecting one or more sets of trivia questions or upload your
           own{" "}
           <button
-            className="btn btn-sm btn-outline-primary"
+            className="btn btn-link p-0"
             onClick={() => {
               setIsUploadModalOpen(true);
             }}
@@ -67,7 +67,7 @@ function Lobby() {
             key={set.setName}
             className={`set badge border-light ${
               selectedSets?.includes(set.setName) ? "badge-light" : ""
-            } ${selectedSets.length ? "mr-auto" : ""}`}
+            } ${setName ? "mr-auto" : ""}`}
             style={{
               gridColumn: `span ${Math.round(
                 Math.pow(set.setName.length, 0.35)
@@ -77,12 +77,14 @@ function Lobby() {
               if (setName) {
                 return;
               }
-              if (selectedSets?.includes(set.setName)) {
-                setSelectedSets(
-                  selectedSets.filter((setName) => set.setName !== setName)
-                );
-              } else if (e.metaKey) {
-                setSelectedSets([set.setName, ...selectedSets]);
+              if (e.metaKey) {
+                if (selectedSets?.includes(set.setName)) {
+                  setSelectedSets(
+                    selectedSets.filter((setName) => set.setName !== setName)
+                  );
+                } else {
+                  setSelectedSets([set.setName, ...selectedSets]);
+                }
               } else {
                 setSelectedSets([set.setName]);
               }
