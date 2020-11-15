@@ -64,7 +64,7 @@ type Set {
 # Queries
 type Query {
   game(gameId: ID!): Game!
-  sets: [Set!]!
+  sets(setName: String): [Set!]!
 }
 
 # Mutations

@@ -165,23 +165,31 @@ func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, e
 	return model.FindGame(r.games, gameID)
 }
 
-func (r *queryResolver) Sets(ctx context.Context) ([]*model.Set, error) {
+func (r *queryResolver) Sets(ctx context.Context, setName *string) ([]*model.Set, error) {
 	var sets []*model.Set
 	keys := r.redisClient.Keys("*")
 	if keys.Err() != nil {
 		return nil, keys.Err()
 	}
-	for _, setName := range keys.Val() {
-		isPrivate := r.redisClient.HGet(setName, "isPrivate")
-		if isPrivate.Err() != nil {
-			return nil, isPrivate.Err()
+	if setName != nil {
+		questions, err := model.LoadQuestions(r.redisClient, *setName)
+		if err != nil {
+			return nil, err
 		}
-		if isPrivate.Val() == "0" {
-			questions, err := model.LoadQuestions(r.redisClient, setName)
-			if err != nil {
-				return nil, err
+		sets = append(sets, &model.Set{SetName: *setName, NumberOfQuestions: len(questions)})
+	} else {
+		for _, name := range keys.Val() {
+			isPrivate := r.redisClient.HGet(name, "isPrivate")
+			if isPrivate.Err() != nil {
+				return nil, isPrivate.Err()
 			}
-			sets = append(sets, &model.Set{SetName: setName, NumberOfQuestions: len(questions)})
+			if isPrivate.Val() == "0" {
+				questions, err := model.LoadQuestions(r.redisClient, name)
+				if err != nil {
+					return nil, err
+				}
+				sets = append(sets, &model.Set{SetName: name, NumberOfQuestions: len(questions)})
+			}
 		}
 	}
 	return sets, nil
