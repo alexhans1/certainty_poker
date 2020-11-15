@@ -5,6 +5,7 @@ import { CSVReader } from "react-papaparse";
 import { useMutation } from "react-apollo";
 import { UPLOAD_QUESTION_SET } from "../../../api/queries";
 import { QueryLazyOptions } from "@apollo/react-hooks";
+import { Link } from "react-router-dom";
 
 interface UploadModalProps {
   open: boolean;
@@ -18,16 +19,22 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
   const [showCSVInput, setShowCSVInput] = useState(true);
   const [data, setData] = useState();
   const [setName, setSetName] = useState("");
+  const [isPrivate, setIsPrivate] = useState(0);
+  const [privateGameLink, setPrivateGameLink] = useState("");
 
   const [uploadQuestions, { error }] = useMutation(UPLOAD_QUESTION_SET, {
     variables: {
       setName,
       questions: data,
-      isPrivate: false,
+      isPrivate: !!isPrivate,
     },
     onCompleted: () => {
-      fetchSets();
-      handleClose();
+      if (isPrivate) {
+        setPrivateGameLink(`/questions/${setName}`);
+      } else {
+        fetchSets();
+        handleClose();
+      }
       setSetName("");
       setData(undefined);
       setShowCSVInput(true);
@@ -120,6 +127,25 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
           <hr />
         </div>
       ))}
+      <div className="form-check">
+        <input
+          type="checkbox"
+          className="form-check-input mt-2"
+          id="isPrivateCheckbox"
+          value={isPrivate}
+          onChange={() => {
+            setIsPrivate(isPrivate ? 0 : 1);
+          }}
+        />
+        <label className="form-check-label" htmlFor="isPrivateCheckbox">
+          Questions are private
+          <br />
+          <span>
+            If checked, this question set of questions will not appear in the
+            list on the start screen.
+          </span>
+        </label>
+      </div>
       <button
         className="btn btn-primary"
         disabled={!setName}
@@ -157,7 +183,27 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
       <div className="card">
         <div className="card-body text-dark">
           <h3>Upload a file with custom questions</h3>
-          {content}
+          {privateGameLink ? (
+            <p>
+              Upload successful. To start a game with those questions you must
+              go to{" "}
+              <Link
+                onClick={() => {
+                  handleClose();
+                }}
+                to={privateGameLink}
+                style={{ color: "#dfae06" }}
+              >{`${window.location.host}${privateGameLink}`}</Link>
+              .
+              <br />
+              You can only start the game from there so make sure you save this
+              link.
+              <br />
+              The questions will be available for 90 days.
+            </p>
+          ) : (
+            content
+          )}
           {error && <div className="alert alert-danger">{error.message}</div>}
         </div>
       </div>
