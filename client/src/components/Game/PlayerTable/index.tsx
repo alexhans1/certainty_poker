@@ -23,8 +23,9 @@ export interface PlayerTableProps {
   playerId?: Player["id"];
   currentBettingRound?: BettingRound;
   usedQuestionRound?: QuestionRound;
-  revealAnswers: boolean;
+  showPreviousQuestionRoundResults: boolean;
   game: Game;
+  isSpectator: boolean;
 }
 
 const moveAppPlayerToTop = (players: Player[], playerId: Player["id"]) => {
@@ -41,8 +42,9 @@ export default ({
   playerId,
   currentBettingRound,
   usedQuestionRound,
-  revealAnswers,
+  showPreviousQuestionRoundResults,
   game,
+  isSpectator,
 }: PlayerTableProps) => {
   if (!players.length) {
     return null;
@@ -119,7 +121,7 @@ export default ({
                   : ""
               }`}
             >
-              {revealAnswers ? (
+              {showPreviousQuestionRoundResults || isSpectator ? (
                 <span role="img" aria-label="answer">
                   💡 {guesses[id]}
                 </span>
@@ -141,12 +143,15 @@ export default ({
                 <span role="img" aria-label="money">
                   💰
                   {money +
-                    (revealAnswers && !game.isOver ? bettingRoundSpending : 0)}
+                    (showPreviousQuestionRoundResults && !game.isOver
+                      ? bettingRoundSpending
+                      : 0)}
                 </span>
-                {!revealAnswers && !!bettingRoundSpending && (
-                  <span className="ml-4">{bettingRoundSpending * -1}</span>
-                )}
-                {revealAnswers && moneyDiff && (
+                {!showPreviousQuestionRoundResults &&
+                  !!bettingRoundSpending && (
+                    <span className="ml-4">{bettingRoundSpending * -1}</span>
+                  )}
+                {showPreviousQuestionRoundResults && moneyDiff && (
                   <span
                     className={`ml-2 ${
                       moneyDiff > 0 ? "text-success" : "text-danger"

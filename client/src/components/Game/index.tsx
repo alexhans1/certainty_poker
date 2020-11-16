@@ -29,6 +29,7 @@ import {
   getCurrentQuestionRound,
   getCurrentBettingRound,
   getPreviousQuestionRound,
+  haveAllPlayersPlacedTheirGuess,
 } from "./helpers";
 
 import "./styles.scss";
@@ -128,13 +129,20 @@ function GameComponent() {
   const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
     (guess) => guess.playerId === playerId
   );
+  const gameHasStarted = !!game.questionRounds.length;
+  const isSpectator = gameHasStarted && (!player || player.isDead);
   const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
-  const previousQuestionRound =
-    (!hasPlayerPlacedGuessInCurrentQuestionRound && !player?.isDead) ||
-    (!((currentQuestionRound?.bettingRounds[0].bets.length || 0) > 2) &&
-      player?.isDead)
-      ? getPreviousQuestionRound(game)
-      : undefined;
+  const previousQuestionRound = getPreviousQuestionRound(game);
+  const showPreviousQuestionRoundResults =
+    !!previousQuestionRound &&
+    (game.isOver ||
+      (!hasPlayerPlacedGuessInCurrentQuestionRound && !isSpectator) ||
+      (isSpectator &&
+        !!currentQuestionRound &&
+        !haveAllPlayersPlacedTheirGuess(currentQuestionRound, game.players)));
+  const usedQuestionRound = showPreviousQuestionRoundResults
+    ? previousQuestionRound
+    : currentQuestionRound;
 
   return (
     <>
@@ -146,11 +154,11 @@ function GameComponent() {
         className="grid mt-3"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
       >
-        {currentQuestionRound && playerId && (
+        {usedQuestionRound && (
           <Question
             {...{
               game,
-              usedQuestionRound: previousQuestionRound || currentQuestionRound,
+              usedQuestionRound,
               playerId,
             }}
           />
@@ -160,9 +168,10 @@ function GameComponent() {
             {...{
               players: game?.players,
               playerId,
-              usedQuestionRound: previousQuestionRound || currentQuestionRound,
+              usedQuestionRound,
               currentBettingRound,
-              revealAnswers: game.isOver || !!previousQuestionRound,
+              showPreviousQuestionRoundResults,
+              isSpectator,
               game,
             }}
           />
@@ -192,7 +201,7 @@ function GameComponent() {
           }}
         />
       )}
-      {!game.isOver && (
+      {!game.isOver && !isSpectator && (
         <Footer
           {...{
             game,
@@ -204,7 +213,9 @@ function GameComponent() {
           }}
         />
       )}
-      <NameInputDrawer {...{ gameId, createPlayer, playerId }} />
+      {!gameHasStarted && (
+        <NameInputDrawer {...{ gameId, createPlayer, playerId }} />
+      )}
     </>
   );
 }
