@@ -7,6 +7,12 @@ import { UPLOAD_QUESTION_SET } from "../../../api/queries";
 import { QueryLazyOptions } from "@apollo/react-hooks";
 import { Link } from "react-router-dom";
 
+const styles = {
+  card: {
+    maxHeight: "95vh",
+  },
+};
+
 interface UploadModalProps {
   open: boolean;
   handleClose: () => void;
@@ -180,8 +186,8 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
         timeout: 500,
       }}
     >
-      <div className="card">
-        <div className="card-body text-dark">
+      <div className="card" style={styles.card}>
+        <div className="card-body text-dark overflow-auto">
           <h3>Upload a file with custom questions</h3>
           {privateGameLink ? (
             <p>
