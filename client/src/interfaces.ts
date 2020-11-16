@@ -40,6 +40,7 @@ export interface QuestionRound {
   foldedPlayerIds: Player["id"][];
   results?: QuestionRoundResult[];
   isOver: boolean;
+  isShowdown: boolean;
 }
 
 export interface Game {

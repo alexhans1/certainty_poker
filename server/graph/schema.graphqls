@@ -28,6 +28,7 @@ type QuestionRound {
   bettingRounds: [BettingRound!]!
   foldedPlayerIds: [ID!]!
   isOver: Boolean!
+  isShowdown: Boolean!
   results: [QuestionRoundResult!]
 }
 

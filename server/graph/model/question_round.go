@@ -116,7 +116,11 @@ func (q *QuestionRound) IsFinished() bool {
 		return true
 	}
 	if len(q.BettingRounds) > len(q.Question.Hints)+1 {
-		return q.CurrentBettingRound().IsFinished()
+		isBettingRoundFinished := q.CurrentBettingRound().IsFinished()
+		if isBettingRoundFinished {
+			q.IsShowdown = true
+		}
+		return isBettingRoundFinished
 	}
 	return false
 }

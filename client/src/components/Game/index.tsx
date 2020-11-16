@@ -165,7 +165,6 @@ function GameComponent() {
               playerId,
               usedQuestionRound,
               currentBettingRound,
-              showPreviousQuestionRoundResults,
               isSpectator,
               game,
             }}

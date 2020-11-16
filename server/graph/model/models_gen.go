@@ -74,6 +74,7 @@ type QuestionRound struct {
 	BettingRounds   []*BettingRound        `json:"bettingRounds"`
 	FoldedPlayerIds []string               `json:"foldedPlayerIds"`
 	IsOver          bool                   `json:"isOver"`
+	IsShowdown      bool                   `json:"isShowdown"`
 	Results         []*QuestionRoundResult `json:"results"`
 }
 

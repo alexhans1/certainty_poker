@@ -44,6 +44,7 @@ func (g *Game) AddNewQuestionRound() {
 		FoldedPlayerIds: make([]string, 0),
 		Game:            g,
 		IsOver:          false,
+		IsShowdown:      false,
 	}
 	newQuestionRound.IsOver = false
 	g.QuestionRounds = append(g.QuestionRounds, newQuestionRound)

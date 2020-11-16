@@ -23,7 +23,6 @@ export interface PlayerTableProps {
   playerId?: Player["id"];
   currentBettingRound?: BettingRound;
   usedQuestionRound?: QuestionRound;
-  showPreviousQuestionRoundResults: boolean;
   game: Game;
   isSpectator: boolean;
 }
@@ -42,7 +41,6 @@ export default ({
   playerId,
   currentBettingRound,
   usedQuestionRound,
-  showPreviousQuestionRoundResults,
   game,
   isSpectator,
 }: PlayerTableProps) => {
@@ -98,6 +96,11 @@ export default ({
         const bettingRoundSpending = currentBettingRound
           ? calculateBettingRoundSpendingForPlayer(currentBettingRound, id)
           : 0;
+        const revealGuess =
+          isSpectator ||
+          (!!usedQuestionRound?.isOver &&
+            usedQuestionRound?.isShowdown &&
+            !hasFolded);
 
         return (
           <div key={id} className="d-flex align-items-center pt-4 ml-4">
@@ -112,7 +115,7 @@ export default ({
                 gameIsOver: game.isOver,
                 isDealer: game?.dealerId === id,
                 size: i === 0 && playerId ? Size.lg : Size.md,
-                showPreviousQuestionRoundResults,
+                showPreviousQuestionRoundResults: !!usedQuestionRound?.isOver,
               }}
             />
             <div
@@ -122,7 +125,7 @@ export default ({
                   : ""
               }`}
             >
-              {showPreviousQuestionRoundResults || isSpectator ? (
+              {revealGuess ? (
                 <span role="img" aria-label="answer">
                   💡 {guesses[id]}
                 </span>
@@ -144,15 +147,14 @@ export default ({
                 <span role="img" aria-label="money">
                   💰
                   {money +
-                    (showPreviousQuestionRoundResults && !game.isOver
+                    (usedQuestionRound?.isOver && !game.isOver
                       ? bettingRoundSpending
                       : 0)}
                 </span>
-                {!showPreviousQuestionRoundResults &&
-                  !!bettingRoundSpending && (
-                    <span className="ml-4">{bettingRoundSpending * -1}</span>
-                  )}
-                {showPreviousQuestionRoundResults && moneyDiff && (
+                {!usedQuestionRound?.isOver && !!bettingRoundSpending && (
+                  <span className="ml-4">{bettingRoundSpending * -1}</span>
+                )}
+                {usedQuestionRound?.isOver && moneyDiff && (
                   <span
                     className={`ml-2 ${
                       moneyDiff > 0 ? "text-success" : "text-danger"
