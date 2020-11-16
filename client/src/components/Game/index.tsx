@@ -57,22 +57,21 @@ function GameComponent() {
     },
   });
 
-  const [
-    createPlayer,
-    { data: newPlayerData, loading: addPlayerLoading },
-  ] = useMutation<{ addPlayer: Player }>(CREATE_PLAYER, {
+  const [createPlayer, { data: newPlayerData }] = useMutation<{
+    addPlayer: Player;
+  }>(CREATE_PLAYER, {
     onError: errorHandler,
   });
 
-  const [startGame, { loading: startGameLoading }] = useMutation<{
+  const [startGame] = useMutation<{
     startGame: Game;
   }>(START_GAME, { onError: errorHandler });
 
-  const [placeBet, { loading: placeBetLoading }] = useMutation<{
+  const [placeBet] = useMutation<{
     placeBet: Game;
   }>(PLACE_BET, { onError: errorHandler });
 
-  const [addGuess, { loading: addGuessLoading }] = useMutation<{
+  const [addGuess] = useMutation<{
     addGuess: Game;
   }>(ADD_GUESS, { onError: errorHandler });
 
@@ -146,10 +145,6 @@ function GameComponent() {
 
   return (
     <>
-      {(addPlayerLoading ||
-        startGameLoading ||
-        placeBetLoading ||
-        addGuessLoading) && <p>Loading...</p>}
       <div
         className="grid mt-3"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
