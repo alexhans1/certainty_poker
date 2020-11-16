@@ -37,7 +37,9 @@ export default ({
     currentBettingRound?.currentPlayer.id === id;
   return (
     <div className={`avatar ${size} ${isDead || isFolded ? "dead" : ""}`}>
-      <span className={isPlayerTurn ? "tada" : ""}>{name}</span>
+      <span className={isPlayerTurn && size === Size.lg ? "tada" : ""}>
+        {name}
+      </span>
       {isPlayerTurn && <span className="turn">{">"}</span>}
       {isDealer && <span className="dealer">{"D"}</span>}
     </div>
