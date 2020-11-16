@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useLazyQuery, useMutation } from "@apollo/react-hooks";
+import { useLocation } from "react-router-dom";
 import { Game, Set } from "../../interfaces";
 import { CREATE_GAME_QUERY, GET_SETS_QUERY } from "../../api/queries";
 import errorHandler from "../../api/errorHandler";
@@ -11,6 +12,7 @@ import "./styles.scss";
 function Lobby() {
   const { setName } = useParams<{ setName: string }>();
   const history = useHistory();
+  const location = useLocation();
   const [selectedSets, setSelectedSets] = useState<string[]>(
     setName ? [setName] : []
   );
@@ -46,7 +48,21 @@ function Lobby() {
 
   return (
     <>
-      {!setName && (
+      {setName ? (
+        <p>
+          You can only start a game with these questions from this link{" "}
+          <Link
+            to={location.pathname}
+            style={{ color: "#dfae06" }}
+          >{`${window.location.host}${location.pathname}`}</Link>
+          .
+          <br />
+          Make sure to <b>save this link</b> if you want to start a game with
+          the uploaded questions later.
+          <br />
+          The questions will be available for 90 days.
+        </p>
+      ) : (
         <p className="mt-3">
           Start by selecting one or more sets of trivia questions or upload your
           own{" "}
@@ -108,6 +124,7 @@ function Lobby() {
           setIsUploadModalOpen(false);
         }}
         fetchSets={fetchSets}
+        setSelectedSets={setSelectedSets}
       />
     </>
   );

@@ -5,7 +5,7 @@ import { CSVReader } from "react-papaparse";
 import { useMutation } from "react-apollo";
 import { UPLOAD_QUESTION_SET } from "../../../api/queries";
 import { QueryLazyOptions } from "@apollo/react-hooks";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const styles = {
   card: {
@@ -19,14 +19,20 @@ interface UploadModalProps {
   fetchSets: (
     options?: QueryLazyOptions<Record<string, any>> | undefined
   ) => void;
+  setSelectedSets: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
+function UploadModal({
+  open,
+  handleClose,
+  fetchSets,
+  setSelectedSets,
+}: UploadModalProps) {
+  const history = useHistory();
   const [showCSVInput, setShowCSVInput] = useState(true);
   const [data, setData] = useState();
   const [setName, setSetName] = useState("");
   const [isPrivate, setIsPrivate] = useState(0);
-  const [privateGameLink, setPrivateGameLink] = useState("");
 
   const [uploadQuestions, { error }] = useMutation(UPLOAD_QUESTION_SET, {
     variables: {
@@ -36,11 +42,12 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
     },
     onCompleted: () => {
       if (isPrivate) {
-        setPrivateGameLink(`/questions/${setName}`);
+        history.push(`/questions/${setName}`);
       } else {
         fetchSets();
-        handleClose();
       }
+      setSelectedSets([setName]);
+      handleClose();
       setSetName("");
       setData(undefined);
       setShowCSVInput(true);
@@ -105,7 +112,8 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
           required={true}
         />
       </div>
-      <h5>Review questions:</h5>
+      <h3>Review your upload:</h3>
+      <hr />
       {(data || []).map((q: any) => (
         <div key={q.question} className="small">
           <p>
@@ -120,7 +128,7 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
               <>
                 <br />
                 <span key={h}>
-                  <b>{h}</b>,{" "}
+                  <b>{h}</b>
                 </span>
               </>
             ))}
@@ -189,27 +197,7 @@ function UploadModal({ open, handleClose, fetchSets }: UploadModalProps) {
       <div className="card" style={styles.card}>
         <div className="card-body text-dark overflow-auto">
           <h3>Upload a file with custom questions</h3>
-          {privateGameLink ? (
-            <p>
-              Upload successful. To start a game with those questions you must
-              go to{" "}
-              <Link
-                onClick={() => {
-                  handleClose();
-                }}
-                to={privateGameLink}
-                style={{ color: "#dfae06" }}
-              >{`${window.location.host}${privateGameLink}`}</Link>
-              .
-              <br />
-              You can only start the game from there so make sure you save this
-              link.
-              <br />
-              The questions will be available for 90 days.
-            </p>
-          ) : (
-            content
-          )}
+          {content}
           {error && <div className="alert alert-danger">{error.message}</div>}
         </div>
       </div>
