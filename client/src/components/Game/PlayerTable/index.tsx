@@ -112,6 +112,7 @@ export default ({
                 gameIsOver: game.isOver,
                 isDealer: game?.dealerId === id,
                 size: i === 0 && playerId ? Size.lg : Size.md,
+                showPreviousQuestionRoundResults,
               }}
             />
             <div

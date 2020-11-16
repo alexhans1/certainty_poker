@@ -8,7 +8,7 @@ export enum Size {
   md = "md",
 }
 
-export interface PlayerTableProps {
+export interface Props {
   id: Player["id"];
   name: Player["name"];
   currentBettingRound?: BettingRound;
@@ -16,6 +16,7 @@ export interface PlayerTableProps {
   isFolded?: boolean;
   gameIsOver?: boolean;
   isDealer: boolean;
+  showPreviousQuestionRoundResults: boolean;
   size: Size;
 }
 
@@ -28,13 +29,16 @@ export default ({
   gameIsOver,
   size,
   isDealer,
-}: PlayerTableProps) => {
+  showPreviousQuestionRoundResults,
+}: Props) => {
+  const isPlayerTurn =
+    !showPreviousQuestionRoundResults &&
+    !gameIsOver &&
+    currentBettingRound?.currentPlayer.id === id;
   return (
     <div className={`avatar ${size} ${isDead || isFolded ? "dead" : ""}`}>
-      <span>{name}</span>
-      {!gameIsOver && currentBettingRound?.currentPlayer.id === id && (
-        <span className="turn">{">"}</span>
-      )}
+      <span className={isPlayerTurn ? "tada" : ""}>{name}</span>
+      {isPlayerTurn && <span className="turn">{">"}</span>}
       {isDealer && <span className="dealer">{"D"}</span>}
     </div>
   );
