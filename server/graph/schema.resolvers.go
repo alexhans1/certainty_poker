@@ -76,6 +76,20 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, input model.PlayerInpu
 	return game.AddNewPlayer(input.PlayerName), nil
 }
 
+func (r *mutationResolver) RemovePlayer(ctx context.Context, gameID string, playerID string) (bool, error) {
+	game, err := model.FindGame(r.games, gameID)
+	if err != nil {
+		return false, err
+	}
+
+	if game.HasStarted() {
+		return false, nil
+	}
+
+	game.RemovePlayer(playerID)
+	return true, nil
+}
+
 func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput) (bool, error) {
 	game, err := model.FindGame(r.games, input.GameID)
 	if err != nil {

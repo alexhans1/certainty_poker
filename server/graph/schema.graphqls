@@ -97,6 +97,7 @@ type Mutation {
   createGame(setNames: [String!]!): Game!
   startGame(gameId: ID!): Boolean!
   addPlayer(input: PlayerInput!): Player!
+  removePlayer(gameId: ID!, playerId: ID!): Boolean!
   addGuess(input: GuessInput!): Boolean!
   placeBet(input: BetInput!): Boolean!
   uploadQuestions(

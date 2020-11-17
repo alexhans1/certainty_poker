@@ -75,6 +75,7 @@ type ComplexityRoot struct {
 		AddPlayer       func(childComplexity int, input model.PlayerInput) int
 		CreateGame      func(childComplexity int, setNames []string) int
 		PlaceBet        func(childComplexity int, input model.BetInput) int
+		RemovePlayer    func(childComplexity int, gameID string, playerID string) int
 		StartGame       func(childComplexity int, gameID string) int
 		UploadQuestions func(childComplexity int, questions []*model.QuestionInput, setName string, isPrivate bool) int
 	}
@@ -131,6 +132,7 @@ type MutationResolver interface {
 	CreateGame(ctx context.Context, setNames []string) (*model.Game, error)
 	StartGame(ctx context.Context, gameID string) (bool, error)
 	AddPlayer(ctx context.Context, input model.PlayerInput) (*model.Player, error)
+	RemovePlayer(ctx context.Context, gameID string, playerID string) (bool, error)
 	AddGuess(ctx context.Context, input model.GuessInput) (bool, error)
 	PlaceBet(ctx context.Context, input model.BetInput) (bool, error)
 	UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string, isPrivate bool) (bool, error)
@@ -296,6 +298,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.PlaceBet(childComplexity, args["input"].(model.BetInput)), true
+
+	case "Mutation.removePlayer":
+		if e.complexity.Mutation.RemovePlayer == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removePlayer_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemovePlayer(childComplexity, args["gameId"].(string), args["playerId"].(string)), true
 
 	case "Mutation.startGame":
 		if e.complexity.Mutation.StartGame == nil {
@@ -698,6 +712,7 @@ type Mutation {
   createGame(setNames: [String!]!): Game!
   startGame(gameId: ID!): Boolean!
   addPlayer(input: PlayerInput!): Player!
+  removePlayer(gameId: ID!, playerId: ID!): Boolean!
   addGuess(input: GuessInput!): Boolean!
   placeBet(input: BetInput!): Boolean!
   uploadQuestions(
@@ -771,6 +786,28 @@ func (ec *executionContext) field_Mutation_placeBet_args(ctx context.Context, ra
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_removePlayer_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["gameId"]; ok {
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["gameId"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["playerId"]; ok {
+		arg1, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["playerId"] = arg1
 	return args, nil
 }
 
@@ -1481,6 +1518,47 @@ func (ec *executionContext) _Mutation_addPlayer(ctx context.Context, field graph
 	res := resTmp.(*model.Player)
 	fc.Result = res
 	return ec.marshalNPlayer2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐPlayer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_removePlayer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_removePlayer_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemovePlayer(rctx, args["gameId"].(string), args["playerId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_addGuess(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3941,6 +4019,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "addPlayer":
 			out.Values[i] = ec._Mutation_addPlayer(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "removePlayer":
+			out.Values[i] = ec._Mutation_removePlayer(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

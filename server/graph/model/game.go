@@ -74,6 +74,17 @@ func (g *Game) AddNewPlayer(name string) *Player {
 	return newPlayer
 }
 
+// RemovePlayer adds a new player
+func (g *Game) RemovePlayer(playerID string) {
+	remainingPlayers := []*Player{}
+	for _, p := range g.Players {
+		if p.ID != playerID {
+			remainingPlayers = append(remainingPlayers, p)
+		}
+	}
+	g.Players = remainingPlayers
+}
+
 // InPlayers returns the players that are not out of the game
 func (g *Game) InPlayers() []*Player {
 	inPlayers := make([]*Player, 0)
