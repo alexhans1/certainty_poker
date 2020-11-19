@@ -53,6 +53,7 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
             placeholder="Type an emoji or letter"
             aria-label="Your answer"
             aria-describedby="basic-addon2"
+            autoFocus
           />
           <div className="input-group-append">
             <button

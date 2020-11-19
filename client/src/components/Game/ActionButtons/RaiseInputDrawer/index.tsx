@@ -71,6 +71,7 @@ export default ({
             placeholder="Amount to raise"
             aria-label="Amount to raise"
             aria-describedby="basic-addon2"
+            autoFocus
           />
           <div className="input-group-append">
             <button

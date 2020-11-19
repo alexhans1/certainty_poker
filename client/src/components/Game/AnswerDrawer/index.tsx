@@ -74,6 +74,7 @@ export default ({
             placeholder="Your answer"
             aria-label="Your answer"
             aria-describedby="basic-addon2"
+            autoFocus
           />
           <div className="input-group-append">
             <button
