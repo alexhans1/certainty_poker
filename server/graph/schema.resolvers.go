@@ -82,11 +82,28 @@ func (r *mutationResolver) RemovePlayer(ctx context.Context, gameID string, play
 		return false, err
 	}
 
+	game.RemovePlayer(playerID)
+
 	if game.HasStarted() {
-		return false, nil
+		cqr := game.CurrentQuestionRound()
+		cbr := cqr.CurrentBettingRound()
+
+		if cbr.IsFinished() {
+			if cqr.IsFinished() {
+				cqr.DistributePot()
+				if game.IsFinished() {
+					fmt.Println("game is finished")
+				} else {
+					game.AddNewQuestionRound()
+				}
+			} else {
+				cqr.AddNewBettingRound()
+			}
+		}
 	}
 
-	game.RemovePlayer(playerID)
+	go updateGameChannel(r, game)
+
 	return true, nil
 }
 

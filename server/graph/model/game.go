@@ -77,11 +77,40 @@ func (g *Game) AddNewPlayer(name string) *Player {
 // RemovePlayer adds a new player
 func (g *Game) RemovePlayer(playerID string) {
 	remainingPlayers := []*Player{}
+
+	if g.HasStarted() {
+		cqr := g.CurrentQuestionRound()
+		cbr := cqr.CurrentBettingRound()
+
+		if playerID == cbr.CurrentPlayer.ID {
+			cbr.MoveToNextPlayer()
+		}
+
+		if playerID == g.DealerID {
+			g.DealerID = g.Dealer().FindNextInPlayer().ID
+		}
+
+		for _, br := range cqr.BettingRounds {
+			for i, bet := range br.Bets {
+				if bet.PlayerID == playerID {
+					br.Bets = append(br.Bets[:i], br.Bets[i+1:]...)
+				}
+			}
+		}
+
+		for i, guess := range cqr.Guesses {
+			if guess.PlayerID == playerID {
+				cqr.Guesses = append(cqr.Guesses[:i], cqr.Guesses[i+1:]...)
+			}
+		}
+	}
+
 	for _, p := range g.Players {
 		if p.ID != playerID {
 			remainingPlayers = append(remainingPlayers, p)
 		}
 	}
+
 	g.Players = remainingPlayers
 }
 
