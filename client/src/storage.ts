@@ -8,6 +8,9 @@ export const setPlayerIdToStorage = (gameId: string, playerId: string) => {
 export const getPlayerIdFromStorage = (gameId: string) =>
   localStorage.getItem(`${PLAYER_ID_KEY}_${gameId}`);
 
+export const deletePlayerIdFromStorage = (gameId: string) =>
+  localStorage.removeItem(`${PLAYER_ID_KEY}_${gameId}`);
+
 export const setFingerprintToStorage = (gameId: string) => {
   const value = Math.random().toString(36).substring(2);
   localStorage.setItem(`${FINGERPRINT_KEY}_${gameId}`, value);

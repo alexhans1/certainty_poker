@@ -25,6 +25,7 @@ import Question from "./Question";
 import AnswerDrawer from "./AnswerDrawer";
 import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
+import LeaveGameButton from "./LeaveGameButton";
 import {
   getCurrentQuestionRound,
   getCurrentBettingRound,
@@ -172,7 +173,7 @@ function GameComponent() {
         </div>
         {!showNewQuestionRound &&
           !hasPlayerPlacedGuessInCurrentQuestionRound &&
-          !player?.isDead && (
+          !isSpectator && (
             <button
               className="new-question-button btn btn-primary mx-auto mt-5"
               onClick={() => {
@@ -210,6 +211,8 @@ function GameComponent() {
       {!gameHasStarted && (
         <NameInputDrawer {...{ gameId, createPlayer, playerId }} />
       )}
+
+      <LeaveGameButton {...{ gameId, playerId, gameHasStarted, setPlayerId }} />
     </>
   );
 }

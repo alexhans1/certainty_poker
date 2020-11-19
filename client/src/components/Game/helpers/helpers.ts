@@ -26,7 +26,7 @@ export const haveAllPlayersPlacedTheirGuess = (
   players: Player[]
 ) => {
   const remainingPlayers = players.filter((player) => !player.isDead);
-  return currentQuestionRound.guesses.length === remainingPlayers.length;
+  return currentQuestionRound.guesses.length >= remainingPlayers.length;
 };
 
 export const calculateAmountToCall = (

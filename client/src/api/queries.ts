@@ -1,4 +1,5 @@
 import { gql } from "apollo-boost";
+import { Game, Player } from "../interfaces";
 
 export const CREATE_GAME_QUERY = gql`
   mutation createGame($setNames: [String!]!) {
@@ -7,6 +8,7 @@ export const CREATE_GAME_QUERY = gql`
     }
   }
 `;
+
 export const UPLOAD_QUESTION_SET = gql`
   mutation uploadQuestions(
     $questions: [QuestionInput!]!
@@ -151,5 +153,15 @@ export const PLACE_BET = gql`
 export const ADD_GUESS = gql`
   mutation addGuess($input: GuessInput!) {
     addGuess(input: $input)
+  }
+`;
+
+export interface RemovePlayerVariables {
+  gameId: Game["id"];
+  playerId: Player["id"];
+}
+export const REMOVE_PLAYER = gql`
+  mutation removePlayer($gameId: ID!, $playerId: ID!) {
+    removePlayer(gameId: $gameId, playerId: $playerId)
   }
 `;
