@@ -4,13 +4,13 @@ import { getRevealAnswer } from "../../helpers";
 
 const styles = {
   title: {
-    fontSize: "0.8em",
+    fontSize: "0.7em",
     borderTop: "1px solid #ebebeb",
     marginTop: "0.3em",
     paddingTop: "1em",
   },
   currentHint: {
-    fontSize: "1.5em",
+    fontSize: "1.4em",
   },
   oldHint: {
     fontSize: "0.7em",

@@ -10,13 +10,10 @@ interface QuestionProps {
 
 const styles = {
   question: {
-    fontSize: "2em",
-  },
-  title: {
-    fontSize: "0.7em",
+    fontSize: "1.6em",
   },
   answer: {
-    fontSize: "2em",
+    fontSize: "1.6em",
   },
 };
 
@@ -25,8 +22,8 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
     usedQuestionRound.bettingRounds.length <= 1 && !usedQuestionRound.isOver;
   const totalQuestions = game.questionRounds.length + game.questions.length;
   return (
-    <div>
-      <p className="mb-0" style={(!noHints && { fontSize: "0.6em" }) || {}}>
+    <div className="mb-4">
+      <p className="mb-0" style={(!noHints && { fontSize: "0.7em" }) || {}}>
         Question ({game.questionRounds.length}/{totalQuestions}):
       </p>
       <p style={(noHints && styles.question) || {}}>

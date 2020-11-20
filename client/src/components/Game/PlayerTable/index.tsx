@@ -103,7 +103,7 @@ export default ({
             !hasFolded);
 
         return (
-          <div key={id} className="d-flex align-items-center pt-4 ml-4">
+          <div key={id} className="d-flex align-items-center pb-4 ml-4">
             {game.isOver && <span className="rank">{rank}.</span>}
             <Avatar
               {...{
