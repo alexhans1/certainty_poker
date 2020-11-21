@@ -1,4 +1,4 @@
-import { Player, Game, GuessInput } from "../../../interfaces";
+import { Player, Game, GuessInput, GuessType } from "../../../interfaces";
 
 export type AddGuess = ({
   variables: { input },
@@ -9,7 +9,7 @@ export type AddGuess = ({
 export const addGuess = (
   addGuessMutation: AddGuess,
   game: Game,
-  guess: number,
+  guess: GuessType,
   playerId: Player["id"]
 ) => {
   addGuessMutation({
