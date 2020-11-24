@@ -46,7 +46,7 @@ export default ({
             playerId !== pId &&
             (isSpectator || !hasPlayerFolded(usedQuestionRound, pId))
           ) {
-            const label = players.find((p) => p.id === playerId)?.name || "";
+            const label = players.find((p) => p.id === pId)?.name || "";
             acc.push({ position: guess.geo, label });
           }
           return acc;
