@@ -2,6 +2,22 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
+type Answer struct {
+	Numerical *float64       `json:"numerical"`
+	Geo       *GeoCoordinate `json:"geo"`
+}
+
+type AnswerInputType struct {
+	Numerical *float64            `json:"numerical"`
+	Geo       *GeoCoordinateInput `json:"geo"`
+}
+
 type Bet struct {
 	PlayerID string `json:"playerId"`
 	Amount   int    `json:"amount"`
@@ -28,15 +44,25 @@ type Game struct {
 	IsOver         bool             `json:"isOver"`
 }
 
+type GeoCoordinate struct {
+	Longitude float64 `json:"longitude"`
+	Latitude  float64 `json:"latitude"`
+}
+
+type GeoCoordinateInput struct {
+	Longitude float64 `json:"longitude"`
+	Latitude  float64 `json:"latitude"`
+}
+
 type Guess struct {
-	Guess    float64 `json:"guess"`
+	Guess    *Answer `json:"guess"`
 	PlayerID string  `json:"playerId"`
 }
 
 type GuessInput struct {
-	GameID   string  `json:"gameId"`
-	PlayerID string  `json:"playerId"`
-	Guess    float64 `json:"guess"`
+	GameID   string           `json:"gameId"`
+	PlayerID string           `json:"playerId"`
+	Guess    *AnswerInputType `json:"guess"`
 }
 
 type Player struct {
@@ -53,18 +79,20 @@ type PlayerInput struct {
 }
 
 type Question struct {
-	ID          string   `json:"id"`
-	Question    string   `json:"question"`
-	Answer      float64  `json:"answer"`
-	Hints       []string `json:"hints"`
-	Explanation *string  `json:"explanation"`
+	ID          string        `json:"id"`
+	Type        QuestionTypes `json:"type"`
+	Question    string        `json:"question"`
+	Answer      *Answer       `json:"answer"`
+	Hints       []string      `json:"hints"`
+	Explanation *string       `json:"explanation"`
 }
 
 type QuestionInput struct {
-	Question    string   `json:"question"`
-	Answer      float64  `json:"answer"`
-	Hints       []string `json:"hints"`
-	Explanation *string  `json:"explanation"`
+	Question    string           `json:"question"`
+	Answer      *AnswerInputType `json:"answer"`
+	Type        QuestionTypes    `json:"type"`
+	Hints       []string         `json:"hints"`
+	Explanation *string          `json:"explanation"`
 }
 
 type QuestionRound struct {
@@ -87,4 +115,49 @@ type Set struct {
 	SetName           string `json:"setName"`
 	NumberOfQuestions int    `json:"numberOfQuestions"`
 	IsPrivate         bool   `json:"isPrivate"`
+}
+
+type QuestionTypes string
+
+const (
+	QuestionTypesNumerical      QuestionTypes = "NUMERICAL"
+	QuestionTypesMultipleChoice QuestionTypes = "MULTIPLE_CHOICE"
+	QuestionTypesDate           QuestionTypes = "DATE"
+	QuestionTypesGeo            QuestionTypes = "GEO"
+)
+
+var AllQuestionTypes = []QuestionTypes{
+	QuestionTypesNumerical,
+	QuestionTypesMultipleChoice,
+	QuestionTypesDate,
+	QuestionTypesGeo,
+}
+
+func (e QuestionTypes) IsValid() bool {
+	switch e {
+	case QuestionTypesNumerical, QuestionTypesMultipleChoice, QuestionTypesDate, QuestionTypesGeo:
+		return true
+	}
+	return false
+}
+
+func (e QuestionTypes) String() string {
+	return string(e)
+}
+
+func (e *QuestionTypes) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = QuestionTypes(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid QuestionTypes", str)
+	}
+	return nil
+}
+
+func (e QuestionTypes) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

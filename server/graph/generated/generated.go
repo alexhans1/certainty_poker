@@ -45,6 +45,11 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Answer struct {
+		Geo       func(childComplexity int) int
+		Numerical func(childComplexity int) int
+	}
+
 	Bet struct {
 		Amount   func(childComplexity int) int
 		PlayerID func(childComplexity int) int
@@ -63,6 +68,11 @@ type ComplexityRoot struct {
 		Players        func(childComplexity int) int
 		QuestionRounds func(childComplexity int) int
 		Questions      func(childComplexity int) int
+	}
+
+	GeoCoordinate struct {
+		Latitude  func(childComplexity int) int
+		Longitude func(childComplexity int) int
 	}
 
 	Guess struct {
@@ -99,6 +109,7 @@ type ComplexityRoot struct {
 		Hints       func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Question    func(childComplexity int) int
+		Type        func(childComplexity int) int
 	}
 
 	QuestionRound struct {
@@ -159,6 +170,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Answer.geo":
+		if e.complexity.Answer.Geo == nil {
+			break
+		}
+
+		return e.complexity.Answer.Geo(childComplexity), true
+
+	case "Answer.numerical":
+		if e.complexity.Answer.Numerical == nil {
+			break
+		}
+
+		return e.complexity.Answer.Numerical(childComplexity), true
 
 	case "Bet.amount":
 		if e.complexity.Bet.Amount == nil {
@@ -236,6 +261,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Game.Questions(childComplexity), true
+
+	case "GeoCoordinate.latitude":
+		if e.complexity.GeoCoordinate.Latitude == nil {
+			break
+		}
+
+		return e.complexity.GeoCoordinate.Latitude(childComplexity), true
+
+	case "GeoCoordinate.longitude":
+		if e.complexity.GeoCoordinate.Longitude == nil {
+			break
+		}
+
+		return e.complexity.GeoCoordinate.Longitude(childComplexity), true
 
 	case "Guess.guess":
 		if e.complexity.Guess.Guess == nil {
@@ -429,6 +468,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Question.Question(childComplexity), true
 
+	case "Question.type":
+		if e.complexity.Question.Type == nil {
+			break
+		}
+
+		return e.complexity.Question.Type(childComplexity), true
+
 	case "QuestionRound.bettingRounds":
 		if e.complexity.QuestionRound.BettingRounds == nil {
 			break
@@ -613,7 +659,15 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	&ast.Source{Name: "graph/schema.graphqls", Input: `# Types
+	&ast.Source{Name: "graph/schema.graphqls", Input: `# Enums
+enum QuestionTypes {
+  NUMERICAL
+  MULTIPLE_CHOICE
+  DATE
+  GEO
+}
+
+# Types
 type Game {
   id: ID!
   players: [Player!]!
@@ -629,6 +683,16 @@ type Player {
   name: String!
   game: Game!
   isDead: Boolean!
+}
+
+type GeoCoordinate {
+  longitude: Float!
+  latitude: Float!
+}
+
+type Answer {
+  numerical: Float
+  geo: GeoCoordinate
 }
 
 type QuestionRoundResult {
@@ -649,14 +713,15 @@ type QuestionRound {
 
 type Question {
   id: ID!
+  type: QuestionTypes!
   question: String!
-  answer: Float!
+  answer: Answer!
   hints: [String!]!
   explanation: String
 }
 
 type Guess {
-  guess: Float!
+  guess: Answer!
   playerId: ID!
 }
 
@@ -684,10 +749,20 @@ type Query {
 }
 
 # Mutations
+input GeoCoordinateInput {
+  longitude: Float!
+  latitude: Float!
+}
+
+input AnswerInputType {
+  numerical: Float
+  geo: GeoCoordinateInput
+}
+
 input GuessInput {
   gameId: ID!
   playerId: ID!
-  guess: Float!
+  guess: AnswerInputType!
 }
 
 input BetInput {
@@ -703,7 +778,8 @@ input PlayerInput {
 
 input QuestionInput {
   question: String!
-  answer: Float!
+  answer: AnswerInputType!
+  type: QuestionTypes!
   hints: [String!]!
   explanation: String
 }
@@ -954,6 +1030,68 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _Answer_numerical(ctx context.Context, field graphql.CollectedField, obj *model.Answer) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Answer",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Numerical, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Answer_geo(ctx context.Context, field graphql.CollectedField, obj *model.Answer) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Answer",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Geo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.GeoCoordinate)
+	fc.Result = res
+	return ec.marshalOGeoCoordinate2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGeoCoordinate(ctx, field.Selections, res)
+}
 
 func (ec *executionContext) _Bet_playerId(ctx context.Context, field graphql.CollectedField, obj *model.Bet) (ret graphql.Marshaler) {
 	defer func() {
@@ -1329,6 +1467,74 @@ func (ec *executionContext) _Game_isOver(ctx context.Context, field graphql.Coll
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _GeoCoordinate_longitude(ctx context.Context, field graphql.CollectedField, obj *model.GeoCoordinate) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "GeoCoordinate",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Longitude, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GeoCoordinate_latitude(ctx context.Context, field graphql.CollectedField, obj *model.GeoCoordinate) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "GeoCoordinate",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Latitude, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Guess_guess(ctx context.Context, field graphql.CollectedField, obj *model.Guess) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1358,9 +1564,9 @@ func (ec *executionContext) _Guess_guess(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(*model.Answer)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNAnswer2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswer(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Guess_playerId(ctx context.Context, field graphql.CollectedField, obj *model.Guess) (ret graphql.Marshaler) {
@@ -2039,6 +2245,40 @@ func (ec *executionContext) _Question_id(ctx context.Context, field graphql.Coll
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Question_type(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Question",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.QuestionTypes)
+	fc.Result = res
+	return ec.marshalNQuestionTypes2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionTypes(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Question_question(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2102,9 +2342,9 @@ func (ec *executionContext) _Question_answer(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(*model.Answer)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNAnswer2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswer(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Question_hints(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
@@ -3711,6 +3951,30 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputAnswerInputType(ctx context.Context, obj interface{}) (model.AnswerInputType, error) {
+	var it model.AnswerInputType
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "numerical":
+			var err error
+			it.Numerical, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "geo":
+			var err error
+			it.Geo, err = ec.unmarshalOGeoCoordinateInput2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGeoCoordinateInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputBetInput(ctx context.Context, obj interface{}) (model.BetInput, error) {
 	var it model.BetInput
 	var asMap = obj.(map[string]interface{})
@@ -3741,6 +4005,30 @@ func (ec *executionContext) unmarshalInputBetInput(ctx context.Context, obj inte
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputGeoCoordinateInput(ctx context.Context, obj interface{}) (model.GeoCoordinateInput, error) {
+	var it model.GeoCoordinateInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "longitude":
+			var err error
+			it.Longitude, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "latitude":
+			var err error
+			it.Latitude, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputGuessInput(ctx context.Context, obj interface{}) (model.GuessInput, error) {
 	var it model.GuessInput
 	var asMap = obj.(map[string]interface{})
@@ -3761,7 +4049,7 @@ func (ec *executionContext) unmarshalInputGuessInput(ctx context.Context, obj in
 			}
 		case "guess":
 			var err error
-			it.Guess, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.Guess, err = ec.unmarshalNAnswerInputType2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswerInputType(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3809,7 +4097,13 @@ func (ec *executionContext) unmarshalInputQuestionInput(ctx context.Context, obj
 			}
 		case "answer":
 			var err error
-			it.Answer, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.Answer, err = ec.unmarshalNAnswerInputType2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswerInputType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "type":
+			var err error
+			it.Type, err = ec.unmarshalNQuestionTypes2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionTypes(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3838,6 +4132,32 @@ func (ec *executionContext) unmarshalInputQuestionInput(ctx context.Context, obj
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
+
+var answerImplementors = []string{"Answer"}
+
+func (ec *executionContext) _Answer(ctx context.Context, sel ast.SelectionSet, obj *model.Answer) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, answerImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Answer")
+		case "numerical":
+			out.Values[i] = ec._Answer_numerical(ctx, field, obj)
+		case "geo":
+			out.Values[i] = ec._Answer_geo(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
 
 var betImplementors = []string{"Bet"}
 
@@ -3946,6 +4266,38 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "isOver":
 			out.Values[i] = ec._Game_isOver(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var geoCoordinateImplementors = []string{"GeoCoordinate"}
+
+func (ec *executionContext) _GeoCoordinate(ctx context.Context, sel ast.SelectionSet, obj *model.GeoCoordinate) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, geoCoordinateImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GeoCoordinate")
+		case "longitude":
+			out.Values[i] = ec._GeoCoordinate_longitude(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "latitude":
+			out.Values[i] = ec._GeoCoordinate_latitude(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4171,6 +4523,11 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = graphql.MarshalString("Question")
 		case "id":
 			out.Values[i] = ec._Question_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "type":
+			out.Values[i] = ec._Question_type(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4591,6 +4948,32 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 // endregion **************************** object.gotpl ****************************
 
 // region    ***************************** type.gotpl *****************************
+
+func (ec *executionContext) marshalNAnswer2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswer(ctx context.Context, sel ast.SelectionSet, v model.Answer) graphql.Marshaler {
+	return ec._Answer(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNAnswer2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswer(ctx context.Context, sel ast.SelectionSet, v *model.Answer) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Answer(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNAnswerInputType2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswerInputType(ctx context.Context, v interface{}) (model.AnswerInputType, error) {
+	return ec.unmarshalInputAnswerInputType(ctx, v)
+}
+
+func (ec *executionContext) unmarshalNAnswerInputType2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswerInputType(ctx context.Context, v interface{}) (*model.AnswerInputType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalNAnswerInputType2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswerInputType(ctx, v)
+	return &res, err
+}
 
 func (ec *executionContext) marshalNBet2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBet(ctx context.Context, sel ast.SelectionSet, v model.Bet) graphql.Marshaler {
 	return ec._Bet(ctx, sel, &v)
@@ -5041,6 +5424,15 @@ func (ec *executionContext) marshalNQuestionRoundResult2ᚖgithubᚗcomᚋalexha
 	return ec._QuestionRoundResult(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNQuestionTypes2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionTypes(ctx context.Context, v interface{}) (model.QuestionTypes, error) {
+	var res model.QuestionTypes
+	return res, res.UnmarshalGQL(v)
+}
+
+func (ec *executionContext) marshalNQuestionTypes2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionTypes(ctx context.Context, sel ast.SelectionSet, v model.QuestionTypes) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNSet2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐSet(ctx context.Context, sel ast.SelectionSet, v model.Set) graphql.Marshaler {
 	return ec._Set(ctx, sel, &v)
 }
@@ -5384,6 +5776,29 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return ec.marshalOBoolean2bool(ctx, sel, *v)
 }
 
+func (ec *executionContext) unmarshalOFloat2float64(ctx context.Context, v interface{}) (float64, error) {
+	return graphql.UnmarshalFloat(v)
+}
+
+func (ec *executionContext) marshalOFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
+	return graphql.MarshalFloat(v)
+}
+
+func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalOFloat2float64(ctx, v)
+	return &res, err
+}
+
+func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel ast.SelectionSet, v *float64) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec.marshalOFloat2float64(ctx, sel, *v)
+}
+
 func (ec *executionContext) marshalOGame2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGame(ctx context.Context, sel ast.SelectionSet, v model.Game) graphql.Marshaler {
 	return ec._Game(ctx, sel, &v)
 }
@@ -5393,6 +5808,29 @@ func (ec *executionContext) marshalOGame2ᚖgithubᚗcomᚋalexhans1ᚋcertainty
 		return graphql.Null
 	}
 	return ec._Game(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOGeoCoordinate2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGeoCoordinate(ctx context.Context, sel ast.SelectionSet, v model.GeoCoordinate) graphql.Marshaler {
+	return ec._GeoCoordinate(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalOGeoCoordinate2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGeoCoordinate(ctx context.Context, sel ast.SelectionSet, v *model.GeoCoordinate) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GeoCoordinate(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOGeoCoordinateInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGeoCoordinateInput(ctx context.Context, v interface{}) (model.GeoCoordinateInput, error) {
+	return ec.unmarshalInputGeoCoordinateInput(ctx, v)
+}
+
+func (ec *executionContext) unmarshalOGeoCoordinateInput2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGeoCoordinateInput(ctx context.Context, v interface{}) (*model.GeoCoordinateInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalOGeoCoordinateInput2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGeoCoordinateInput(ctx, v)
+	return &res, err
 }
 
 func (ec *executionContext) marshalOQuestion2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestion(ctx context.Context, sel ast.SelectionSet, v model.Question) graphql.Marshaler {
