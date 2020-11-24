@@ -1,3 +1,11 @@
+# Enums
+enum QuestionTypes {
+  NUMERICAL
+  MULTIPLE_CHOICE
+  DATE
+  GEO
+}
+
 # Types
 type Game {
   id: ID!
@@ -14,6 +22,16 @@ type Player {
   name: String!
   game: Game!
   isDead: Boolean!
+}
+
+type GeoCoordinate {
+  longitude: Float!
+  latitude: Float!
+}
+
+type Answer {
+  numerical: Float
+  geo: GeoCoordinate
 }
 
 type QuestionRoundResult {
@@ -34,14 +52,15 @@ type QuestionRound {
 
 type Question {
   id: ID!
+  type: QuestionTypes!
   question: String!
-  answer: Float!
+  answer: Answer!
   hints: [String!]!
   explanation: String
 }
 
 type Guess {
-  guess: Float!
+  guess: Answer!
   playerId: ID!
 }
 
@@ -69,10 +88,20 @@ type Query {
 }
 
 # Mutations
+input GeoCoordinateInput {
+  longitude: Float!
+  latitude: Float!
+}
+
+input AnswerInputType {
+  numerical: Float
+  geo: GeoCoordinateInput
+}
+
 input GuessInput {
   gameId: ID!
   playerId: ID!
-  guess: Float!
+  guess: AnswerInputType!
 }
 
 input BetInput {
@@ -88,7 +117,8 @@ input PlayerInput {
 
 input QuestionInput {
   question: String!
-  answer: Float!
+  answer: AnswerInputType!
+  type: QuestionTypes!
   hints: [String!]!
   explanation: String
 }

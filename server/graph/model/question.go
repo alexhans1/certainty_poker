@@ -69,10 +69,27 @@ func LoadQuestions(redisClient *redis.Client, setName string) ([]*Question, erro
 	return questions, nil
 }
 
-// DrawQuestion draws a random Question and removes it from the slice
+// DrawQuestion draws the next Question and removes it from the slice
 func DrawQuestion(g *Game) *Question {
 	drawnQuestion := g.Questions[0]
 	g.Questions = g.Questions[1:]
 
 	return drawnQuestion
+}
+
+// GetGuessForType creates an Answer from an AnswerInputType
+func (q *Question) GetGuessForType(g *AnswerInputType) (Answer, error) {
+	var guess Answer
+	if q.Type == QuestionTypesNumerical {
+		guess.Numerical = g.Numerical
+		return guess, nil
+	}
+	if q.Type == QuestionTypesGeo {
+		guess.Geo = &GeoCoordinate{
+			Latitude:  g.Geo.Latitude,
+			Longitude: g.Geo.Longitude,
+		}
+		return guess, nil
+	}
+	return guess, errors.New("invalid question type")
 }

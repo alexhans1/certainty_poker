@@ -17,10 +17,17 @@ func (q *QuestionRound) CurrentBettingRound() *BettingRound {
 func (q *QuestionRound) guessDeviation(playerID string) (float64, error) {
 	for _, guess := range q.Guesses {
 		if guess.PlayerID == playerID {
-			return math.Abs(q.Question.Answer - guess.Guess), nil
+			if q.Question.Type == QuestionTypesNumerical {
+				return math.Abs(*q.Question.Answer.Numerical - *guess.Guess.Numerical), nil
+			}
+			if q.Question.Type == QuestionTypesGeo {
+				dist := guess.GetGeoDistance(q.Question.Answer)
+				return dist, nil
+			}
+			return -1, errors.New("invalid question type")
 		}
 	}
-	return -1.0, errors.New("player not found in QuestionRound")
+	return -1, errors.New("player not found in QuestionRound")
 }
 
 func (q *QuestionRound) playerBets() map[string]int {

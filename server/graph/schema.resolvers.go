@@ -113,9 +113,13 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 		return false, err
 	}
 
+	guess, gErr := game.CurrentQuestionRound().Question.GetGuessForType(input.Guess)
+	if gErr != nil {
+		return false, gErr
+	}
 	game.CurrentQuestionRound().AddGuess(model.Guess{
 		PlayerID: input.PlayerID,
-		Guess:    input.Guess,
+		Guess:    &guess,
 	})
 
 	go updateGameChannel(r, game)
