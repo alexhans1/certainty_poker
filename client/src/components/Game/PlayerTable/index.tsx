@@ -10,6 +10,7 @@ import {
   QuestionRound,
   Game,
   Guess,
+  QuestionTypes,
 } from "../../../interfaces";
 import Avatar, { Size } from "./Avatar";
 
@@ -128,24 +129,25 @@ export default ({
                   : ""
               }`}
             >
-              {revealGuess ? (
-                <span role="img" aria-label="answer">
-                  💡 {guess}
-                </span>
-              ) : (
-                guesses && (
+              {questionType === QuestionTypes.NUMERICAL &&
+                (revealGuess ? (
                   <span role="img" aria-label="answer">
-                    💡{" "}
-                    <span className={id === playerId ? "" : "obfuscate"}>
-                      {!guess && guess !== 0
-                        ? null
-                        : id === playerId
-                        ? guess
-                        : 432}
-                    </span>
+                    💡 {guess}
                   </span>
-                )
-              )}
+                ) : (
+                  guesses && (
+                    <span role="img" aria-label="answer">
+                      💡{" "}
+                      <span className={id === playerId ? "" : "obfuscate"}>
+                        {!guess && guess !== 0
+                          ? null
+                          : id === playerId
+                          ? guess
+                          : 432}
+                      </span>
+                    </span>
+                  )
+                ))}
               <div className="d-flex">
                 <span role="img" aria-label="money">
                   💰
