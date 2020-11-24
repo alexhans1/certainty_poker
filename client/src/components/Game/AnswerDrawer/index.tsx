@@ -3,6 +3,7 @@ import Drawer from "../../Drawer";
 import NumberInput from "./NumberInput";
 import MapInput from "./MapInput";
 import {
+  Answer,
   Game,
   GeoCoordinate,
   Player,
@@ -38,12 +39,22 @@ export default ({
 
   const handleNumberInputSubmit = (guess: number | string) => {
     if ((guess || guess === 0) && typeof guess === "number") {
-      addGuess(addGuessMutation, game, guess, playerId);
+      addGuess(
+        addGuessMutation,
+        game,
+        {
+          numerical: guess,
+        },
+        playerId
+      );
       setShowNewQuestionRound(false);
     }
   };
 
-  const handleMapInputSubmit = (guess: GeoCoordinate) => {
+  const handleMapInputSubmit = (geoCoordinate: GeoCoordinate) => {
+    const guess: Answer = {
+      geo: geoCoordinate,
+    };
     addGuess(addGuessMutation, game, guess, playerId);
     setShowNewQuestionRound(false);
   };

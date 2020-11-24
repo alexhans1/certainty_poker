@@ -1,4 +1,11 @@
-import { QuestionRound, Player, Game, BettingRound } from "../../../interfaces";
+import {
+  QuestionRound,
+  Player,
+  Game,
+  BettingRound,
+  QuestionTypes,
+  Answer,
+} from "../../../interfaces";
 
 export const calculateBettingRoundSpendingForPlayer = (
   bettingRound: BettingRound,
@@ -61,3 +68,15 @@ export const hasPlayerFolded = (
 export const getRevealAnswer = (questionRound: QuestionRound) =>
   questionRound.isOver ||
   questionRound.question.hints.length + 1 < questionRound.bettingRounds.length;
+
+export const getGuess = (guess: Answer, questionType?: QuestionTypes) => {
+  if (!guess) return;
+  switch (questionType) {
+    case QuestionTypes.NUMERICAL:
+      return guess.numerical;
+    case QuestionTypes.GEO:
+      return `[${guess.geo?.latitude}, ${guess.geo?.longitude}]`;
+    default:
+      throw new Error("Invalid question type");
+  }
+};

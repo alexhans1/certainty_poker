@@ -40,9 +40,16 @@ export const GET_GAME_BY_ID = gql`
         question {
           id
           hints
-          answer
+          answer {
+            numerical
+            geo {
+              latitude
+              longitude
+            }
+          }
           question
           explanation
+          type
         }
         foldedPlayerIds
         bettingRounds {
@@ -55,7 +62,13 @@ export const GET_GAME_BY_ID = gql`
           }
         }
         guesses {
-          guess
+          guess {
+            numerical
+            geo {
+              latitude
+              longitude
+            }
+          }
           playerId
         }
         results {
@@ -88,9 +101,16 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
         question {
           id
           hints
-          answer
+          answer {
+            numerical
+            geo {
+              latitude
+              longitude
+            }
+          }
           question
           explanation
+          type
         }
         foldedPlayerIds
         bettingRounds {
@@ -103,7 +123,13 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
           }
         }
         guesses {
-          guess
+          guess {
+            numerical
+            geo {
+              latitude
+              longitude
+            }
+          }
           playerId
         }
         results {
