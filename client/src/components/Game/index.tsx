@@ -26,6 +26,7 @@ import AnswerDrawer from "./AnswerDrawer";
 import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
 import LeaveGameButton from "./LeaveGameButton";
+import GuessMap from "./GuessMap";
 import {
   getCurrentQuestionRound,
   getCurrentBettingRound,
@@ -150,15 +151,25 @@ function GameComponent() {
         className="grid mt-3"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
       >
-        {usedQuestionRound && (
-          <Question
+        <div>
+          {usedQuestionRound && (
+            <Question
+              {...{
+                game,
+                usedQuestionRound,
+                playerId,
+              }}
+            />
+          )}
+          <GuessMap
             {...{
-              game,
               usedQuestionRound,
+              isSpectator,
               playerId,
+              players: game.players,
             }}
           />
-        )}
+        </div>
         <div className="d-flex flex-column">
           <PlayerTable
             {...{

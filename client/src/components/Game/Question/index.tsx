@@ -1,5 +1,5 @@
 import React from "react";
-import { Game, QuestionRound } from "../../../interfaces";
+import { Game, QuestionRound, QuestionTypes } from "../../../interfaces";
 import { getGuess, getRevealAnswer } from "../helpers";
 import Hints from "./Hints";
 
@@ -34,22 +34,23 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
           usedQuestionRound,
         }}
       />
-      {getRevealAnswer(usedQuestionRound) && (
-        <>
-          <p style={styles.answer}>
-            Answer:{" "}
-            <b>
-              {getGuess(
-                usedQuestionRound.question.answer,
-                usedQuestionRound.question.type
-              )}
-            </b>
-          </p>
-          {usedQuestionRound.question.explanation && (
-            <p>{usedQuestionRound.question.explanation}</p>
-          )}
-        </>
-      )}
+      {usedQuestionRound.question.type !== QuestionTypes.GEO &&
+        getRevealAnswer(usedQuestionRound) && (
+          <>
+            <p style={styles.answer}>
+              Answer:{" "}
+              <b>
+                {getGuess(
+                  usedQuestionRound.question.answer,
+                  usedQuestionRound.question.type
+                )}
+              </b>
+            </p>
+            {usedQuestionRound.question.explanation && (
+              <p>{usedQuestionRound.question.explanation}</p>
+            )}
+          </>
+        )}
     </div>
   );
 };
