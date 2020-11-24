@@ -2,6 +2,7 @@ import React from "react";
 import {
   hasPlayerFolded,
   calculateBettingRoundSpendingForPlayer,
+  getGuess,
 } from "../helpers";
 import {
   Player,
@@ -84,6 +85,7 @@ export default ({
       )
       .map((p) => p.id);
   }
+  const questionType = usedQuestionRound?.question.type;
 
   return (
     <>
@@ -101,6 +103,7 @@ export default ({
           (!!usedQuestionRound?.isOver &&
             usedQuestionRound?.isShowdown &&
             !hasFolded);
+        const guess = guesses && getGuess(guesses[id], questionType);
 
         return (
           <div key={id} className="d-flex align-items-center pb-4 ml-4">
@@ -127,17 +130,17 @@ export default ({
             >
               {revealGuess ? (
                 <span role="img" aria-label="answer">
-                  💡 {guesses[id]}
+                  💡 {guess}
                 </span>
               ) : (
                 guesses && (
                   <span role="img" aria-label="answer">
                     💡{" "}
                     <span className={id === playerId ? "" : "obfuscate"}>
-                      {!guesses[id] && guesses[id] !== 0
+                      {!guess && guess !== 0
                         ? null
                         : id === playerId
-                        ? guesses[id]
+                        ? guess
                         : 432}
                     </span>
                   </span>

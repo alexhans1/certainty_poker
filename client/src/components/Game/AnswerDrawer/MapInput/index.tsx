@@ -19,7 +19,7 @@ function LocationMarker({
   useMapEvents({
     click(e) {
       setPosition(e.latlng);
-      handleUpdate([e.latlng.lat, e.latlng.lng]);
+      handleUpdate({ latitude: e.latlng.lat, longitude: e.latlng.lng });
     },
   });
 
@@ -51,7 +51,7 @@ export default ({ handleSubmit }: Props) => {
         onClick={() => {
           guess && handleSubmit(guess);
         }}
-        disabled={!guess?.length}
+        disabled={!guess?.latitude || !guess.longitude}
       >
         Submit
       </button>

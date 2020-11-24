@@ -1,11 +1,13 @@
-export type GeoCoordinate = [number, number];
-export type GuessType = number | GeoCoordinate;
-
 export enum QuestionTypes {
-  GEO = "geo",
-  NUMERICAL = "numerical",
-  MULTIPLE_CHOICE = "multiple_choice",
-  DATE = "date",
+  GEO = "GEO",
+  NUMERICAL = "NUMERICAL",
+  MULTIPLE_CHOICE = "MULTIPLE_CHOICE",
+  DATE = "DATE",
+}
+
+export interface GeoCoordinate {
+  latitude: number;
+  longitude: number;
 }
 
 export interface Player {
@@ -15,18 +17,23 @@ export interface Player {
   isDead: boolean;
 }
 
+export interface Answer {
+  numerical?: number;
+  geo?: GeoCoordinate;
+}
+
 export interface Question {
   id: string;
   type: QuestionTypes;
   question: string;
-  answer: number;
+  answer: Answer;
   hints: string[];
   explanation?: string;
 }
 
 export interface Guess {
   playerId: Player["id"];
-  guess: GuessType;
+  guess: Answer;
 }
 
 interface Bet {
@@ -72,7 +79,7 @@ export interface BetInput {
 export interface GuessInput {
   gameId: Game["id"];
   playerId: Player["id"];
-  guess: GuessType;
+  guess: Answer;
 }
 
 export interface Set {
