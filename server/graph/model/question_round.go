@@ -115,11 +115,12 @@ func (q *QuestionRound) Fold(playerID string) {
 // or all players are all in or only one player is still active
 func (q *QuestionRound) IsFinished() bool {
 	activePlayers := q.Game.ActivePlayers()
-	actionablePlayers := q.Game.ActionablePlayers()
 	if len(activePlayers) <= 1 {
 		return true
 	}
+	actionablePlayers := q.Game.ActionablePlayers()
 	if len(actionablePlayers) <= 1 {
+		q.IsShowdown = true
 		return true
 	}
 	if len(q.BettingRounds) > len(q.Question.Hints)+1 {
