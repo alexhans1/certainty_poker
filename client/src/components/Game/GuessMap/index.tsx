@@ -65,6 +65,5 @@ export default ({
     });
   }
 
-  console.log("mapMarkers", mapMarkers);
   return <Map markers={mapMarkers} />;
 };
