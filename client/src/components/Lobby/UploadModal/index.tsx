@@ -6,6 +6,9 @@ import { useMutation } from "react-apollo";
 import { UPLOAD_QUESTION_SET } from "../../../api/queries";
 import { QueryLazyOptions } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
+import { Answer, Question, QuestionTypes } from "../../../interfaces";
+import errorLogger from "../../../api/errorHandler";
+import { getGuess } from "../../Game/helpers";
 
 const styles = {
   card: {
@@ -13,7 +16,18 @@ const styles = {
   },
 };
 
-interface UploadModalProps {
+interface CSVDataRow {
+  question: string;
+  type: QuestionTypes;
+  answer?: number;
+  latitude?: number;
+  longitude?: number;
+  hint1?: string;
+  hint2?: string;
+  explanation?: string;
+}
+
+interface Props {
   open: boolean;
   handleClose: () => void;
   fetchSets: (
@@ -22,17 +36,12 @@ interface UploadModalProps {
   setSelectedSets: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-function UploadModal({
-  open,
-  handleClose,
-  fetchSets,
-  setSelectedSets,
-}: UploadModalProps) {
+function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
   const history = useHistory();
   const [showCSVInput, setShowCSVInput] = useState(true);
-  const [data, setData] = useState();
+  const [data, setData] = useState<Omit<Question, "id">[]>();
   const [setName, setSetName] = useState("");
-  const [isPrivate, setIsPrivate] = useState(0);
+  const [isPrivate, setIsPrivate] = useState<0 | 1>(0);
 
   const [uploadQuestions, { error }] = useMutation(UPLOAD_QUESTION_SET, {
     variables: {
@@ -52,41 +61,61 @@ function UploadModal({
       setData(undefined);
       setShowCSVInput(true);
     },
+    onError: errorLogger,
   });
 
-  const handleOnDrop = (d: any) => {
+  const handleOnDrop = (rows: { data: CSVDataRow }[]) => {
     setShowCSVInput(false);
     setData(
-      d.map((row: any) => {
-        const { question, answer, hint1, hint2, explanation } = row.data;
-        return { question, answer, hints: [hint1, hint2], explanation };
+      rows.map((row) => {
+        const {
+          question,
+          type,
+          answer: numericalAnswer,
+          latitude,
+          longitude,
+          hint1,
+          hint2,
+          explanation,
+        } = row.data;
+        const hints = [hint1, hint2].filter(Boolean) as string[];
+        const answer: Answer = {};
+        if (numericalAnswer || numericalAnswer === 0) {
+          answer.numerical = numericalAnswer;
+        } else if (
+          (latitude || latitude === 0) &&
+          (longitude || longitude === 0)
+        ) {
+          answer.geo = { latitude, longitude };
+        }
+        return {
+          question,
+          type,
+          answer,
+          hints,
+          explanation,
+        };
       })
     );
   };
 
   const handleOnError = (err: any, file: any, inputElem: any, reason: any) => {
-    console.log(err);
+    console.error(err);
   };
 
   const content = showCSVInput ? (
     <>
-      <h4>Format:</h4>
-      <table className="table text-dark table-responsive small">
-        <tr>
-          <td>question</td>
-          <td>answer</td>
-          <td>hint1</td>
-          <td>hint2</td>
-          <td>explanation</td>
-        </tr>
-        <tr>
-          <td>Example Question?</td>
-          <td>274,84</td>
-          <td>Example hint 1</td>
-          <td>Example hint 2</td>
-          <td>Example explanation (optional)</td>
-        </tr>
-      </table>
+      <p>
+        An example of the file format can be found{" "}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://docs.google.com/spreadsheets/d/1_cUrvCc3R2qTL_ME-A9wc9HmyH-zoAQkRnBs80dOPb8/edit?usp=sharing"
+        >
+          here
+        </a>
+        .
+      </p>
       <CSVReader
         onDrop={handleOnDrop}
         onError={handleOnError}
@@ -109,33 +138,36 @@ function UploadModal({
           className="form-control form-control-lg"
           placeholder="Name for the question set"
           aria-label="Name for the question set"
-          required={true}
+          required
+          autoFocus
         />
       </div>
       <h3>Review your upload:</h3>
       <hr />
-      {(data || []).map((q: any) => (
+      {(data || []).map((q) => (
         <div key={q.question} className="small">
           <p>
             Question: <b>{q.question}</b>
           </p>
           <p>
-            Answer: <b>{q.answer}</b>
+            Answer: <b>{getGuess(q.answer, q.type)}</b>
           </p>
-          <p>
-            Hints:{" "}
-            {q.hints.map((h: string) => (
-              <>
-                <br />
-                <span key={h}>
-                  <b>{h}</b>
-                </span>
-              </>
-            ))}
-          </p>
-          {q.explantion && (
+          {q.hints?.length && (
             <p>
-              Explanation: <b>{q.explantion}</b>
+              Hints:{" "}
+              {q.hints.map((h: string) => (
+                <>
+                  <br />
+                  <span key={h}>
+                    <b>{h}</b>
+                  </span>
+                </>
+              ))}
+            </p>
+          )}
+          {q.explanation && (
+            <p>
+              Explanation: <b>{q.explanation}</b>
             </p>
           )}
           <hr />
@@ -155,8 +187,8 @@ function UploadModal({
           Questions are private
           <br />
           <span>
-            If checked, this question set of questions will not appear in the
-            list on the start screen.
+            If checked, this set of questions will not appear in the list on the
+            start screen.
           </span>
         </label>
       </div>
@@ -196,7 +228,7 @@ function UploadModal({
     >
       <div className="card" style={styles.card}>
         <div className="card-body text-dark overflow-auto">
-          <h3>Upload a file with custom questions</h3>
+          <h3>Upload a CSV file with custom questions</h3>
           {content}
           {error && <div className="alert alert-danger">{error.message}</div>}
         </div>
