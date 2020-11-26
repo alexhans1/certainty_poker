@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import useSound from "use-sound";
 import {
   useLazyQuery,
   useMutation,
@@ -33,9 +34,11 @@ import {
   getPreviousQuestionRound,
   haveAllPlayersPlacedTheirGuess,
 } from "./helpers";
+import errorLogger from "../../api/errorHandler";
 
 import "./styles.scss";
-import errorLogger from "../../api/errorHandler";
+
+let soundInterval: NodeJS.Timeout;
 
 function GameComponent() {
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
@@ -45,6 +48,10 @@ function GameComponent() {
   const [showNewQuestionRound, setShowNewQuestionRound] = useState(true);
   const { gameId } = useParams<{ gameId: string }>();
   const [gqlErr, setGqlErr] = useState<Error>();
+  const [playNotification] = useSound(
+    require("../../assets/turn-notification.mp3")
+  );
+  const [playAlert] = useSound(require("../../assets/turn-alert.wav"));
 
   const errorHandler = (err: Error) => {
     errorLogger(err);
@@ -86,7 +93,24 @@ function GameComponent() {
         getFingerprintFromStorage(gameId) || setFingerprintToStorage(gameId),
     },
     onSubscriptionData: ({ subscriptionData }) => {
+      clearInterval(soundInterval);
       setGame(subscriptionData.data?.gameUpdated);
+      const cqr = getCurrentQuestionRound(subscriptionData.data?.gameUpdated);
+      const cbr = getCurrentBettingRound(cqr);
+      const players = subscriptionData.data?.gameUpdated.players;
+      if (
+        cqr &&
+        players &&
+        cbr?.currentPlayer.id === playerId &&
+        haveAllPlayersPlacedTheirGuess(cqr, players)
+      ) {
+        playNotification();
+        window.navigator.vibrate(200);
+        soundInterval = setInterval(() => {
+          playAlert();
+          window.navigator.vibrate(200);
+        }, 15000);
+      }
     },
   });
 

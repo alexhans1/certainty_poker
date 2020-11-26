@@ -32,7 +32,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "subscriptions-transport-ws": "^0.9.18",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "use-sound": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

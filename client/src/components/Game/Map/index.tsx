@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import L, {
+import {
   MapContainer,
   TileLayer,
   Marker,
