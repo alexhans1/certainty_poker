@@ -48,7 +48,10 @@ export default ({ markers, handleOnClick }: Props) => {
       {handleOnClick && <LocationMarker handleUpdate={handleOnClick} />}
       {markers?.length &&
         markers.map(({ position, label }) => (
-          <Marker position={[position.latitude, position.longitude]}>
+          <Marker
+            position={[position.latitude, position.longitude]}
+            key={position.latitude}
+          >
             {label && (
               <Tooltip direction="bottom" offset={[-15, 20]} permanent>
                 {label}
