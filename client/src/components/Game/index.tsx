@@ -46,6 +46,10 @@ function GameComponent() {
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   const [showNewQuestionRound, setShowNewQuestionRound] = useState(true);
+  const [
+    showNewQuestionRoundForSpectator,
+    setShowNewQuestionRoundForSpectator,
+  ] = useState(false);
   const { gameId } = useParams<{ gameId: string }>();
   const [gqlErr, setGqlErr] = useState<Error>();
   const [playNotification] = useSound(
@@ -98,12 +102,12 @@ function GameComponent() {
       const cqr = getCurrentQuestionRound(subscriptionData.data?.gameUpdated);
       const cbr = getCurrentBettingRound(cqr);
       const players = subscriptionData.data?.gameUpdated.players;
-      if (
-        cqr &&
-        players &&
-        cbr?.currentPlayer.id === playerId &&
-        haveAllPlayersPlacedTheirGuess(cqr, players)
-      ) {
+      const allPlayersPlacedTheirBet =
+        cqr && players && haveAllPlayersPlacedTheirGuess(cqr, players);
+      if (allPlayersPlacedTheirBet) {
+        setShowNewQuestionRoundForSpectator(false);
+      }
+      if (cbr?.currentPlayer.id === playerId && allPlayersPlacedTheirBet) {
         playNotification();
         window.navigator.vibrate(200);
         soundInterval = setInterval(() => {
@@ -164,6 +168,7 @@ function GameComponent() {
       (!hasPlayerPlacedGuessInCurrentQuestionRound && !isSpectator) ||
       (isSpectator &&
         !!currentQuestionRound &&
+        !showNewQuestionRoundForSpectator &&
         !haveAllPlayersPlacedTheirGuess(currentQuestionRound, game.players)));
   const usedQuestionRound = showPreviousQuestionRoundResults
     ? previousQuestionRound
@@ -218,6 +223,16 @@ function GameComponent() {
               Answer New Question
             </button>
           )}
+        {isSpectator && usedQuestionRound?.isOver && (
+          <button
+            className="new-question-button btn btn-light mx-auto mt-5"
+            onClick={() => {
+              setShowNewQuestionRoundForSpectator(true);
+            }}
+          >
+            Show Next Question
+          </button>
+        )}
       </div>
       {currentQuestionRound && playerId && (
         <AnswerDrawer
