@@ -85,4 +85,5 @@ export interface GuessInput {
 export interface Set {
   setName: string;
   numberOfQuestions: number;
+  language: string;
 }

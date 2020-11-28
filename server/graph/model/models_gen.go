@@ -115,6 +115,7 @@ type Set struct {
 	SetName           string `json:"setName"`
 	NumberOfQuestions int    `json:"numberOfQuestions"`
 	IsPrivate         bool   `json:"isPrivate"`
+	Language          string `json:"language"`
 }
 
 type QuestionTypes string

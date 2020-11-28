@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useLazyQuery, useMutation } from "@apollo/react-hooks";
 import { useLocation } from "react-router-dom";
+import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
 import { Game, Set } from "../../interfaces";
 import { CREATE_GAME_QUERY, GET_SETS_QUERY } from "../../api/queries";
 import errorHandler from "../../api/errorHandler";
@@ -17,6 +18,7 @@ function Lobby() {
     setName ? [setName] : []
   );
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [shownLanguage, setShownLanguage] = useState("GB");
   const [createGame, { loading }] = useMutation<{
     createGame: Game;
   }>(CREATE_GAME_QUERY, {
@@ -45,6 +47,21 @@ function Lobby() {
       createGame();
     }
   };
+
+  const languages =
+    sets?.sets
+      .reduce<string[]>((uniqueLanguages, s) => {
+        if (!uniqueLanguages.includes(s.language)) {
+          uniqueLanguages.push(s.language);
+        }
+        return uniqueLanguages;
+      }, [])
+      .sort((a, b) => {
+        if (a === "GB") {
+          return -1;
+        }
+        return parseInt(a) - parseInt(b);
+      }) || [];
 
   return (
     <>
@@ -77,38 +94,58 @@ function Lobby() {
           .
         </p>
       )}
-      <div className="set-container my-4">
-        {sets?.sets.map((set) => (
+      <div className="d-flex my-3">
+        {languages.map((language) => (
           <span
-            key={set.setName}
-            className={`set badge border-light ${
-              selectedSets?.includes(set.setName) ? "badge-light" : ""
-            } ${setName ? "mr-auto" : ""}`}
-            style={{
-              gridColumn: `span ${Math.round(
-                Math.pow(set.setName.length, 0.35)
-              )}`,
+            key={language}
+            className={`language mx-1 ${
+              language === shownLanguage ? "" : "text-black-50"
+            }`}
+            onClick={() => {
+              setShownLanguage(language);
             }}
-            onClick={(e) => {
-              if (setName) {
-                return;
-              }
-              if (e.metaKey) {
-                if (selectedSets?.includes(set.setName)) {
-                  setSelectedSets(
-                    selectedSets.filter((setName) => set.setName !== setName)
-                  );
-                } else {
-                  setSelectedSets([set.setName, ...selectedSets]);
-                }
-              } else {
-                setSelectedSets([set.setName]);
-              }
+            style={{
+              cursor: language === shownLanguage ? "default" : "pointer",
             }}
           >
-            {set.setName} ({set.numberOfQuestions})
+            {countryCodeToFlagEmoji(language)}
           </span>
         ))}
+      </div>
+      <div className="set-container my-4">
+        {sets?.sets
+          .filter((s) => s.language === shownLanguage)
+          .map((set) => (
+            <span
+              key={set.setName}
+              className={`set badge border-light ${
+                selectedSets?.includes(set.setName) ? "badge-light" : ""
+              } ${setName ? "mr-auto" : ""}`}
+              style={{
+                gridColumn: `span ${Math.round(
+                  Math.pow(set.setName.length, 0.35)
+                )}`,
+              }}
+              onClick={(e) => {
+                if (setName) {
+                  return;
+                }
+                if (e.metaKey) {
+                  if (selectedSets?.includes(set.setName)) {
+                    setSelectedSets(
+                      selectedSets.filter((setName) => set.setName !== setName)
+                    );
+                  } else {
+                    setSelectedSets([set.setName, ...selectedSets]);
+                  }
+                } else {
+                  setSelectedSets([set.setName]);
+                }
+              }}
+            >
+              {set.setName} ({set.numberOfQuestions})
+            </span>
+          ))}
       </div>
       <button
         className="btn btn-lg btn-primary mt-auto mb-3 mx-5"

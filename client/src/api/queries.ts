@@ -14,11 +14,13 @@ export const UPLOAD_QUESTION_SET = gql`
     $questions: [QuestionInput!]!
     $setName: String!
     $isPrivate: Boolean!
+    $language: String!
   ) {
     uploadQuestions(
       questions: $questions
       setName: $setName
       isPrivate: $isPrivate
+      language: $language
     )
   }
 `;
@@ -28,6 +30,7 @@ export const GET_SETS_QUERY = gql`
     sets(setName: $setName) {
       setName
       numberOfQuestions
+      language
     }
   }
 `;

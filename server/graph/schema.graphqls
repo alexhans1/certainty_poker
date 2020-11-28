@@ -79,6 +79,7 @@ type Set {
   setName: String!
   numberOfQuestions: Int!
   isPrivate: Boolean!
+  language: String!
 }
 
 # Queries
@@ -134,6 +135,7 @@ type Mutation {
     questions: [QuestionInput!]!
     setName: String!
     isPrivate: Boolean!
+    language: String!
   ): Boolean!
 }
 

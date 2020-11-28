@@ -3,12 +3,14 @@ import Modal from "@material-ui/core/Modal";
 import { Backdrop } from "@material-ui/core";
 import { CSVReader } from "react-papaparse";
 import { useMutation } from "react-apollo";
+import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
 import { UPLOAD_QUESTION_SET } from "../../../api/queries";
 import { QueryLazyOptions } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 import { Answer, Question, QuestionTypes } from "../../../interfaces";
 import errorLogger from "../../../api/errorHandler";
 import { getGuess } from "../../Game/helpers";
+import countryCodes from "../../../assets/countryCodes";
 
 const styles = {
   card: {
@@ -42,12 +44,14 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
   const [data, setData] = useState<Omit<Question, "id">[]>();
   const [setName, setSetName] = useState("");
   const [isPrivate, setIsPrivate] = useState<0 | 1>(0);
+  const [language, setLanguage] = useState<string>();
 
   const [uploadQuestions, { error }] = useMutation(UPLOAD_QUESTION_SET, {
     variables: {
       setName,
       questions: data,
       isPrivate: !!isPrivate,
+      language,
     },
     onCompleted: () => {
       if (isPrivate) {
@@ -128,7 +132,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
     </>
   ) : (
     <>
-      <div className="input-group mb-3">
+      <div className="input-group mb-2">
         <input
           value={setName}
           onChange={(e) => {
@@ -141,6 +145,23 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
           required
           autoFocus
         />
+      </div>
+      <div className="input-group mb-3">
+        <select
+          className="custom-select"
+          value={language}
+          onChange={(e) => {
+            setLanguage(e.target.value);
+          }}
+        >
+          <option selected>Language...</option>
+          {Object.keys(countryCodes).map((code) => (
+            <option value={code}>
+              {countryCodeToFlagEmoji(code)}{" "}
+              {countryCodes[code as keyof typeof countryCodes]}
+            </option>
+          ))}
+        </select>
       </div>
       <h3>Review your upload:</h3>
       <hr />

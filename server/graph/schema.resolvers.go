@@ -187,8 +187,8 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	return true, nil
 }
 
-func (r *mutationResolver) UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string, isPrivate bool) (bool, error) {
-	err := model.UploadQuestions(r.redisClient, setName, questions, isPrivate)
+func (r *mutationResolver) UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string, isPrivate bool, language string) (bool, error) {
+	err := model.UploadQuestions(r.redisClient, setName, questions, isPrivate, language)
 	if err != nil {
 		return false, err
 	}
@@ -202,28 +202,36 @@ func (r *queryResolver) Game(ctx context.Context, gameID string) (*model.Game, e
 
 func (r *queryResolver) Sets(ctx context.Context, setName *string) ([]*model.Set, error) {
 	var sets []*model.Set
-	keys := r.redisClient.Keys("*")
-	if keys.Err() != nil {
-		return nil, keys.Err()
-	}
 	if setName != nil {
 		questions, err := model.LoadQuestions(r.redisClient, *setName)
 		if err != nil {
 			return nil, err
 		}
-		sets = append(sets, &model.Set{SetName: *setName, NumberOfQuestions: len(questions)})
+		language := r.redisClient.HGet(*setName, "language")
+		if language.Err() != nil {
+			return nil, language.Err()
+		}
+		sets = append(sets, &model.Set{SetName: *setName, NumberOfQuestions: len(questions), Language: language.Val()})
 	} else {
+		keys := r.redisClient.Keys("*")
+		if keys.Err() != nil {
+			return nil, keys.Err()
+		}
 		for _, name := range keys.Val() {
 			isPrivate := r.redisClient.HGet(name, "isPrivate")
 			if isPrivate.Err() != nil {
 				return nil, isPrivate.Err()
+			}
+			language := r.redisClient.HGet(name, "language")
+			if language.Err() != nil {
+				return nil, language.Err()
 			}
 			if isPrivate.Val() == "0" {
 				questions, err := model.LoadQuestions(r.redisClient, name)
 				if err != nil {
 					return nil, err
 				}
-				sets = append(sets, &model.Set{SetName: name, NumberOfQuestions: len(questions)})
+				sets = append(sets, &model.Set{SetName: name, NumberOfQuestions: len(questions), Language: language.Val()})
 			}
 		}
 	}
