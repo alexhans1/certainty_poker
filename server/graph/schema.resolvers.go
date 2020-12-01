@@ -11,6 +11,7 @@ import (
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
 	"github.com/alexhans1/certainty_poker/helpers"
+	"github.com/thoas/go-funk"
 )
 
 func (r *mutationResolver) CreateGame(ctx context.Context, setNames []string) (*model.Game, error) {
@@ -53,7 +54,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (bool, 
 		return false, errors.New("not enough players to start the game")
 	}
 
-	model.ShufflePlayers(game.Players)
+	funk.Shuffle(game.Players)
 	game.AddNewQuestionRound()
 
 	go updateGameChannel(r, game)

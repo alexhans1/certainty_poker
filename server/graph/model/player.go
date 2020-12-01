@@ -1,8 +1,6 @@
 package model
 
 import (
-	"math/rand"
-
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
@@ -89,14 +87,6 @@ func (p *Player) getNextPlayer() *Player {
 		}
 	}
 	return nil
-}
-
-// ShufflePlayers receives a slice and returns it in a new order
-func ShufflePlayers(playerSlice []*Player) {
-	for i := range playerSlice {
-		j := rand.Intn(i + 1)
-		playerSlice[i], playerSlice[j] = playerSlice[j], playerSlice[i]
-	}
 }
 
 // FindPlayer finds player by ID in given player slice

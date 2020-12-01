@@ -79,20 +79,23 @@ type PlayerInput struct {
 }
 
 type Question struct {
-	ID          string        `json:"id"`
-	Type        QuestionTypes `json:"type"`
-	Question    string        `json:"question"`
-	Answer      *Answer       `json:"answer"`
-	Hints       []string      `json:"hints"`
-	Explanation *string       `json:"explanation"`
+	ID                 string        `json:"id"`
+	Type               QuestionTypes `json:"type"`
+	Question           string        `json:"question"`
+	Answer             *Answer       `json:"answer"`
+	Alternatives       []string      `json:"alternatives"`
+	HiddenAlternatives []string      `json:"hiddenAlternatives"`
+	Hints              []string      `json:"hints"`
+	Explanation        *string       `json:"explanation"`
 }
 
 type QuestionInput struct {
-	Question    string           `json:"question"`
-	Answer      *AnswerInputType `json:"answer"`
-	Type        QuestionTypes    `json:"type"`
-	Hints       []string         `json:"hints"`
-	Explanation *string          `json:"explanation"`
+	Question     string           `json:"question"`
+	Type         QuestionTypes    `json:"type"`
+	Answer       *AnswerInputType `json:"answer"`
+	Alternatives []string         `json:"alternatives"`
+	Hints        []string         `json:"hints"`
+	Explanation  *string          `json:"explanation"`
 }
 
 type QuestionRound struct {

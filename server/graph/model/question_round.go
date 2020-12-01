@@ -24,6 +24,12 @@ func (q *QuestionRound) guessDeviation(playerID string) (float64, error) {
 				dist := guess.GetGeoDistance(q.Question.Answer)
 				return dist, nil
 			}
+			if q.Question.Type == QuestionTypesMultipleChoice {
+				if *guess.Guess.Numerical == *q.Question.Answer.Numerical {
+					return 0, nil
+				}
+				return 1, nil
+			}
 			return -1, errors.New("invalid question type")
 		}
 	}
@@ -113,6 +119,7 @@ func (q *QuestionRound) Fold(playerID string) {
 // IsFinished returns true if the current betting
 // round is finished and all hints are already revealed
 // or all players are all in or only one player is still active
+// WARNING: this assumes the the current betting round is also finished
 func (q *QuestionRound) IsFinished() bool {
 	activePlayers := q.Game.ActivePlayers()
 	if len(activePlayers) <= 1 {
@@ -123,12 +130,10 @@ func (q *QuestionRound) IsFinished() bool {
 		q.IsShowdown = true
 		return true
 	}
-	if len(q.BettingRounds) > len(q.Question.Hints)+1 {
-		isBettingRoundFinished := q.CurrentBettingRound().IsFinished()
-		if isBettingRoundFinished {
-			q.IsShowdown = true
-		}
-		return isBettingRoundFinished
+	if (q.Question.Type == QuestionTypesMultipleChoice && len(q.BettingRounds) > 3) ||
+		(q.Question.Type != QuestionTypesMultipleChoice && len(q.BettingRounds) > len(q.Question.Hints)+1) {
+		q.IsShowdown = true
+		return true
 	}
 	return false
 }
@@ -139,6 +144,12 @@ func (q *QuestionRound) AddNewBettingRound() {
 		Bets:          make([]*Bet, 0),
 		CurrentPlayer: nil,
 		QuestionRound: q,
+	}
+
+	if q.Question.Type == QuestionTypesMultipleChoice &&
+		len(q.BettingRounds) >= 1 &&
+		len(q.BettingRounds) <= 2 {
+		q.Question.HiddenAlternatives = append(q.Question.HiddenAlternatives, q.Question.GetHiddenAlternative())
 	}
 
 	newBettingRound.Start()
