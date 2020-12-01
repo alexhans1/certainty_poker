@@ -99,8 +99,9 @@ function GameComponent() {
     },
     onSubscriptionData: ({ subscriptionData }) => {
       clearInterval(soundInterval);
-      setGame(subscriptionData.data?.gameUpdated);
-      const cqr = getCurrentQuestionRound(subscriptionData.data?.gameUpdated);
+      const game = subscriptionData.data?.gameUpdated;
+      setGame(game);
+      const cqr = getCurrentQuestionRound(game);
       const cbr = getCurrentBettingRound(cqr);
       const players = subscriptionData.data?.gameUpdated.players;
       const allPlayersPlacedTheirBet =
@@ -108,7 +109,11 @@ function GameComponent() {
       if (allPlayersPlacedTheirBet) {
         setShowNewQuestionRoundForSpectator(false);
       }
-      if (cbr?.currentPlayer.id === playerId && allPlayersPlacedTheirBet) {
+      if (
+        !game?.isOver &&
+        cbr?.currentPlayer.id === playerId &&
+        allPlayersPlacedTheirBet
+      ) {
         playNotification();
         window.navigator.vibrate(200);
         soundInterval = setInterval(() => {
