@@ -50,6 +50,7 @@ export const GET_GAME_BY_ID = gql`
               longitude
             }
           }
+          alternatives
           question
           explanation
           type
@@ -111,6 +112,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
               longitude
             }
           }
+          alternatives
           question
           explanation
           type

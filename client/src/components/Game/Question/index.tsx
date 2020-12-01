@@ -42,7 +42,8 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
               <b>
                 {getGuess(
                   usedQuestionRound.question.answer,
-                  usedQuestionRound.question.type
+                  usedQuestionRound.question.type,
+                  usedQuestionRound.question.alternatives
                 )}
               </b>
             </p>

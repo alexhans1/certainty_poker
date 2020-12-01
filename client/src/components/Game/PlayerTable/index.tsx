@@ -104,7 +104,13 @@ export default ({
           (!!usedQuestionRound?.isOver &&
             usedQuestionRound?.isShowdown &&
             !hasFolded);
-        const guess = guesses && getGuess(guesses[id], questionType);
+        const guess =
+          guesses &&
+          getGuess(
+            guesses[id],
+            questionType,
+            usedQuestionRound?.question.alternatives
+          );
 
         return (
           <div key={id} className="d-flex align-items-center pb-4 ml-4">
@@ -129,7 +135,7 @@ export default ({
                   : ""
               }`}
             >
-              {questionType === QuestionTypes.NUMERICAL &&
+              {questionType !== QuestionTypes.GEO &&
                 (revealGuess ? (
                   <span role="img" aria-label="answer">
                     💡 {guess}

@@ -2,6 +2,7 @@ import React from "react";
 import Drawer from "../../Drawer";
 import NumberInput from "./NumberInput";
 import MapInput from "./MapInput";
+import MultipleChoiceInput from "./MultipleChoiceInput";
 import {
   Answer,
   Game,
@@ -65,6 +66,13 @@ export default ({
         return <NumberInput handleSubmit={handleNumberInputSubmit} />;
       case QuestionTypes.GEO:
         return <MapInput handleSubmit={handleMapInputSubmit} />;
+      case QuestionTypes.MULTIPLE_CHOICE:
+        return (
+          <MultipleChoiceInput
+            alternatives={currentQuestionRound.question.alternatives}
+            handleSubmit={handleNumberInputSubmit}
+          />
+        );
       default:
         throw new Error("Unknow Question Type");
     }

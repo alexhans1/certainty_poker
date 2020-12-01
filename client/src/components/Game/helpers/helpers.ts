@@ -5,6 +5,7 @@ import {
   BettingRound,
   QuestionTypes,
   Answer,
+  Question,
 } from "../../../interfaces";
 
 export const calculateBettingRoundSpendingForPlayer = (
@@ -65,17 +66,34 @@ export const hasPlayerFolded = (
   playerId: Player["id"]
 ) => currentQuestionRound?.foldedPlayerIds.includes(playerId);
 
-export const getRevealAnswer = (questionRound: QuestionRound) =>
-  questionRound.isOver ||
-  questionRound.question.hints.length + 1 < questionRound.bettingRounds.length;
+export const getRevealAnswer = (questionRound: QuestionRound) => {
+  if (questionRound.isOver) {
+    return true;
+  }
+  if (questionRound.question.type === QuestionTypes.MULTIPLE_CHOICE) {
+    return questionRound.bettingRounds.length >= 4;
+  }
+  return (
+    questionRound.question.hints.length + 1 < questionRound.bettingRounds.length
+  );
+};
 
-export const getGuess = (guess: Answer, questionType?: QuestionTypes) => {
+export const getGuess = (
+  guess: Answer,
+  questionType?: QuestionTypes,
+  alternatives?: Question["alternatives"]
+) => {
   if (!guess) return;
   switch (questionType) {
     case QuestionTypes.NUMERICAL:
       return guess.numerical;
     case QuestionTypes.GEO:
       return `[${guess.geo?.latitude}, ${guess.geo?.longitude}]`;
+    case QuestionTypes.MULTIPLE_CHOICE:
+      if (alternatives?.length !== 4) {
+        throw new Error("missing alternatives for multiple choice question");
+      }
+      return alternatives[guess.numerical ?? -1];
     default:
       throw new Error("Invalid question type");
   }
