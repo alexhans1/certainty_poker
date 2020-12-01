@@ -27,6 +27,7 @@ export interface Question {
   type: QuestionTypes;
   question: string;
   answer: Answer;
+  alternatives?: [string, string, string, string];
   hints: string[];
   explanation?: string;
 }
