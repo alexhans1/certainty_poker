@@ -55,6 +55,8 @@ type Question {
   type: QuestionTypes!
   question: String!
   answer: Answer!
+  alternatives: [String!]
+  hiddenAlternatives: [String!]
   hints: [String!]!
   explanation: String
 }
@@ -118,8 +120,9 @@ input PlayerInput {
 
 input QuestionInput {
   question: String!
-  answer: AnswerInputType!
   type: QuestionTypes!
+  answer: AnswerInputType!
+  alternatives: [String!]
   hints: [String!]!
   explanation: String
 }

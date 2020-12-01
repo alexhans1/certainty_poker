@@ -104,12 +104,14 @@ type ComplexityRoot struct {
 	}
 
 	Question struct {
-		Answer      func(childComplexity int) int
-		Explanation func(childComplexity int) int
-		Hints       func(childComplexity int) int
-		ID          func(childComplexity int) int
-		Question    func(childComplexity int) int
-		Type        func(childComplexity int) int
+		Alternatives       func(childComplexity int) int
+		Answer             func(childComplexity int) int
+		Explanation        func(childComplexity int) int
+		HiddenAlternatives func(childComplexity int) int
+		Hints              func(childComplexity int) int
+		ID                 func(childComplexity int) int
+		Question           func(childComplexity int) int
+		Type               func(childComplexity int) int
 	}
 
 	QuestionRound struct {
@@ -434,6 +436,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Sets(childComplexity, args["setName"].(*string)), true
 
+	case "Question.alternatives":
+		if e.complexity.Question.Alternatives == nil {
+			break
+		}
+
+		return e.complexity.Question.Alternatives(childComplexity), true
+
 	case "Question.answer":
 		if e.complexity.Question.Answer == nil {
 			break
@@ -447,6 +456,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Question.Explanation(childComplexity), true
+
+	case "Question.hiddenAlternatives":
+		if e.complexity.Question.HiddenAlternatives == nil {
+			break
+		}
+
+		return e.complexity.Question.HiddenAlternatives(childComplexity), true
 
 	case "Question.hints":
 		if e.complexity.Question.Hints == nil {
@@ -724,6 +740,8 @@ type Question {
   type: QuestionTypes!
   question: String!
   answer: Answer!
+  alternatives: [String!]
+  hiddenAlternatives: [String!]
   hints: [String!]!
   explanation: String
 }
@@ -787,8 +805,9 @@ input PlayerInput {
 
 input QuestionInput {
   question: String!
-  answer: AnswerInputType!
   type: QuestionTypes!
+  answer: AnswerInputType!
+  alternatives: [String!]
   hints: [String!]!
   explanation: String
 }
@@ -2363,6 +2382,68 @@ func (ec *executionContext) _Question_answer(ctx context.Context, field graphql.
 	res := resTmp.(*model.Answer)
 	fc.Result = res
 	return ec.marshalNAnswer2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Question_alternatives(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Question",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Alternatives, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Question_hiddenAlternatives(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Question",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HiddenAlternatives, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Question_hints(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
@@ -4147,15 +4228,21 @@ func (ec *executionContext) unmarshalInputQuestionInput(ctx context.Context, obj
 			if err != nil {
 				return it, err
 			}
+		case "type":
+			var err error
+			it.Type, err = ec.unmarshalNQuestionTypes2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionTypes(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "answer":
 			var err error
 			it.Answer, err = ec.unmarshalNAnswerInputType2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐAnswerInputType(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "type":
+		case "alternatives":
 			var err error
-			it.Type, err = ec.unmarshalNQuestionTypes2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐQuestionTypes(ctx, v)
+			it.Alternatives, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4593,6 +4680,10 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "alternatives":
+			out.Values[i] = ec._Question_alternatives(ctx, field, obj)
+		case "hiddenAlternatives":
+			out.Values[i] = ec._Question_hiddenAlternatives(ctx, field, obj)
 		case "hints":
 			out.Values[i] = ec._Question_hints(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -5947,6 +6038,38 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	return graphql.MarshalString(v)
+}
+
+func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
