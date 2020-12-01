@@ -7,10 +7,11 @@ import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
 import { UPLOAD_QUESTION_SET } from "../../../api/queries";
 import { QueryLazyOptions } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
-import { Answer, Question, QuestionTypes } from "../../../interfaces";
+import { Question, QuestionTypes } from "../../../interfaces";
 import errorLogger from "../../../api/errorHandler";
 import { getGuess } from "../../Game/helpers";
 import countryCodes from "../../../assets/countryCodes";
+import processCsvData from "./processCsvData";
 
 const styles = {
   card: {
@@ -18,15 +19,18 @@ const styles = {
   },
 };
 
-interface CSVDataRow {
+export interface CSVDataRow {
   question: string;
   type: QuestionTypes;
-  answer?: number;
+  answer?: number | string;
   latitude?: number;
   longitude?: number;
   hint1?: string;
   hint2?: string;
   explanation?: string;
+  multiple_choice_alternative1?: string;
+  multiple_choice_alternative2?: string;
+  multiple_choice_alternative3?: string;
 }
 
 interface Props {
@@ -70,37 +74,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
 
   const handleOnDrop = (rows: { data: CSVDataRow }[]) => {
     setShowCSVInput(false);
-    setData(
-      rows.map((row) => {
-        const {
-          question,
-          type,
-          answer: numericalAnswer,
-          latitude,
-          longitude,
-          hint1,
-          hint2,
-          explanation,
-        } = row.data;
-        const hints = [hint1, hint2].filter(Boolean) as string[];
-        const answer: Answer = {};
-        if (numericalAnswer || numericalAnswer === 0) {
-          answer.numerical = numericalAnswer;
-        } else if (
-          (latitude || latitude === 0) &&
-          (longitude || longitude === 0)
-        ) {
-          answer.geo = { latitude, longitude };
-        }
-        return {
-          question,
-          type,
-          answer,
-          hints,
-          explanation,
-        };
-      })
-    );
+    setData(processCsvData(rows));
   };
 
   const handleOnError = (err: any, file: any, inputElem: any, reason: any) => {
@@ -173,7 +147,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
           <p>
             Answer: <b>{getGuess(q.answer, q.type, q.alternatives)}</b>
           </p>
-          {q.hints?.length && (
+          {!!q.hints?.length && (
             <p>
               Hints:{" "}
               {q.hints.map((h: string) => (
@@ -181,6 +155,19 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
                   <br />
                   <span key={h}>
                     <b>{h}</b>
+                  </span>
+                </>
+              ))}
+            </p>
+          )}
+          {q.alternatives?.length && (
+            <p>
+              Alternatives:{" "}
+              {q.alternatives.map((alt, i) => (
+                <>
+                  <br />
+                  <span key={alt}>
+                    <b className={i === 0 ? "text-success" : ""}>{alt}</b>
                   </span>
                 </>
               ))}
