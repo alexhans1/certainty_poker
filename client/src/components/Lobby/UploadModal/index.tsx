@@ -171,7 +171,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
             Question: <b>{q.question}</b>
           </p>
           <p>
-            Answer: <b>{getGuess(q.answer, q.type)}</b>
+            Answer: <b>{getGuess(q.answer, q.type, q.alternatives)}</b>
           </p>
           {q.hints?.length && (
             <p>

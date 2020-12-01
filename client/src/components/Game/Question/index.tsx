@@ -19,7 +19,9 @@ const styles = {
 
 export default ({ game, usedQuestionRound }: QuestionProps) => {
   const noHints =
-    usedQuestionRound.bettingRounds.length <= 1 && !usedQuestionRound.isOver;
+    usedQuestionRound.question.type !== QuestionTypes.MULTIPLE_CHOICE &&
+    usedQuestionRound.bettingRounds.length <= 1 &&
+    !usedQuestionRound.isOver;
   const totalQuestions = game.questionRounds.length + game.questions.length;
   return (
     <div className="mb-4">
@@ -34,7 +36,7 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
           usedQuestionRound,
         }}
       />
-      {usedQuestionRound.question.type !== QuestionTypes.GEO &&
+      {usedQuestionRound.question.type === QuestionTypes.NUMERICAL &&
         getRevealAnswer(usedQuestionRound) && (
           <>
             <p style={styles.answer}>
@@ -42,8 +44,7 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
               <b>
                 {getGuess(
                   usedQuestionRound.question.answer,
-                  usedQuestionRound.question.type,
-                  usedQuestionRound.question.alternatives
+                  usedQuestionRound.question.type
                 )}
               </b>
             </p>

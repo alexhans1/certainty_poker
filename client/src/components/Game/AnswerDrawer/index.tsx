@@ -67,9 +67,13 @@ export default ({
       case QuestionTypes.GEO:
         return <MapInput handleSubmit={handleMapInputSubmit} />;
       case QuestionTypes.MULTIPLE_CHOICE:
+        const alternatives = currentQuestionRound.question.alternatives?.map(
+          (alt) => ({ value: alt, active: true })
+        );
         return (
           <MultipleChoiceInput
-            alternatives={currentQuestionRound.question.alternatives}
+            usedQuestionRound={currentQuestionRound}
+            alternatives={alternatives}
             handleSubmit={handleNumberInputSubmit}
           />
         );

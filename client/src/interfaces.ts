@@ -28,6 +28,7 @@ export interface Question {
   question: string;
   answer: Answer;
   alternatives?: [string, string, string, string];
+  hiddenAlternatives?: string[];
   hints: string[];
   explanation?: string;
 }

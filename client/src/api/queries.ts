@@ -51,6 +51,7 @@ export const GET_GAME_BY_ID = gql`
             }
           }
           alternatives
+          hiddenAlternatives
           question
           explanation
           type
@@ -113,6 +114,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
             }
           }
           alternatives
+          hiddenAlternatives
           question
           explanation
           type

@@ -28,6 +28,7 @@ import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
 import LeaveGameButton from "./LeaveGameButton";
 import GuessMap from "./GuessMap";
+import MultipleChoiceOptions from "./MultipleChoiceOptions";
 import {
   getCurrentQuestionRound,
   getCurrentBettingRound,
@@ -173,6 +174,10 @@ function GameComponent() {
   const usedQuestionRound = showPreviousQuestionRoundResults
     ? previousQuestionRound
     : currentQuestionRound;
+  console.log(
+    "usedQuestionRound.question.hiddenAlternatives",
+    usedQuestionRound?.question.hiddenAlternatives
+  );
 
   return (
     <>
@@ -196,6 +201,21 @@ function GameComponent() {
               isSpectator,
               playerId,
               players: game.players,
+            }}
+          />
+          <MultipleChoiceOptions
+            {...{
+              usedQuestionRound,
+              alternatives:
+                usedQuestionRound?.question.alternatives?.map((alt) => ({
+                  value: alt,
+                  active: !usedQuestionRound.question.hiddenAlternatives?.includes(
+                    alt
+                  ),
+                })) || [],
+              guess: usedQuestionRound?.guesses.find(
+                (g) => g.playerId === playerId
+              )?.guess.numerical,
             }}
           />
         </div>

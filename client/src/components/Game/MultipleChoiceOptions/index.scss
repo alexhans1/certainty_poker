@@ -1,0 +1,20 @@
+.mc-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px 15px;
+
+  button {
+    border-radius: 0;
+
+    &.no-pointer {
+      cursor: default !important;
+      pointer-events: none;
+
+      // &:hover {
+      //   color: inherit;
+      //   background: inherit;
+      //   border: unset;
+      // }
+    }
+  }
+}
