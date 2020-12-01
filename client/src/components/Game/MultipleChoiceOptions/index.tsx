@@ -1,5 +1,5 @@
 import React from "react";
-import { QuestionRound } from "../../../interfaces";
+import { QuestionRound, QuestionTypes } from "../../../interfaces";
 import { getRevealAnswer } from "../helpers";
 
 import "./index.scss";
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default ({ usedQuestionRound, handleClick, guess }: Props) => {
-  if (!usedQuestionRound) {
+  if (usedQuestionRound?.question.type !== QuestionTypes.MULTIPLE_CHOICE) {
     return null;
   }
   if (usedQuestionRound.question.alternatives?.length !== 4) {
