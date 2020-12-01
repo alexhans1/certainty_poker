@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Question } from "../../../../interfaces";
-
-import "./index.scss";
+import { QuestionRound } from "../../../../interfaces";
+import MultipleChoiceOptions from "../../MultipleChoiceOptions";
 
 interface Props {
-  alternatives: Question["alternatives"];
+  usedQuestionRound: QuestionRound;
+  alternatives?: {
+    value: string;
+    active: boolean;
+  }[];
   handleSubmit: (guess: number) => void;
 }
 
-export default ({ handleSubmit, alternatives }: Props) => {
+export default ({ usedQuestionRound, handleSubmit, alternatives }: Props) => {
   const [guess, setGuess] = useState<number>();
   if (alternatives?.length !== 4) {
     throw new Error("missing alternatives for multiple choice question");
@@ -16,19 +19,11 @@ export default ({ handleSubmit, alternatives }: Props) => {
 
   return (
     <>
-      <div className="mc-container mb-3">
-        {alternatives.map((alt, i) => (
-          <button
-            key={`${alt}_${i}`}
-            className={`btn btn-outline-dark ${
-              guess === i ? "bg-dark text-light shadow" : ""
-            }`}
-            onClick={() => setGuess(i)}
-          >
-            {alt}
-          </button>
-        ))}
-      </div>
+      <MultipleChoiceOptions
+        usedQuestionRound={usedQuestionRound}
+        handleClick={setGuess}
+        guess={guess}
+      />
       <button
         className="btn btn-primary ml-auto"
         onClick={() => {
