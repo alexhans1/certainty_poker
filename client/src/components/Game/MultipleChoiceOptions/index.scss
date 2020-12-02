@@ -9,12 +9,9 @@
     &.no-pointer {
       cursor: default !important;
       pointer-events: none;
-
-      // &:hover {
-      //   color: inherit;
-      //   background: inherit;
-      //   border: unset;
-      // }
+    }
+    &.box-shadow {
+      box-shadow: 7px 7px 12px #222222;
     }
   }
 }

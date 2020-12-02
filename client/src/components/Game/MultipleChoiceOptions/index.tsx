@@ -33,15 +33,11 @@ export default ({ usedQuestionRound, handleClick, guess }: Props) => {
           buttonClassName += " no-pointer";
         }
         if (guess === i) {
-          buttonClassName += " shadow";
+          buttonClassName += handleClick ? " shadow" : " box-shadow";
         }
         if (alt.active) {
           if (revealAnswer && i === answer) {
-            if (guess === i) {
-              buttonClassName += " btn-success";
-            } else {
-              buttonClassName += " btn-outline-success";
-            }
+            buttonClassName += " btn-outline-success";
           } else {
             if (handleClick) {
               buttonClassName += " btn-outline-dark";
@@ -50,17 +46,10 @@ export default ({ usedQuestionRound, handleClick, guess }: Props) => {
               }
             } else {
               buttonClassName += " btn-outline-light";
-              if (guess === i) {
-                buttonClassName += " bg-light text-dark";
-              }
             }
           }
         } else {
-          if (guess === i) {
-            buttonClassName += " btn-danger";
-          } else {
-            buttonClassName += " btn-outline-danger";
-          }
+          buttonClassName += " btn-outline-danger";
         }
         return (
           <button
