@@ -19,7 +19,10 @@ export default ({ handleSubmit }: Props) => {
       <button
         className="btn btn-primary ml-auto"
         onClick={() => {
-          guess && handleSubmit(guess);
+          if (guess) {
+            handleSubmit(guess);
+            setGuess(undefined);
+          }
         }}
         disabled={!guess?.latitude || !guess.longitude}
       >
