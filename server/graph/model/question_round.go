@@ -148,7 +148,8 @@ func (q *QuestionRound) AddNewBettingRound() {
 
 	if q.Question.Type == QuestionTypesMultipleChoice &&
 		len(q.BettingRounds) >= 1 &&
-		len(q.BettingRounds) <= 2 {
+		len(q.BettingRounds) <= 2 &&
+		len(q.Question.Hints) < len(q.BettingRounds) {
 		q.Question.HiddenAlternatives = append(q.Question.HiddenAlternatives, q.Question.GetHiddenAlternative())
 	}
 
