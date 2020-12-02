@@ -27,7 +27,10 @@ export default ({ usedQuestionRound, handleSubmit, alternatives }: Props) => {
       <button
         className="btn btn-primary ml-auto"
         onClick={() => {
-          (guess || guess === 0) && handleSubmit(guess);
+          if (guess || guess === 0) {
+            handleSubmit(guess);
+            setGuess(undefined);
+          }
         }}
         disabled={!guess && guess !== 0}
       >
