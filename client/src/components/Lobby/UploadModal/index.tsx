@@ -160,7 +160,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
               ))}
             </p>
           )}
-          {q.alternatives?.length && (
+          {!!q.alternatives?.length && (
             <p>
               Alternatives:{" "}
               {q.alternatives.map((alt, i) => (
