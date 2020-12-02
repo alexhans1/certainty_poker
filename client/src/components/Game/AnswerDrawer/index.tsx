@@ -16,27 +16,25 @@ import { AddGuess, addGuess } from "../helpers";
 interface QuestionProps {
   game: Game;
   currentQuestionRound: QuestionRound;
-  playerId: Player["id"];
+  player?: Player;
   addGuessMutation: AddGuess;
-  showNewQuestionRound: boolean;
-  setShowNewQuestionRound: React.Dispatch<React.SetStateAction<boolean>>;
+  showAnswerDrawer: boolean;
+  setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>;
+  hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
 }
 
 export default ({
   currentQuestionRound,
-  playerId,
+  player,
   addGuessMutation,
   game,
-  showNewQuestionRound,
-  setShowNewQuestionRound,
+  showAnswerDrawer,
+  setShowAnswerDrawer,
+  hasPlayerPlacedGuessInCurrentQuestionRound,
 }: QuestionProps) => {
-  const player = game.players.find((p) => p.id === playerId);
-  if (player?.isDead) {
+  if (!player || player.isDead) {
     return null;
   }
-  const canAddGuess = !currentQuestionRound.guesses.find(
-    (guess) => guess.playerId === playerId
-  );
 
   const handleNumberInputSubmit = (guess: number | string) => {
     if ((guess || guess === 0) && typeof guess === "number") {
@@ -46,9 +44,9 @@ export default ({
         {
           numerical: guess,
         },
-        playerId
+        player.id
       );
-      setShowNewQuestionRound(false);
+      setShowAnswerDrawer(false);
     }
   };
 
@@ -56,8 +54,8 @@ export default ({
     const guess: Answer = {
       geo: geoCoordinate,
     };
-    addGuess(addGuessMutation, game, guess, playerId);
-    setShowNewQuestionRound(false);
+    addGuess(addGuessMutation, game, guess, player.id);
+    setShowAnswerDrawer(false);
   };
 
   const getInput = () => {
@@ -86,15 +84,12 @@ export default ({
     <Drawer
       title="New Question"
       onClose={() => {
-        setShowNewQuestionRound(false);
+        setShowAnswerDrawer(false);
       }}
       anchor={"bottom"}
       open={
-        canAddGuess &&
-        showNewQuestionRound &&
-        !currentQuestionRound?.guesses.find(
-          (guess) => guess.playerId === playerId
-        )
+        (showAnswerDrawer || game.questionRounds.length === 1) &&
+        !hasPlayerPlacedGuessInCurrentQuestionRound
       }
       variant="persistent"
     >
