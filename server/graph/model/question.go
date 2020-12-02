@@ -105,8 +105,8 @@ func LoadQuestions(redisClient *redis.Client, setName string) ([]*Question, erro
 	json.Unmarshal([]byte(stringifiedQuestions), &questions)
 	for _, q := range questions {
 		q.ID = helpers.CreateID()
-		q.HiddenAlternatives = []string{}
 		if q.Type == QuestionTypesMultipleChoice {
+			q.HiddenAlternatives = []string{}
 			// for multiple choice questions we shuffle the answers and
 			// make sure the answer still points to the correct one
 			answer := q.Alternatives[int(*q.Answer.Numerical)]
