@@ -46,7 +46,7 @@ function GameComponent() {
   const [game, setGame] = useState<Game | undefined>(undefined);
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
-  const [showNewQuestionRound, setShowNewQuestionRound] = useState(true);
+  const [showAnswerDrawer, setShowAnswerDrawer] = useState(false);
   const [
     showNewQuestionRoundForSpectator,
     setShowNewQuestionRoundForSpectator,
@@ -164,9 +164,9 @@ function GameComponent() {
   const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
     (guess) => guess.playerId === playerId
   );
+  const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
   const gameHasStarted = !!game.questionRounds.length;
   const isSpectator = gameHasStarted && (!player || player.isDead);
-  const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
   const previousQuestionRound = getPreviousQuestionRound(game);
   const showPreviousQuestionRoundResults =
     !!previousQuestionRound &&
@@ -179,10 +179,6 @@ function GameComponent() {
   const usedQuestionRound = showPreviousQuestionRoundResults
     ? previousQuestionRound
     : currentQuestionRound;
-  console.log(
-    "usedQuestionRound.question.hiddenAlternatives",
-    usedQuestionRound?.question.hiddenAlternatives
-  );
 
   return (
     <>
@@ -253,9 +249,10 @@ function GameComponent() {
             game,
             addGuessMutation: addGuess,
             currentQuestionRound,
-            playerId,
-            showNewQuestionRound,
-            setShowNewQuestionRound,
+            player,
+            showAnswerDrawer,
+            setShowAnswerDrawer,
+            hasPlayerPlacedGuessInCurrentQuestionRound,
           }}
         />
       )}
@@ -268,8 +265,8 @@ function GameComponent() {
             placeBet,
             playerId,
             startGame,
-            showNewQuestionRound,
-            setShowNewQuestionRound,
+            hasPlayerPlacedGuessInCurrentQuestionRound,
+            setShowAnswerDrawer,
           }}
         />
       )}

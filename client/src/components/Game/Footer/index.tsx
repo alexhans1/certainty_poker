@@ -17,8 +17,8 @@ interface FooterProps
   playerId?: Player["id"];
   currentQuestionRound?: QuestionRound;
   currentBettingRound?: BettingRound;
-  showNewQuestionRound: boolean;
-  setShowNewQuestionRound: React.Dispatch<React.SetStateAction<boolean>>;
+  hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
+  setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default ({
@@ -28,8 +28,8 @@ export default ({
   playerId,
   placeBet,
   startGame,
-  showNewQuestionRound,
-  setShowNewQuestionRound,
+  hasPlayerPlacedGuessInCurrentQuestionRound,
+  setShowAnswerDrawer,
 }: FooterProps) => {
   const revealPreviousAnswers =
     game?.isOver ||
@@ -38,11 +38,6 @@ export default ({
       !currentQuestionRound?.guesses.find(
         (guess) => guess.playerId === playerId
       ));
-
-  const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
-    (guess) => guess.playerId === playerId
-  );
-  const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
 
   return (
     <div className="footer">
@@ -60,19 +55,18 @@ export default ({
             Start Game
           </button>
         )}
-        {!showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound && (
-          <button
-            className="new-question-button btn btn-primary mx-auto"
-            onClick={() => {
-              setShowNewQuestionRound(true);
-            }}
-          >
-            Answer New Question
-          </button>
-        )}
-        {!(
-          !showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound
-        ) &&
+        {!hasPlayerPlacedGuessInCurrentQuestionRound &&
+          game.questionRounds.length > 1 && (
+            <button
+              className="new-question-button btn btn-primary mx-auto"
+              onClick={() => {
+                setShowAnswerDrawer(true);
+              }}
+            >
+              Answer New Question
+            </button>
+          )}
+        {hasPlayerPlacedGuessInCurrentQuestionRound &&
           currentQuestionRound &&
           currentBettingRound &&
           playerId && (
