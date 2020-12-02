@@ -17,6 +17,8 @@ interface FooterProps
   playerId?: Player["id"];
   currentQuestionRound?: QuestionRound;
   currentBettingRound?: BettingRound;
+  showNewQuestionRound: boolean;
+  setShowNewQuestionRound: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default ({
@@ -26,6 +28,8 @@ export default ({
   playerId,
   placeBet,
   startGame,
+  showNewQuestionRound,
+  setShowNewQuestionRound,
 }: FooterProps) => {
   const revealPreviousAnswers =
     game?.isOver ||
@@ -34,6 +38,11 @@ export default ({
       !currentQuestionRound?.guesses.find(
         (guess) => guess.playerId === playerId
       ));
+
+  const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
+    (guess) => guess.playerId === playerId
+  );
+  const hasPlayerPlacedGuessInCurrentQuestionRound = !!playerGuessInCurrentQuestionRound;
 
   return (
     <div className="footer">
@@ -51,25 +60,40 @@ export default ({
             Start Game
           </button>
         )}
-        {currentQuestionRound && currentBettingRound && playerId && (
-          <>
-            <Pot
-              playerId={playerId}
-              currentQuestionRound={currentQuestionRound}
-              currentBettingRound={currentBettingRound}
-              revealPreviousAnswers={revealPreviousAnswers}
-            />
-            <ActionButtons
-              {...{
-                game,
-                currentQuestionRound,
-                currentBettingRound,
-                placeBet,
-                playerId,
-              }}
-            />
-          </>
+        {!showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound && (
+          <button
+            className="new-question-button btn btn-primary mx-auto"
+            onClick={() => {
+              setShowNewQuestionRound(true);
+            }}
+          >
+            Answer New Question
+          </button>
         )}
+        {!(
+          !showNewQuestionRound && !hasPlayerPlacedGuessInCurrentQuestionRound
+        ) &&
+          currentQuestionRound &&
+          currentBettingRound &&
+          playerId && (
+            <>
+              <Pot
+                playerId={playerId}
+                currentQuestionRound={currentQuestionRound}
+                currentBettingRound={currentBettingRound}
+                revealPreviousAnswers={revealPreviousAnswers}
+              />
+              <ActionButtons
+                {...{
+                  game,
+                  currentQuestionRound,
+                  currentBettingRound,
+                  placeBet,
+                  playerId,
+                }}
+              />
+            </>
+          )}
       </div>
     </div>
   );

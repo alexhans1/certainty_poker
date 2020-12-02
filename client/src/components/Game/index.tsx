@@ -236,18 +236,6 @@ function GameComponent() {
             }}
           />
         </div>
-        {!showNewQuestionRound &&
-          !hasPlayerPlacedGuessInCurrentQuestionRound &&
-          !isSpectator && (
-            <button
-              className="new-question-button btn btn-primary mx-auto mt-5"
-              onClick={() => {
-                setShowNewQuestionRound(true);
-              }}
-            >
-              Answer New Question
-            </button>
-          )}
         {isSpectator && usedQuestionRound?.isOver && (
           <button
             className="new-question-button btn btn-light mx-auto mt-5"
@@ -280,6 +268,8 @@ function GameComponent() {
             placeBet,
             playerId,
             startGame,
+            showNewQuestionRound,
+            setShowNewQuestionRound,
           }}
         />
       )}
