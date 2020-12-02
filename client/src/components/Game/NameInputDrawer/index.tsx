@@ -22,7 +22,9 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
   const [name, setName] = useState("");
 
   const handleSubmit = () => {
-    createPlayer({ variables: { input: { gameId, playerName: name } } });
+    if (!playerId) {
+      createPlayer({ variables: { input: { gameId, playerName: name } } });
+    }
   };
 
   return (
