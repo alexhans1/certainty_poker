@@ -1,27 +1,27 @@
 {
   "files": {
     "main.css": "/static/css/main.67c5e24e.chunk.css",
-    "main.js": "/static/js/main.389c74d2.chunk.js",
-    "main.js.map": "/static/js/main.389c74d2.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.22a06bd7.js",
-    "runtime-main.js.map": "/static/js/runtime-main.22a06bd7.js.map",
-    "static/js/2.5548d9c2.chunk.js": "/static/js/2.5548d9c2.chunk.js",
-    "static/js/2.5548d9c2.chunk.js.map": "/static/js/2.5548d9c2.chunk.js.map",
-    "static/js/3.7cb58646.chunk.js": "/static/js/3.7cb58646.chunk.js",
-    "static/js/3.7cb58646.chunk.js.map": "/static/js/3.7cb58646.chunk.js.map",
+    "main.js": "/static/js/main.f9c6f7f9.chunk.js",
+    "main.js.map": "/static/js/main.f9c6f7f9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.c8cb967a.js",
+    "runtime-main.js.map": "/static/js/runtime-main.c8cb967a.js.map",
+    "static/js/2.b17ce765.chunk.js": "/static/js/2.b17ce765.chunk.js",
+    "static/js/2.b17ce765.chunk.js.map": "/static/js/2.b17ce765.chunk.js.map",
+    "static/js/3.7e54f954.chunk.js": "/static/js/3.7e54f954.chunk.js",
+    "static/js/3.7e54f954.chunk.js.map": "/static/js/3.7e54f954.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.9983c7017a94a04f44bef244db488cde.js": "/precache-manifest.9983c7017a94a04f44bef244db488cde.js",
+    "precache-manifest.55e58ec616fbe42615243121da2ad51b.js": "/precache-manifest.55e58ec616fbe42615243121da2ad51b.js",
     "service-worker.js": "/service-worker.js",
     "static/css/main.67c5e24e.chunk.css.map": "/static/css/main.67c5e24e.chunk.css.map",
-    "static/js/2.5548d9c2.chunk.js.LICENSE.txt": "/static/js/2.5548d9c2.chunk.js.LICENSE.txt",
-    "static/js/3.7cb58646.chunk.js.LICENSE.txt": "/static/js/3.7cb58646.chunk.js.LICENSE.txt",
+    "static/js/2.b17ce765.chunk.js.LICENSE.txt": "/static/js/2.b17ce765.chunk.js.LICENSE.txt",
+    "static/js/3.7e54f954.chunk.js.LICENSE.txt": "/static/js/3.7e54f954.chunk.js.LICENSE.txt",
     "static/media/turn-alert.wav": "/static/media/turn-alert.3a60f09f.wav",
     "static/media/turn-notification.mp3": "/static/media/turn-notification.15b0efd7.mp3"
   },
   "entrypoints": [
-    "static/js/runtime-main.22a06bd7.js",
-    "static/js/2.5548d9c2.chunk.js",
+    "static/js/runtime-main.c8cb967a.js",
+    "static/js/2.b17ce765.chunk.js",
     "static/css/main.67c5e24e.chunk.css",
-    "static/js/main.389c74d2.chunk.js"
+    "static/js/main.f9c6f7f9.chunk.js"
   ]
 }
