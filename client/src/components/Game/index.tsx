@@ -39,6 +39,9 @@ import errorLogger from "../../api/errorHandler";
 
 import "./styles.scss";
 
+const vibrate = (t: number) => {
+  window.navigator.vibrate && window.navigator.vibrate(t);
+};
 let soundInterval: NodeJS.Timeout;
 
 function GameComponent() {
@@ -115,10 +118,10 @@ function GameComponent() {
         allPlayersPlacedTheirBet
       ) {
         playNotification();
-        window.navigator.vibrate(200);
+        vibrate(200);
         soundInterval = setInterval(() => {
           playAlert();
-          window.navigator.vibrate(200);
+          vibrate(200);
         }, 15000);
       }
     },
