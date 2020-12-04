@@ -1,13 +1,14 @@
 import React, { ReactNode, useState } from "react";
-import { latLngBounds } from "leaflet";
+import { LatLng, latLngBounds } from "leaflet";
 import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMapEvents,
-  Tooltip,
   FeatureGroup,
+  MapContainer,
+  Marker,
+  Polyline,
+  TileLayer,
+  Tooltip,
   useMap,
+  useMapEvents,
 } from "react-leaflet";
 import { equals } from "ramda";
 import { GeoCoordinate } from "../../../interfaces";
@@ -18,12 +19,27 @@ type HandleOnClick = (p: GeoCoordinate) => void;
 export interface Marker {
   label?: string;
   position: GeoCoordinate;
+  isAnswer?: boolean;
+  distanceToAnswer?: number;
 }
 
 interface Props {
   markers?: Marker[];
   handleOnClick?: HandleOnClick;
 }
+
+const getNumberOfDecimals = (val: number = 0) => {
+  if (val > 1000) {
+    return 0;
+  }
+  if (val > 100) {
+    return 1;
+  }
+  if (val > 1) {
+    return 2;
+  }
+  return 4;
+};
 
 function LocationMarker({ handleUpdate }: { handleUpdate: HandleOnClick }) {
   const [position, setPosition] = useState<any>(null);
@@ -60,6 +76,24 @@ function MarkerContainer({
 
 export default React.memo(
   ({ markers = [], handleOnClick }: Props) => {
+    const answerMarker = markers.find((m) => m.isAnswer);
+    const distanceLines =
+      !!answerMarker &&
+      markers
+        .filter((m) => !m.isAnswer && m.distanceToAnswer)
+        .map((m) => ({
+          line: [
+            new LatLng(m.position.latitude, m.position.longitude),
+            new LatLng(
+              answerMarker.position.latitude,
+              answerMarker.position.longitude
+            ),
+          ],
+          label: m.distanceToAnswer?.toFixed(
+            getNumberOfDecimals(m.distanceToAnswer)
+          ),
+        }));
+
     return (
       <MapContainer
         center={[0, 0]}
@@ -72,6 +106,25 @@ export default React.memo(
           url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.svg"
         />
         {handleOnClick && <LocationMarker handleUpdate={handleOnClick} />}
+        {distanceLines &&
+          distanceLines.map(({ line, label }) => (
+            <Polyline
+              key={line.toString()}
+              positions={line}
+              color="#393d4e"
+              weight={2}
+            >
+              {label && (
+                <Tooltip
+                  className="distance-label"
+                  direction="center"
+                  permanent
+                >
+                  {label} km
+                </Tooltip>
+              )}
+            </Polyline>
+          ))}
         {markers.length && (
           <MarkerContainer markers={markers}>
             {markers.map(({ position, label }) => (

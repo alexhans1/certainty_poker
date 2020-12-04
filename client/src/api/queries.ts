@@ -75,6 +75,7 @@ export const GET_GAME_BY_ID = gql`
             }
           }
           playerId
+          difference
         }
         results {
           playerId
@@ -138,6 +139,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
             }
           }
           playerId
+          difference
         }
         results {
           playerId

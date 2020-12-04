@@ -3,3 +3,15 @@
   max-height: calc(100vh - 100px);
   cursor: pointer;
 }
+
+.distance-label {
+  border-radius: 10px;
+  font-size: smaller;
+  color: #ebebeb;
+  background-color: #393d4e;
+  border: 1px solid #22242e;
+
+  &::before {
+    all: unset;
+  }
+}

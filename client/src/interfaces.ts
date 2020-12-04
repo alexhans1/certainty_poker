@@ -36,6 +36,7 @@ export interface Question {
 export interface Guess {
   playerId: Player["id"];
   guess: Answer;
+  difference?: number;
 }
 
 interface Bet {

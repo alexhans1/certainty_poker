@@ -28,10 +28,16 @@ export default ({
 
   const playerGuess = usedQuestionRound?.guesses.find(
     (g) => g.playerId === playerId
-  )?.guess.geo;
+  );
 
-  let mapMarkers: Marker[] = playerGuess
-    ? [{ position: playerGuess, label: "You" }]
+  let mapMarkers: Marker[] = playerGuess?.guess.geo
+    ? [
+        {
+          position: playerGuess.guess.geo,
+          label: "You",
+          distanceToAnswer: playerGuess.difference,
+        },
+      ]
     : [];
 
   if (
@@ -40,14 +46,18 @@ export default ({
   ) {
     mapMarkers.push(
       ...usedQuestionRound?.guesses.reduce<Marker[]>(
-        (acc, { guess, playerId: pId }) => {
+        (acc, { guess, playerId: pId, difference }) => {
           if (
             guess.geo &&
             playerId !== pId &&
             (isSpectator || !hasPlayerFolded(usedQuestionRound, pId))
           ) {
             const label = players.find((p) => p.id === pId)?.name || "";
-            acc.push({ position: guess.geo, label });
+            acc.push({
+              position: guess.geo,
+              label,
+              distanceToAnswer: difference,
+            });
           }
           return acc;
         },
@@ -62,6 +72,7 @@ export default ({
     mapMarkers.push({
       position: usedQuestionRound.question.answer.geo,
       label: "Correct Answer",
+      isAnswer: true,
     });
   }
 
