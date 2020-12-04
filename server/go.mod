@@ -16,6 +16,7 @@ require (
 	github.com/rs/cors v1.6.0
 	github.com/stretchr/testify v1.6.1
 	github.com/thoas/go-funk v0.7.0
+	github.com/umahmood/haversine v0.0.0-20151105152445-808ab04add26
 	github.com/vektah/gqlparser/v2 v2.0.1
 	sourcegraph.com/sourcegraph/appdash v0.0.0-20180110180208-2cc67fd64755
 )

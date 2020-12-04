@@ -76,8 +76,9 @@ type ComplexityRoot struct {
 	}
 
 	Guess struct {
-		Guess    func(childComplexity int) int
-		PlayerID func(childComplexity int) int
+		Difference func(childComplexity int) int
+		Guess      func(childComplexity int) int
+		PlayerID   func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -278,6 +279,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GeoCoordinate.Longitude(childComplexity), true
+
+	case "Guess.difference":
+		if e.complexity.Guess.Difference == nil {
+			break
+		}
+
+		return e.complexity.Guess.Difference(childComplexity), true
 
 	case "Guess.guess":
 		if e.complexity.Guess.Guess == nil {
@@ -749,6 +757,7 @@ type Question {
 type Guess {
   guess: Answer!
   playerId: ID!
+  difference: Float
 }
 
 type BettingRound {
@@ -1638,6 +1647,37 @@ func (ec *executionContext) _Guess_playerId(ctx context.Context, field graphql.C
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Guess_difference(ctx context.Context, field graphql.CollectedField, obj *model.Guess) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Guess",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Difference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createGame(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4472,6 +4512,8 @@ func (ec *executionContext) _Guess(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "difference":
+			out.Values[i] = ec._Guess_difference(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

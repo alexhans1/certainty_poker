@@ -55,8 +55,9 @@ type GeoCoordinateInput struct {
 }
 
 type Guess struct {
-	Guess    *Answer `json:"guess"`
-	PlayerID string  `json:"playerId"`
+	Guess      *Answer  `json:"guess"`
+	PlayerID   string   `json:"playerId"`
+	Difference *float64 `json:"difference"`
 }
 
 type GuessInput struct {

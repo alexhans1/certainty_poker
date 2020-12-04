@@ -1,8 +1,12 @@
 package model
 
-import "math"
+import "github.com/umahmood/haversine"
 
 // GetGeoDistance returns the distance between the geo guess and answer
 func (g *Guess) GetGeoDistance(a *Answer) float64 {
-	return math.Pow(g.Guess.Geo.Latitude-a.Geo.Latitude, 2) + math.Pow(g.Guess.Geo.Longitude-a.Geo.Longitude, 2)
+	guessCoord := haversine.Coord{Lat: g.Guess.Geo.Latitude, Lon: g.Guess.Geo.Longitude}
+	answerCoord := haversine.Coord{Lat: a.Geo.Latitude, Lon: a.Geo.Longitude}
+	_, km := haversine.Distance(guessCoord, answerCoord)
+	g.Difference = &km
+	return km
 }

@@ -64,6 +64,7 @@ type Question {
 type Guess {
   guess: Answer!
   playerId: ID!
+  difference: Float
 }
 
 type BettingRound {
