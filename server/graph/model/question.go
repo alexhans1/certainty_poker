@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -16,6 +17,15 @@ func validateQuestions(questions []*QuestionInput) error {
 	for i, q := range questions {
 		if q.Type == QuestionTypesNumerical && q.Answer.Numerical == nil {
 			return errors.New("\"answer\" cannot be nil for numerical questions at question " + strconv.Itoa(i+1))
+		}
+		if q.Type == QuestionTypesDate {
+			if q.Answer.Numerical == nil {
+				return errors.New("\"answer\" cannot be nil for date questions at question " + strconv.Itoa(i+1))
+			}
+			match, _ := regexp.MatchString(`([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01]))`, strconv.FormatFloat(*q.Answer.Numerical, 'f', 6, 64))
+			if !match {
+				return errors.New("\"answer\" must be a valid date for date questions at question " + strconv.Itoa(i+1))
+			}
 		}
 		if q.Type == QuestionTypesGeo && (q.Answer.Geo == nil) {
 			return errors.New("\"latitude\" or \"longitude\" cannot be nil for geo questions at question " + strconv.Itoa(i+1))
@@ -134,7 +144,9 @@ func DrawQuestion(g *Game) *Question {
 // GetGuessForType creates an Answer from an AnswerInputType
 func (q *Question) GetGuessForType(g *AnswerInputType) (Answer, error) {
 	var guess Answer
-	if q.Type == QuestionTypesNumerical || q.Type == QuestionTypesMultipleChoice {
+	if q.Type == QuestionTypesNumerical ||
+		q.Type == QuestionTypesMultipleChoice ||
+		q.Type == QuestionTypesDate {
 		guess.Numerical = g.Numerical
 		return guess, nil
 	}

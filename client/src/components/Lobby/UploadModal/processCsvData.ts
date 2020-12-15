@@ -23,6 +23,9 @@ export default (rows: { data: CSVDataRow }[]): Omit<Question, "id">[] => {
       case QuestionTypes.NUMERICAL:
         answer.numerical = csvAnswer as number;
         break;
+      case QuestionTypes.DATE:
+        answer.numerical = csvAnswer as number;
+        break;
       case QuestionTypes.GEO:
         answer.geo = {
           latitude: latitude as number,

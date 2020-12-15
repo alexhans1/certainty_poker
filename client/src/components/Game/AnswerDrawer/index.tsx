@@ -1,6 +1,7 @@
 import React from "react";
 import Drawer from "../../Drawer";
 import NumberInput from "./NumberInput";
+import DateInput from "./DateInput";
 import MapInput from "./MapInput";
 import MultipleChoiceInput from "./MultipleChoiceInput";
 import {
@@ -62,6 +63,8 @@ export default ({
     switch (currentQuestionRound.question.type) {
       case QuestionTypes.NUMERICAL:
         return <NumberInput handleSubmit={handleNumberInputSubmit} />;
+      case QuestionTypes.DATE:
+        return <DateInput handleSubmit={handleNumberInputSubmit} />;
       case QuestionTypes.GEO:
         return <MapInput handleSubmit={handleMapInputSubmit} />;
       case QuestionTypes.MULTIPLE_CHOICE:
