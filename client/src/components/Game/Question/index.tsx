@@ -1,6 +1,7 @@
 import React from "react";
 import { Game, QuestionRound, QuestionTypes } from "../../../interfaces";
-import { getGuess, getRevealAnswer } from "../helpers";
+import Guess from "../Guess";
+import { getRevealAnswer } from "../helpers";
 import Hints from "./Hints";
 
 interface QuestionProps {
@@ -42,10 +43,10 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
             <p style={styles.answer}>
               Answer:{" "}
               <b>
-                {getGuess(
-                  usedQuestionRound.question.answer,
-                  usedQuestionRound.question.type
-                )}
+                <Guess
+                  guess={usedQuestionRound.question.answer}
+                  questionType={usedQuestionRound.question.type}
+                />
               </b>
             </p>
             {usedQuestionRound.question.explanation && (

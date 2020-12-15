@@ -9,9 +9,9 @@ import { QueryLazyOptions } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 import { Question, QuestionTypes } from "../../../interfaces";
 import errorLogger from "../../../api/errorHandler";
-import { getGuess } from "../../Game/helpers";
 import countryCodes from "../../../assets/countryCodes";
 import processCsvData from "./processCsvData";
+import Guess from "../../Game/Guess";
 
 const styles = {
   card: {
@@ -123,6 +123,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
       <div className="input-group mb-3">
         <select
           className="custom-select"
+          required
           value={language}
           onChange={(e) => {
             setLanguage(e.target.value);
@@ -130,7 +131,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
         >
           <option selected>Language...</option>
           {Object.keys(countryCodes).map((code) => (
-            <option value={code}>
+            <option key={code} value={code}>
               {countryCodeToFlagEmoji(code)}{" "}
               {countryCodes[code as keyof typeof countryCodes]}
             </option>
@@ -144,9 +145,18 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
           <p>
             Question: <b>{q.question}</b>
           </p>
-          <p>
-            Answer: <b>{getGuess(q.answer, q.type, q.alternatives)}</b>
-          </p>
+          {q.type !== QuestionTypes.MULTIPLE_CHOICE && (
+            <p>
+              Answer:{" "}
+              <b>
+                <Guess
+                  guess={q.answer}
+                  questionType={q.type}
+                  alternatives={q.alternatives}
+                />
+              </b>
+            </p>
+          )}
           {!!q.hints?.length && (
             <p>
               Hints:{" "}
@@ -202,7 +212,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
       </div>
       <button
         className="btn btn-primary"
-        disabled={!setName}
+        disabled={!setName || !language}
         onClick={() => {
           uploadQuestions();
         }}
