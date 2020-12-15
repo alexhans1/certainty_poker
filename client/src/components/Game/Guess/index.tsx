@@ -1,6 +1,5 @@
 import React from "react";
 import moment from "moment";
-// import NumberFormat from "react-number-format";
 import { Answer, Question, QuestionTypes } from "../../../interfaces";
 
 interface Props {
