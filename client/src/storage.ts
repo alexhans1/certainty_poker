@@ -12,6 +12,9 @@ export const deletePlayerIdFromStorage = (gameId: string) =>
   localStorage.removeItem(`${PLAYER_ID_KEY}_${gameId}`);
 
 export const setFingerprintToStorage = (gameId: string) => {
+  // clear stoage when joining a new game
+  localStorage.clear();
+
   const value = Math.random().toString(36).substring(2);
   localStorage.setItem(`${FINGERPRINT_KEY}_${gameId}`, value);
   return value;
