@@ -17,7 +17,8 @@ func (q *QuestionRound) CurrentBettingRound() *BettingRound {
 func (q *QuestionRound) guessDeviation(playerID string) (float64, error) {
 	for _, guess := range q.Guesses {
 		if guess.PlayerID == playerID {
-			if q.Question.Type == QuestionTypesNumerical {
+			if q.Question.Type == QuestionTypesNumerical ||
+				q.Question.Type == QuestionTypesDate {
 				return math.Abs(*q.Question.Answer.Numerical - *guess.Guess.Numerical), nil
 			}
 			if q.Question.Type == QuestionTypesGeo {

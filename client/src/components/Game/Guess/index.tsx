@@ -22,6 +22,17 @@ export default ({ guess, questionType, alternatives }: Props) => {
           )}
         </span>
       );
+    case QuestionTypes.DATE:
+      if (!guess.numerical) {
+        return null;
+      }
+      return (
+        <span>
+          {moment(guess.numerical.toString(), "YYYYMMDD").format(
+            "MMM DD, YYYY"
+          )}
+        </span>
+      );
     case QuestionTypes.GEO:
       return <span>{`[${guess.geo?.latitude}, ${guess.geo?.longitude}]`}</span>;
     case QuestionTypes.MULTIPLE_CHOICE:
