@@ -1,8 +1,8 @@
 import React from "react";
+import FormattedGuess from "../Guess";
 import {
   hasPlayerFolded,
   calculateBettingRoundSpendingForPlayer,
-  getGuess,
 } from "../helpers";
 import {
   Player,
@@ -104,13 +104,15 @@ export default ({
           (!!usedQuestionRound?.isOver &&
             usedQuestionRound?.isShowdown &&
             !hasFolded);
-        const guess =
-          guesses &&
-          getGuess(
-            guesses[id],
-            questionType,
-            usedQuestionRound?.question.alternatives
-          );
+        const guess = guesses && (
+          <FormattedGuess
+            {...{
+              guess: guesses[id],
+              questionType,
+              alternatives: usedQuestionRound?.question.alternatives,
+            }}
+          />
+        );
 
         return (
           <div key={id} className="d-flex align-items-center pb-4 ml-4">

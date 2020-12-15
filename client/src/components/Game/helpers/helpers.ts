@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
   QuestionRound,
   Player,
@@ -76,25 +77,4 @@ export const getRevealAnswer = (questionRound: QuestionRound) => {
   return (
     questionRound.question.hints.length + 1 < questionRound.bettingRounds.length
   );
-};
-
-export const getGuess = (
-  guess: Answer,
-  questionType?: QuestionTypes,
-  alternatives?: Question["alternatives"]
-) => {
-  if (!guess) return;
-  switch (questionType) {
-    case QuestionTypes.NUMERICAL:
-      return guess.numerical;
-    case QuestionTypes.GEO:
-      return `[${guess.geo?.latitude}, ${guess.geo?.longitude}]`;
-    case QuestionTypes.MULTIPLE_CHOICE:
-      if (alternatives?.length !== 4) {
-        throw new Error("missing alternatives for multiple choice question");
-      }
-      return alternatives[guess.numerical ?? -1];
-    default:
-      throw new Error("Invalid question type");
-  }
 };
