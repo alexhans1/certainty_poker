@@ -2,10 +2,11 @@ import React from "react";
 import { QuestionRound, Game, BettingRound, Player } from "../../../interfaces";
 import ActionButtons, { ActionButtonsProps } from "../ActionButtons";
 import Pot from "../Pot";
+import StartGameButton from "./StartGameButton";
 
 import "./styles.scss";
 
-type StartGame = ({
+export type StartGame = ({
   variables: { gameId },
 }: {
   variables: { gameId: Game["id"] };
@@ -43,17 +44,22 @@ export default ({
     <div className="footer">
       <div className="footer-content">
         {!game.questionRounds.length && (
-          <button
-            className="btn btn-lg btn-primary mt-auto mx-5"
-            disabled={game.players.length <= 1}
-            onClick={() => {
-              startGame({
-                variables: { gameId: game.id },
-              });
-            }}
-          >
-            Start Game
-          </button>
+          <StartGameButton
+            startGame={startGame}
+            gameId={game.id}
+            isDisabled={game.players.length <= 1}
+          />
+          // <button
+          //   className="btn btn-lg btn-primary mt-auto mx-5"
+          //   disabled={game.players.length <= 1}
+          //   onClick={() => {
+          //     startGame({
+          //       variables: { gameId: game.id },
+          //     });
+          //   }}
+          // >
+          //   Start Game
+          // </button>
         )}
         {!hasPlayerPlacedGuessInCurrentQuestionRound &&
           game.questionRounds.length > 1 && (
