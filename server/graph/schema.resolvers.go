@@ -176,13 +176,18 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 
 	if bettingRound.IsFinished() {
 		if questionRound.IsFinished() {
+			r.logger.WithFields(logrus.Fields{
+				"game":              game.ID,
+				"isShowdown":        questionRound.IsShowdown,
+				"playersInShowdown": len(game.ActivePlayers()),
+			}).Info("question round is over")
 			questionRound.DistributePot()
 			if game.IsFinished() {
 				r.logger.WithFields(logrus.Fields{
-					"game":             game.ID,
-					"remainingPlayers": len(game.ActivePlayers()),
-					"currentQuestion":  len(game.QuestionRounds),
-					"totalQuestions":   len(game.Questions),
+					"game":               game.ID,
+					"remainingPlayers":   len(game.ActivePlayers()),
+					"currentQuestion":    len(game.QuestionRounds),
+					"remainingQuestions": len(game.Questions),
 				}).Info("game is over")
 			} else {
 				game.AddNewQuestionRound()
