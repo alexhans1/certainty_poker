@@ -14,6 +14,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/opentracing/opentracing-go v1.0.2
 	github.com/rs/cors v1.6.0
+	github.com/sirupsen/logrus v1.7.0
 	github.com/stretchr/testify v1.6.1
 	github.com/thoas/go-funk v0.7.0
 	github.com/umahmood/haversine v0.0.0-20151105152445-808ab04add26

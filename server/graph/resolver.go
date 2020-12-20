@@ -3,13 +3,13 @@ package graph
 //go:generate go run github.com/99designs/gqlgen
 
 import (
-	"fmt"
 	"os"
 	"sync"
 
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
 	"github.com/go-redis/redis"
+	"github.com/sirupsen/logrus"
 )
 
 // This file will not be regenerated automatically.
@@ -21,9 +21,13 @@ type Resolver struct {
 	gameChannels map[string]map[string]chan *model.Game
 	mutex        sync.Mutex
 	redisClient  *redis.Client
+	logger       *logrus.Logger
 }
 
 func NewResolver() generated.Config {
+	// logger
+	var log = logrus.New()
+
 	// redis client
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDISCLOUD_URL"),
@@ -32,7 +36,9 @@ func NewResolver() generated.Config {
 	})
 
 	pong, err := redisClient.Ping().Result()
-	fmt.Println(pong, err)
+	log.Println(pong, err)
+
+	log.SetFormatter(&logrus.JSONFormatter{})
 
 	return generated.Config{
 		Resolvers: &Resolver{
@@ -40,6 +46,7 @@ func NewResolver() generated.Config {
 			gameChannels: map[string]map[string]chan *model.Game{},
 			mutex:        sync.Mutex{},
 			redisClient:  redisClient,
+			logger:       log,
 		},
 	}
 }

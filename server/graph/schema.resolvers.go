@@ -11,6 +11,7 @@ import (
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
 	"github.com/alexhans1/certainty_poker/helpers"
+	"github.com/sirupsen/logrus"
 	"github.com/thoas/go-funk"
 )
 
@@ -37,6 +38,7 @@ func (r *mutationResolver) CreateGame(ctx context.Context, setNames []string) (*
 
 	r.games[gameID] = &game
 
+	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("game created")
 	return &game, nil
 }
 
@@ -59,6 +61,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (bool, 
 
 	go updateGameChannel(r, game)
 
+	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("game started")
 	return true, nil
 }
 
@@ -74,6 +77,7 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, input model.PlayerInpu
 
 	go updateGameChannel(r, game)
 
+	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("player added")
 	return game.AddNewPlayer(input.PlayerName), nil
 }
 
@@ -105,6 +109,7 @@ func (r *mutationResolver) RemovePlayer(ctx context.Context, gameID string, play
 
 	go updateGameChannel(r, game)
 
+	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("player removed")
 	return true, nil
 }
 
@@ -125,6 +130,7 @@ func (r *mutationResolver) AddGuess(ctx context.Context, input model.GuessInput)
 
 	go updateGameChannel(r, game)
 
+	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("guess added")
 	return true, nil
 }
 
@@ -172,7 +178,12 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 		if questionRound.IsFinished() {
 			questionRound.DistributePot()
 			if game.IsFinished() {
-				fmt.Println("game is finished")
+				r.logger.WithFields(logrus.Fields{
+					"game":             game.ID,
+					"remainingPlayers": len(game.ActivePlayers()),
+					"currentQuestion":  len(game.QuestionRounds),
+					"totalQuestions":   len(game.Questions),
+				}).Info("game is over")
 			} else {
 				game.AddNewQuestionRound()
 			}
@@ -185,6 +196,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 
 	go updateGameChannel(r, game)
 
+	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("bet placed")
 	return true, nil
 }
 
@@ -194,6 +206,11 @@ func (r *mutationResolver) UploadQuestions(ctx context.Context, questions []*mod
 		return false, err
 	}
 
+	r.logger.WithFields(logrus.Fields{
+		"setName":   setName,
+		"isPrivate": isPrivate,
+		"language":  language,
+	}).Info("question set uploaded")
 	return true, nil
 }
 
