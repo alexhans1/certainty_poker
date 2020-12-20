@@ -61,7 +61,10 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (bool, 
 
 	go updateGameChannel(r, game)
 
-	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("game started")
+	r.logger.WithFields(logrus.Fields{
+		"game":            game.ID,
+		"numberOfPlayers": len(game.Players),
+	}).Info("game started")
 	return true, nil
 }
 
