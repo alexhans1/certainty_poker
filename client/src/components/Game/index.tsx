@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useSound from "use-sound";
+import FileCopy from "@material-ui/icons/FileCopy";
 import {
   useLazyQuery,
   useMutation,
@@ -192,6 +193,23 @@ function GameComponent() {
         className="grid mt-3"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
       >
+        {!gameHasStarted && (
+          <h5>
+            Share this link with your friends who want to join the game:
+            <br />
+            <div className="d-flex align-items-center">
+              {window.location.href}{" "}
+              <button
+                className="btn btn-link p-0"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(window.location.href);
+                }}
+              >
+                <FileCopy className="ml-1" />
+              </button>
+            </div>
+          </h5>
+        )}
         <div>
           {usedQuestionRound && (
             <Question
