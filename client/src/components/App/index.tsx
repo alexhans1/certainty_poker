@@ -11,10 +11,7 @@ function PageNotFound() {
 
 function App() {
   return (
-    <div id="app" className="container-sm py-2">
-      <a href="/" id="title" className="unstyled-link">
-        Certainty Poker
-      </a>
+    <div id="app">
       <Switch>
         <Route path="/" component={Lobby} exact />
         <Route path="/:gameId" component={Game} exact />
