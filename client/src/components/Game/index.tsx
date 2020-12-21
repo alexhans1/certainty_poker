@@ -184,7 +184,10 @@ function GameComponent() {
     : currentQuestionRound;
 
   return (
-    <>
+    <div className="container-sm py-2">
+      <a href="/" id="title" className="unstyled-link">
+        Certainty Poker
+      </a>
       <div
         className="grid mt-3"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
@@ -278,7 +281,7 @@ function GameComponent() {
       )}
 
       <LeaveGameButton {...{ gameId, playerId, gameHasStarted, setPlayerId }} />
-    </>
+    </div>
   );
 }
 
