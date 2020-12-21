@@ -238,7 +238,7 @@ function GameComponent() {
             }}
           />
         </div>
-        {isSpectator && usedQuestionRound?.isOver && (
+        {isSpectator && usedQuestionRound?.isOver && !game.isOver && (
           <button
             className="new-question-button btn btn-light mx-auto mt-5"
             onClick={() => {
