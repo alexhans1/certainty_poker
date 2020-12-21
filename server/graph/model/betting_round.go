@@ -60,7 +60,7 @@ func (b *BettingRound) IsFinished() bool {
 		// if it's the first betting round, the big blind player gets to bet again
 		bigBlindPlayer := b.QuestionRound.Game.BigBlindPlayer()
 		if len(b.QuestionRound.BettingRounds) == 1 &&
-			amountToCall == 10 &&
+			amountToCall == b.QuestionRound.Game.BigBlind() &&
 			b.CurrentPlayer.FindNextActionablePlayer().ID == bigBlindPlayer.ID {
 			return false
 		}
