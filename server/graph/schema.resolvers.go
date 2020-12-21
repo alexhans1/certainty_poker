@@ -38,7 +38,10 @@ func (r *mutationResolver) CreateGame(ctx context.Context, setNames []string) (*
 
 	r.games[gameID] = &game
 
-	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("game created")
+	r.logger.WithFields(logrus.Fields{
+		"game":         game.ID,
+		"questionSets": setNames,
+	}).Info("game created")
 	return &game, nil
 }
 
