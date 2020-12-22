@@ -2,6 +2,9 @@ package model
 
 import (
 	"errors"
+	"math"
+	"os"
+	"strconv"
 
 	"github.com/alexhans1/certainty_poker/helpers"
 )
@@ -183,6 +186,18 @@ func (g *Game) PlayerIds() []string {
 // HasStarted returns true if there are 1 or more question rounds already
 func (g *Game) HasStarted() bool {
 	return len(g.QuestionRounds) > 0
+}
+
+// SmallBlind returns the amout of the small blind depending on the env variable and the number of question rounds
+func (g *Game) SmallBlind() int {
+	smallBlind, _ := strconv.Atoi(os.Getenv("SMALL_BLIND"))
+	numberOfQuestionRounds := len(g.QuestionRounds)
+	return smallBlind * int(math.Ceil(float64(numberOfQuestionRounds)/4))
+}
+
+// BigBlind returns two times the small blind
+func (g *Game) BigBlind() int {
+	return g.SmallBlind() * 2
 }
 
 // FindGame returns the game with the provided ID

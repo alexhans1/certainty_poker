@@ -164,11 +164,11 @@ func (q *QuestionRound) PlaceBlinds() {
 	dealer := q.Game.Dealer()
 	q.CurrentBettingRound().AddBet(&Bet{
 		PlayerID: dealer.FindNextInPlayer().ID,
-		Amount:   5,
+		Amount:   q.Game.SmallBlind(),
 	})
 	q.CurrentBettingRound().AddBet(&Bet{
 		PlayerID: dealer.FindNextInPlayer().FindNextInPlayer().ID,
-		Amount:   10,
+		Amount:   q.Game.BigBlind(),
 	})
 }
 
