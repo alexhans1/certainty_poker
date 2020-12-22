@@ -191,8 +191,9 @@ func (g *Game) HasStarted() bool {
 // SmallBlind returns the amout of the small blind depending on the env variable and the number of question rounds
 func (g *Game) SmallBlind() int {
 	smallBlind, _ := strconv.Atoi(os.Getenv("SMALL_BLIND"))
+	doubleEveryNthRound, _ := strconv.ParseFloat(os.Getenv("DOUBLE_EVERY_NTH_ROUND"), 64)
 	numberOfQuestionRounds := len(g.QuestionRounds)
-	return smallBlind * int(math.Ceil(float64(numberOfQuestionRounds)/4))
+	return smallBlind * int(math.Pow(2, math.Floor(float64(numberOfQuestionRounds-1)/doubleEveryNthRound)))
 }
 
 // BigBlind returns two times the small blind
