@@ -110,6 +110,7 @@ input GeoCoordinateInput {
 input AnswerInputType {
   numerical: Float
   geo: GeoCoordinateInput
+  order: [String]
 }
 
 input GuessInput {

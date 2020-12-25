@@ -176,6 +176,7 @@ const (
 	QuestionTypesMultipleChoice QuestionTypes = "MULTIPLE_CHOICE"
 	QuestionTypesDate           QuestionTypes = "DATE"
 	QuestionTypesGeo            QuestionTypes = "GEO"
+	QuestionTypesOrder			QuestionTypes = "ORDER"
 )
 
 var AllQuestionTypes = []QuestionTypes{
@@ -183,6 +184,7 @@ var AllQuestionTypes = []QuestionTypes{
 	QuestionTypesMultipleChoice,
 	QuestionTypesDate,
 	QuestionTypesGeo,
+	QuestionTypesOrder
 }
 
 func (e QuestionTypes) IsValid() bool {

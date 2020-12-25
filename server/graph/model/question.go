@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/thoas/go-funk"
 
@@ -36,6 +37,11 @@ func validateQuestions(questions []*QuestionInput) error {
 		if q.Type == QuestionTypesMultipleChoice && (q.Alternatives == nil || len(q.Alternatives) < 4) {
 			return errors.New("all \"alternatives\" must be set for multiple choice questions at question " + strconv.Itoa(i+1))
 		}
+
+		if q.Type == QuestionTypesOrder  && len(strings.Split(q.Answer.Order, ";") < 2){
+			return errors.New("\"answer\" must be a string with multiple elements, separated by semicolon")
+		}
+
 	}
 	return nil
 }

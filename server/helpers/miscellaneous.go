@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"math"
 
 	"github.com/google/uuid"
 )
@@ -100,4 +101,22 @@ func SliceSliceStringEqual(sliceOne [][]string, sliceTwo [][]string) bool {
 	}
 
 	return true
+}
+
+// SliceStringIndex returns index of first occurrence of item in slice or -1, if item is not contained
+func SliceStringIndex(slice []string, item string) int {
+	foundIndex := -1
+
+	for index, element := range slice {
+		if item == element {
+			foundIndex = index
+			break
+		}
+	}
+
+	return foundIndex
+}
+
+func IntAbs(n int) int {
+	return int64(math.Abs(float64(n)))
 }

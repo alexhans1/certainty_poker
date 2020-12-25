@@ -31,6 +31,11 @@ func (q *QuestionRound) guessDeviation(playerID string) (float64, error) {
 				}
 				return 1, nil
 			}
+			if q.Question.Type == QuestionTypeOrder {
+				dist := guess.GetOrderDeviation(q.Question.Answer)
+				return dist, nil
+			}
+			
 			return -1, errors.New("invalid question type")
 		}
 	}
