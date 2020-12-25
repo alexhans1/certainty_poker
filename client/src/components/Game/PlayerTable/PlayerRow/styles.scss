@@ -4,31 +4,18 @@ $smallAvatar: 50px;
 .avatar {
   position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.4em;
+  flex-direction: column;
+  min-width: 4em;
+  font-size: 1em;
   vertical-align: middle;
-  width: $smallAvatar;
-  height: $smallAvatar;
-  border-radius: 50%;
-  background: #ebebeb;
 
   .turn {
     position: absolute;
-    left: calc(#{$smallAvatar} / -2.7);
+    left: calc(#{$smallAvatar} / -2.4);
     color: #c44444;
     font-family: "Satisfy", cursive;
     font-size: 2em;
     text-shadow: 0px 0px 7px #c26464;
-  }
-  .dealer {
-    position: absolute;
-    right: -5px;
-    bottom: -9px;
-    font-size: 0.6em;
-    color: #ebebeb;
-    -webkit-text-stroke-width: 0.2px;
-    -webkit-text-stroke-color: #282c39;
   }
 
   &.lg {
@@ -52,10 +39,6 @@ $smallAvatar: 50px;
 
   &.dead {
     background: #a5a5a5;
-  }
-
-  span {
-    color: #393d4e;
   }
 }
 

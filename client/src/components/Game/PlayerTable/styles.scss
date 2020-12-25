@@ -7,15 +7,10 @@ $smallAvatar: 50px;
 .money {
   display: flex;
   flex-direction: column;
-  margin-left: 1.5em;
 
   .obfuscate {
     text-shadow: 0 0 11px white;
     color: transparent;
-  }
-
-  &.md {
-    margin-left: calc(1.5em + calc((#{$largeAvatar} - #{$smallAvatar}) / 2));
   }
 
   &.dead {

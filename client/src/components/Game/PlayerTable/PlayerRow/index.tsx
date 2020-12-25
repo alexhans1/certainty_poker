@@ -15,9 +15,9 @@ export interface Props {
   isDead?: boolean;
   isFolded?: boolean;
   gameIsOver?: boolean;
-  isDealer: boolean;
   showPreviousQuestionRoundResults: boolean;
   size: Size;
+  money: number;
 }
 
 export default ({
@@ -28,20 +28,29 @@ export default ({
   isFolded,
   gameIsOver,
   size,
-  isDealer,
   showPreviousQuestionRoundResults,
+  money,
 }: Props) => {
   const isPlayerTurn =
     !showPreviousQuestionRoundResults &&
     !gameIsOver &&
     currentBettingRound?.currentPlayer.id === id;
   return (
-    <div className={`avatar ${size} ${isDead || isFolded ? "dead" : ""}`}>
-      <span className={isPlayerTurn && size === Size.lg ? "tada" : ""}>
-        {name}
-      </span>
-      {isPlayerTurn && <span className="turn">{">"}</span>}
-      {isDealer && <span className="dealer">{"D"}</span>}
+    <div
+      className={`d-flex flex-column align-items-center ${
+        isPlayerTurn && size === Size.lg ? "tada" : ""
+      }`}
+    >
+      <div className={`avatar ${isDead || isFolded ? "dead" : ""}`}>
+        <span>{name}</span>
+        <div className="d-flex">
+          <span role="img" aria-label="money bag">
+            💰
+          </span>
+          <span>{money}</span>
+        </div>
+        {isPlayerTurn && <span className="turn">{">"}</span>}
+      </div>
     </div>
   );
 };

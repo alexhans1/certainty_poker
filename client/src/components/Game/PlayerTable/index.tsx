@@ -12,7 +12,7 @@ import {
   Guess,
   QuestionTypes,
 } from "../../../interfaces";
-import Avatar, { Size } from "./Avatar";
+import Avatar, { Size } from "./PlayerRow";
 
 import "./styles.scss";
 
@@ -128,6 +128,11 @@ export default ({
                 isDealer: game?.dealerId === id,
                 size: i === 0 && playerId ? Size.lg : Size.md,
                 showPreviousQuestionRoundResults: !!usedQuestionRound?.isOver,
+                money:
+                  money +
+                  (usedQuestionRound?.isOver && !game.isOver
+                    ? bettingRoundSpending
+                    : 0),
               }}
             />
             <div
@@ -157,15 +162,13 @@ export default ({
                   )
                 ))}
               <div className="d-flex">
-                <span role="img" aria-label="money">
-                  💰
-                  {money +
-                    (usedQuestionRound?.isOver && !game.isOver
-                      ? bettingRoundSpending
-                      : 0)}
-                </span>
                 {!usedQuestionRound?.isOver && !!bettingRoundSpending && (
-                  <span className="ml-4">{bettingRoundSpending * -1}</span>
+                  <>
+                    <span role="img" aria-label="money bag">
+                      💰
+                    </span>
+                    <span>{bettingRoundSpending * -1}</span>
+                  </>
                 )}
                 {usedQuestionRound?.isOver && moneyDiff && (
                   <span
