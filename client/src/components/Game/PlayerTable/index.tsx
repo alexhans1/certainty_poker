@@ -12,16 +12,18 @@ import {
   Guess,
   QuestionTypes,
 } from "../../../interfaces";
-import Avatar, { Size } from "./PlayerRow";
+import PlayerRow from "./PlayerRow";
 
 import "./styles.scss";
+import colors, { GradientColor } from "./colors";
 
-interface PlayerWithRank extends Player {
+interface ExtendedPlayer extends Player {
   rank?: number;
+  gradientColor?: GradientColor;
 }
 
 export interface PlayerTableProps {
-  players: PlayerWithRank[];
+  players: ExtendedPlayer[];
   playerId?: Player["id"];
   currentBettingRound?: BettingRound;
   usedQuestionRound?: QuestionRound;
@@ -49,6 +51,7 @@ export default ({
   if (!players.length) {
     return null;
   }
+  players.forEach((p, i) => (p.gradientColor = colors[i % colors.length]));
   if (game.isOver) {
     // todo: check if this changes the order of the player list after the game is over
     players
@@ -89,111 +92,72 @@ export default ({
   const questionType = usedQuestionRound?.question.type;
 
   return (
-    <>
-      {players.map(({ id, money, name, rank, isDead }, i) => {
+    <div className="table-container">
+      {players.map(({ id, money, name, rank, isDead, gradientColor }, i) => {
+        if (!gradientColor) {
+          return null;
+        }
         const hasFolded =
           usedQuestionRound && hasPlayerFolded(usedQuestionRound, id);
         const moneyDiff = usedQuestionRound?.results?.find(
           ({ playerId }) => id === playerId
         )?.changeInMoney;
         const bettingRoundSpending = currentBettingRound
-          ? calculateBettingRoundSpendingForPlayer(currentBettingRound, id)
+          ? calculateBettingRoundSpendingForPlayer(currentBettingRound, id) * -1
           : 0;
         const revealGuess =
           isSpectator ||
           (!!usedQuestionRound?.isOver &&
             usedQuestionRound?.isShowdown &&
             !hasFolded);
-        const guess = guesses && (
-          <FormattedGuess
+        const guess = (revealGuess || id === playerId) &&
+          guesses &&
+          guesses[id] && (
+            <FormattedGuess
+              {...{
+                guess: guesses[id],
+                questionType,
+                alternatives: usedQuestionRound?.question.alternatives,
+              }}
+            />
+          );
+        return (
+          <PlayerRow
             {...{
-              guess: guesses[id],
-              questionType,
-              alternatives: usedQuestionRound?.question.alternatives,
+              key: id,
+              id,
+              name,
+              currentPlayerId: currentBettingRound?.currentPlayer.id,
+              isDead,
+              isFolded: hasFolded,
+              gameIsOver: game.isOver,
+              questionRoundIsOver: usedQuestionRound?.isOver,
+              isDealer: game?.dealerId === id,
+              showPreviousQuestionRoundResults: !!usedQuestionRound?.isOver,
+              isAppPlayer: id === playerId,
+              money:
+                money +
+                (usedQuestionRound?.isOver && !game.isOver
+                  ? bettingRoundSpending
+                  : 0),
+              moneyChange: usedQuestionRound?.isOver
+                ? moneyDiff
+                : bettingRoundSpending,
+              guess:
+                questionType !== QuestionTypes.GEO &&
+                !isDead &&
+                (guess || (
+                  <span className={id === playerId ? "" : "obfuscate"}>
+                    {guesses && !guesses[id] && guesses[id] !== 0 ? null : 432}
+                  </span>
+                )),
+              hasWonGame: winningPlayerIds?.includes(id),
+              rank,
+              gradientColor,
             }}
           />
         );
-
-        return (
-          <div key={id} className="d-flex align-items-center pb-4 ml-4">
-            {game.isOver && <span className="rank">{rank}.</span>}
-            <Avatar
-              {...{
-                id,
-                name,
-                currentBettingRound,
-                isDead,
-                isFolded: hasFolded,
-                gameIsOver: game.isOver,
-                isDealer: game?.dealerId === id,
-                size: i === 0 && playerId ? Size.lg : Size.md,
-                showPreviousQuestionRoundResults: !!usedQuestionRound?.isOver,
-                money:
-                  money +
-                  (usedQuestionRound?.isOver && !game.isOver
-                    ? bettingRoundSpending
-                    : 0),
-              }}
-            />
-            <div
-              className={`money ${id === playerId ? "" : "md"} ${
-                (isDead || hasFolded) && !usedQuestionRound?.isOver
-                  ? "dead"
-                  : ""
-              }`}
-            >
-              {questionType !== QuestionTypes.GEO &&
-                (revealGuess ? (
-                  <span role="img" aria-label="answer">
-                    💡 {guess}
-                  </span>
-                ) : (
-                  guesses && (
-                    <span role="img" aria-label="answer">
-                      💡{" "}
-                      <span className={id === playerId ? "" : "obfuscate"}>
-                        {!guess && guess !== 0
-                          ? null
-                          : id === playerId
-                          ? guess
-                          : 432}
-                      </span>
-                    </span>
-                  )
-                ))}
-              <div className="d-flex">
-                {!usedQuestionRound?.isOver && !!bettingRoundSpending && (
-                  <>
-                    <span role="img" aria-label="money bag">
-                      💰
-                    </span>
-                    <span>{bettingRoundSpending * -1}</span>
-                  </>
-                )}
-                {usedQuestionRound?.isOver && moneyDiff && (
-                  <span
-                    className={`ml-2 ${
-                      moneyDiff > 0 ? "text-success" : "text-danger"
-                    }`}
-                  >
-                    {moneyDiff}
-                  </span>
-                )}
-              </div>
-            </div>
-            {winningPlayerIds?.includes(id) && (
-              <span className="trophy" role="img" aria-label="trophy">
-                🏆
-              </span>
-            )}
-            {isDead && !game.isOver && (
-              <span className="skull" role="img" aria-label="skull">
-                💀
-              </span>
-            )}
-          </div>
-        );
       })}
-    </>
+    </div>
   );
 };

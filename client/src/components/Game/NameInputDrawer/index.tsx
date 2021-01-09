@@ -27,14 +27,14 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
 
   return (
     <Drawer
-      title="Your avatar"
+      title="Your name"
       anchor={"bottom"}
       open={!playerId}
       variant="persistent"
       className="drawer"
     >
       <>
-        <p>Use an emoji or your initials as your avatar</p>
+        <p>Add you name to join the game</p>
         <div className="input-group mb-3">
           <input
             value={name}

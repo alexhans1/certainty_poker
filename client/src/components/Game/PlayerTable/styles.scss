@@ -1,27 +1,6 @@
-$largeAvatar: 90px;
-$smallAvatar: 50px;
-
-.rank {
-  margin-right: 0.4em;
-}
-.money {
-  display: flex;
-  flex-direction: column;
-
-  .obfuscate {
-    text-shadow: 0 0 11px white;
-    color: transparent;
-  }
-
-  &.dead {
-    color: #777777;
-  }
-}
-.skull {
-  margin-left: 0.6em;
-  font-size: 2em;
-}
-.trophy {
-  margin-left: 0.6em;
-  font-size: 3.5em;
+.table-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  grid-gap: 1em 1.5em;
+  height: min-content;
 }

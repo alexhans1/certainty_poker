@@ -244,18 +244,16 @@ function GameComponent() {
             }}
           />
         </div>
-        <div className="d-flex flex-column">
-          <PlayerTable
-            {...{
-              players: game?.players,
-              playerId,
-              usedQuestionRound,
-              currentBettingRound,
-              isSpectator,
-              game,
-            }}
-          />
-        </div>
+        <PlayerTable
+          {...{
+            players: game?.players,
+            playerId,
+            usedQuestionRound,
+            currentBettingRound,
+            isSpectator,
+            game,
+          }}
+        />
         {isSpectator && usedQuestionRound?.isOver && !game.isOver && (
           <button
             className="new-question-button btn btn-light mx-auto mt-5"

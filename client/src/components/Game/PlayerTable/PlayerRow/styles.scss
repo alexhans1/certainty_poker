@@ -1,52 +1,73 @@
-$largeAvatar: 90px;
-$smallAvatar: 50px;
+.player-row {
+  display: grid;
+  grid-template-columns: 0 auto auto 50px;
+  grid-gap: 0 0.5em;
+  height: min-content;
 
-.avatar {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 4em;
-  font-size: 1em;
-  vertical-align: middle;
-
-  .turn {
-    position: absolute;
-    left: calc(#{$smallAvatar} / -2.4);
-    color: #c44444;
-    font-family: "Satisfy", cursive;
-    font-size: 2em;
-    text-shadow: 0px 0px 7px #c26464;
-  }
-
-  &.lg {
-    font-size: 2.3em;
-    width: $largeAvatar;
-    height: $largeAvatar;
-
-    .turn {
-      left: calc(#{$largeAvatar} / -3);
-    }
-
-    .dealer {
-      right: -9px;
-      bottom: -10px;
-    }
-  }
-
-  &.md {
-    margin-left: calc((#{$largeAvatar} - #{$smallAvatar}) / 2);
-  }
+  padding: 0.4em 0.2em;
+  border-radius: 7px;
+  font-weight: 400;
 
   &.dead {
-    background: #a5a5a5;
+    opacity: 0.4;
+  }
+
+  &.turn {
+    border: 3px solid;
+    margin-bottom: -6px;
+    margin-top: -6px;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .turn-container {
+    justify-content: center;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+
+    .turn {
+      color: #c44444;
+      font-family: "Satisfy", cursive;
+      font-size: 2.2em;
+      text-shadow: 0px 0px 7px #c26464;
+      margin-right: 0.8em;
+    }
+  }
+  .name-container {
+    grid-column: 2;
+  }
+  .guess-container {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+  .icon-container {
+    font-size: 2em;
+    grid-column: -2;
+    grid-row: 1 / span 2;
+  }
+  .money-container {
+    grid-row: 2;
+    grid-column: 2 / span 2;
+  }
+
+  .obfuscate {
+    text-shadow: 0 0 11px white;
+    color: transparent;
   }
 }
 
+$tadaDuration: 1s;
+$twentyScale: 0.9;
+$ninetyScale: 1.1;
+$rotateDegree: 3deg;
 .tada {
   -webkit-animation-name: tada;
   animation-name: tada;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
+  -webkit-animation-duration: $tadaDuration;
+  animation-duration: $tadaDuration;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
@@ -57,21 +78,27 @@ $smallAvatar: 50px;
   }
   10%,
   20% {
-    -webkit-transform: scale3d(0.8, 0.8, 0.8) rotate3d(0, 0, 1, -8deg);
-    transform: scale3d(0.8, 0.8, 0.8) rotate3d(0, 0, 1, -8deg);
+    -webkit-transform: scale3d($twentyScale, $twentyScale, $twentyScale)
+      rotate3d(0, 0, 1, -$rotateDegree);
+    transform: scale3d($twentyScale, $twentyScale, $twentyScale)
+      rotate3d(0, 0, 1, -$rotateDegree);
   }
   30%,
   50%,
   70%,
   90% {
-    -webkit-transform: scale3d(1.4, 1.4, 1.4) rotate3d(0, 0, 1, 8deg);
-    transform: scale3d(1.4, 1.4, 1.4) rotate3d(0, 0, 1, 8deg);
+    -webkit-transform: scale3d($ninetyScale, $ninetyScale, $ninetyScale)
+      rotate3d(0, 0, 1, $rotateDegree);
+    transform: scale3d($ninetyScale, $ninetyScale, $ninetyScale)
+      rotate3d(0, 0, 1, $rotateDegree);
   }
   40%,
   60%,
   80% {
-    -webkit-transform: scale3d(1.4, 1.4, 1.4) rotate3d(0, 0, 1, -8deg);
-    transform: scale3d(1.4, 1.4, 1.4) rotate3d(0, 0, 1, -8deg);
+    -webkit-transform: scale3d($ninetyScale, $ninetyScale, $ninetyScale)
+      rotate3d(0, 0, 1, -$rotateDegree);
+    transform: scale3d($ninetyScale, $ninetyScale, $ninetyScale)
+      rotate3d(0, 0, 1, -$rotateDegree);
   }
   100% {
     -webkit-transform: scale3d(1, 1, 1);
@@ -85,21 +112,27 @@ $smallAvatar: 50px;
   }
   10%,
   20% {
-    -webkit-transform: scale3d(0.8, 0.8, 0.8) rotate3d(0, 0, 1, -8deg);
-    transform: scale3d(0.8, 0.8, 0.8) rotate3d(0, 0, 1, -8deg);
+    -webkit-transform: scale3d($twentyScale, $twentyScale, $twentyScale)
+      rotate3d(0, 0, 1, -$rotateDegree);
+    transform: scale3d($twentyScale, $twentyScale, $twentyScale)
+      rotate3d(0, 0, 1, -$rotateDegree);
   }
   30%,
   50%,
   70%,
   90% {
-    -webkit-transform: scale3d(1.4, 1.4, 1.4) rotate3d(0, 0, 1, 8deg);
-    transform: scale3d(1.4, 1.4, 1.4) rotate3d(0, 0, 1, 8deg);
+    -webkit-transform: scale3d($ninetyScale, $ninetyScale, $ninetyScale)
+      rotate3d(0, 0, 1, $rotateDegree);
+    transform: scale3d($ninetyScale, $ninetyScale, $ninetyScale)
+      rotate3d(0, 0, 1, $rotateDegree);
   }
   40%,
   60%,
   80% {
-    -webkit-transform: scale3d(1.4, 1.4, 1.4) rotate3d(0, 0, 1, -8deg);
-    transform: scale3d(1.4, 1.4, 1.4) rotate3d(0, 0, 1, -8deg);
+    -webkit-transform: scale3d($ninetyScale, $ninetyScale, $ninetyScale)
+      rotate3d(0, 0, 1, -$rotateDegree);
+    transform: scale3d($ninetyScale, $ninetyScale, $ninetyScale)
+      rotate3d(0, 0, 1, -$rotateDegree);
   }
   100% {
     -webkit-transform: scale3d(1, 1, 1);
