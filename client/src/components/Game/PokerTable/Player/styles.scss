@@ -1,0 +1,95 @@
+.player {
+  height: 5em;
+  width: 14em;
+  background-color: #ebebeb;
+  border-radius: 1em;
+  font-size: 0.7em;
+  color: #393d4e;
+  display: flex;
+  position: absolute;
+
+  .info {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0.5em 1em;
+    width: 9em;
+  }
+
+  .status {
+    height: 5em;
+    width: 5em;
+    background-color: grey;
+    border-radius: 50%;
+    margin-left: -1.5em;
+  }
+
+  .name {
+    font-weight: bold;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.player-1 {
+    top: 20%;
+    left: 0;
+    transform: translatex(-50%) translatey(-50%);
+  }
+  &.player-2 {
+    top: 0;
+    left: 75%;
+    transform: translatex(-50%) translatey(-65%);
+  }
+  &.player-3 {
+    bottom: 0;
+    left: 25%;
+    transform: translatex(-50%) translatey(65%);
+  }
+  &.player-4 {
+    top: 50%;
+    right: 0;
+    transform: translatex(80%) translatey(-50%);
+  }
+  &.player-5 {
+    top: 80%;
+    left: 0;
+    transform: translatex(-50%) translatey(-50%);
+  }
+  &.player-6 {
+    bottom: 0;
+    left: 75%;
+    transform: translatex(-50%) translatey(65%);
+  }
+  &.player-7 {
+    top: 0;
+    left: 25%;
+    transform: translatex(-50%) translatey(-65%);
+  }
+  &.player-8 {
+    top: 80%;
+    right: 0;
+    transform: translatex(60%) translatey(-50%);
+  }
+  &.player-9 {
+    top: 50%;
+    left: 0;
+    transform: translatex(-75%) translatey(-65%);
+  }
+  &.player-10 {
+    bottom: 0;
+    left: 50%;
+    transform: translatex(-50%) translatey(65%);
+  }
+  &.player-11 {
+    top: 20%;
+    right: 0;
+    transform: translatex(60%) translatey(-50%);
+  }
+  &.player-12 {
+    top: 0;
+    left: 50%;
+    transform: translatex(-50%) translatey(-65%);
+  }
+}
