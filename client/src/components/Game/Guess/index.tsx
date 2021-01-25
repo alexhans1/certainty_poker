@@ -4,7 +4,7 @@ import { Answer, Question, QuestionTypes } from "../../../interfaces";
 
 interface Props {
   guess: Answer;
-  questionType?: QuestionTypes;
+  questionType: QuestionTypes;
   alternatives?: Question["alternatives"];
 }
 

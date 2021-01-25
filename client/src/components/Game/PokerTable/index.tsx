@@ -3,11 +3,16 @@ import PlayerComp from "./Player";
 import Question from "../Question";
 import {
   Game,
+  Guess,
   Player,
   QuestionRound,
   QuestionTypes,
 } from "../../../interfaces";
-import { getCurrentBettingRound, hasPlayerFolded } from "../helpers";
+import {
+  getCurrentBettingRound,
+  hasPlayerFolded,
+  haveAllPlayersPlacedTheirGuess,
+} from "../helpers";
 import GuessMap from "../GuessMap";
 
 import "./styles.scss";
@@ -26,6 +31,10 @@ const PokerTable = ({
 }: Props) => {
   const currentBettingRound = getCurrentBettingRound(usedQuestionRound);
   const isGeoQuestion = usedQuestionRound?.question.type === QuestionTypes.GEO;
+  const allPlayersPlacedTheirGuess =
+    usedQuestionRound &&
+    game.players &&
+    haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
   return (
     <div className="d-flex flex-column align-items-center">
       {usedQuestionRound && isGeoQuestion && (
@@ -46,6 +55,9 @@ const PokerTable = ({
             const hasFolded = !!(
               usedQuestionRound && hasPlayerFolded(usedQuestionRound, player.id)
             );
+            const guess = usedQuestionRound?.guesses.find(
+              (g) => g.playerId === player.id
+            );
             return (
               <PlayerComp
                 key={player.id}
@@ -58,7 +70,12 @@ const PokerTable = ({
                   isTurnPlayer:
                     player.id === currentBettingRound?.currentPlayer.id,
                   isQuestionRoundOver: !!usedQuestionRound?.isOver,
+                  isShowdown: !!usedQuestionRound?.isShowdown,
                   hasFolded,
+                  isSpectator,
+                  allPlayersPlacedTheirGuess,
+                  guess,
+                  questionType: usedQuestionRound?.question.type,
                 }}
               />
             );

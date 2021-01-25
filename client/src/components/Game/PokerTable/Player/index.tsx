@@ -1,10 +1,17 @@
 import React from "react";
-import { MonetizationOn } from "@material-ui/icons";
+import { MonetizationOn, EmojiObjects } from "@material-ui/icons";
 import Status from "./Status";
-import { BettingRound, Player } from "../../../../interfaces";
+import {
+  BettingRound,
+  Guess,
+  Player,
+  Question,
+  QuestionTypes,
+} from "../../../../interfaces";
 import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
 
 import "./styles.scss";
+import FormattedGuess from "../../Guess";
 
 interface Props {
   player: Player;
@@ -15,7 +22,12 @@ interface Props {
   isAppPlayer: boolean;
   isWinningPlayer?: boolean;
   isQuestionRoundOver: boolean;
+  isShowdown: boolean;
   hasFolded: boolean;
+  isSpectator: boolean;
+  allPlayersPlacedTheirGuess?: boolean;
+  guess?: Guess;
+  question?: Question;
 }
 
 export default ({
@@ -25,9 +37,14 @@ export default ({
   isAppPlayer,
   isWinningPlayer,
   isQuestionRoundOver,
+  isShowdown,
   currentBettingRound,
   changeInMoney,
   hasFolded,
+  isSpectator,
+  allPlayersPlacedTheirGuess,
+  guess,
+  question,
 }: Props) => {
   const isTurnPlayerClass =
     isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : "";
@@ -36,6 +53,10 @@ export default ({
   const bettingRoundSpending = currentBettingRound
     ? calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id)
     : 0;
+  const revealGuess =
+    question?.type !== QuestionTypes.GEO &&
+    (isSpectator || (!!isQuestionRoundOver && isShowdown && !hasFolded));
+
   return (
     <div
       className={`player player-${
@@ -50,6 +71,8 @@ export default ({
             isQuestionRoundOver,
             isDead: player.isDead,
             hasFolded,
+            allPlayersPlacedTheirGuess,
+            playerHasPlacedTheirGuess: !!guess,
           }}
         />
       </span>
@@ -57,7 +80,7 @@ export default ({
         <span className="name">{player.name}</span>
         <div className="d-flex align-items-center">
           <MonetizationOn className="mr-1" fontSize="small" />
-          <span className="money">{player.money}</span>
+          <span>{player.money}</span>
           {isQuestionRoundOver && changeInMoney && (
             <span
               className={`ml-1 ${
@@ -68,12 +91,22 @@ export default ({
             </span>
           )}
         </div>
-        {!isQuestionRoundOver && !!bettingRoundSpending && (
-          <div className="spending">
-            <MonetizationOn className="mr-1" fontSize="inherit" />
-            <span>{bettingRoundSpending}</span>
-          </div>
-        )}
+        <div className="inner-info">
+          {!isQuestionRoundOver && !!bettingRoundSpending && (
+            <div className="d-flex align-items-center">
+              <MonetizationOn className="mr-1" fontSize="inherit" />
+              <span>{bettingRoundSpending}</span>
+            </div>
+          )}
+          {revealGuess && question?.type && guess?.guess && (
+            <div className="d-flex align-items-center">
+              <EmojiObjects className="mr-1" fontSize="inherit" />
+              <FormattedGuess
+                {...{ guess: guess?.guess, questionType: question.type }}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

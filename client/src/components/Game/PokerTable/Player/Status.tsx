@@ -4,6 +4,8 @@ import {
   SentimentVerySatisfied,
   AccountTree,
   Close,
+  EmojiObjects,
+  MoreHoriz,
 } from "@material-ui/icons";
 
 interface Props {
@@ -12,6 +14,8 @@ interface Props {
   changeInMoney?: number;
   hasFolded: boolean;
   isDead: boolean;
+  playerHasPlacedTheirGuess?: boolean;
+  allPlayersPlacedTheirGuess?: boolean;
 }
 
 function Status({
@@ -20,6 +24,8 @@ function Status({
   changeInMoney,
   isDead,
   hasFolded,
+  allPlayersPlacedTheirGuess,
+  playerHasPlacedTheirGuess,
 }: Props) {
   if (isDead) {
     return <AccountTree fontSize="large" />;
@@ -35,6 +41,13 @@ function Status({
   }
   if (isQuestionRoundOver && changeInMoney && changeInMoney < 0) {
     return <SentimentDissatisfied fontSize="large" />;
+  }
+  if (!allPlayersPlacedTheirGuess) {
+    if (playerHasPlacedTheirGuess) {
+      return <EmojiObjects fontSize="large" />;
+    } else {
+      return <MoreHoriz fontSize="large" />;
+    }
   }
   return null;
 }

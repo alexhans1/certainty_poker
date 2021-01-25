@@ -47,12 +47,14 @@
     text-overflow: ellipsis;
   }
 
-  .spending {
+  .inner-info {
     position: absolute;
     font-size: 1.7em;
     color: #ebebeb;
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-gap: 0.1em 0.3em;
+    grid-auto-flow: column;
+    // align-items: center;
   }
 
   &.player-1 {
@@ -60,9 +62,10 @@
     left: 0;
     transform: translatex(-50%) translatey(-50%);
 
-    .spending {
+    .inner-info {
       right: -3%;
       transform: translateX(100%);
+      grid-auto-flow: row;
     }
   }
   &.player-2 {
@@ -70,8 +73,9 @@
     left: 75%;
     transform: translatex(-50%) translatey(-40%);
 
-    .spending {
+    .inner-info {
       top: 110%;
+      transform: translatex(-20%) translatey(0);
     }
   }
   &.player-3 {
@@ -79,7 +83,7 @@
     left: 25%;
     transform: translatex(-50%) translatey(40%);
 
-    .spending {
+    .inner-info {
       bottom: 110%;
     }
   }
@@ -87,8 +91,9 @@
     top: 50%;
     right: 0;
     transform: translatex(80%) translatey(-50%);
+    grid-auto-flow: row;
 
-    .spending {
+    .inner-info {
       left: -15%;
       transform: translateX(-100%);
     }
@@ -98,9 +103,10 @@
     left: 0;
     transform: translatex(-50%) translatey(-50%);
 
-    .spending {
+    .inner-info {
       right: -3%;
       transform: translateX(100%);
+      grid-auto-flow: row;
     }
   }
   &.player-6 {
@@ -108,7 +114,7 @@
     left: 75%;
     transform: translatex(-50%) translatey(40%);
 
-    .spending {
+    .inner-info {
       bottom: 110%;
     }
   }
@@ -117,7 +123,7 @@
     left: 25%;
     transform: translatex(-50%) translatey(-40%);
 
-    .spending {
+    .inner-info {
       top: 110%;
     }
   }
@@ -126,9 +132,10 @@
     right: 0;
     transform: translatex(60%) translatey(-50%);
 
-    .spending {
+    .inner-info {
       left: -15%;
       transform: translateX(-100%);
+      grid-auto-flow: row;
     }
   }
   &.player-9 {
@@ -136,9 +143,10 @@
     left: 0;
     transform: translatex(-75%) translatey(-40%);
 
-    .spending {
+    .inner-info {
       right: -3%;
       transform: translateX(100%);
+      grid-auto-flow: row;
     }
   }
   &.player-10 {
@@ -146,7 +154,7 @@
     left: 50%;
     transform: translatex(-50%) translatey(40%);
 
-    .spending {
+    .inner-info {
       bottom: 110%;
     }
   }
@@ -155,9 +163,10 @@
     right: 0;
     transform: translatex(60%) translatey(-50%);
 
-    .spending {
+    .inner-info {
       left: -15%;
       transform: translateX(-100%);
+      grid-auto-flow: row;
     }
   }
   &.player-12 {
@@ -165,7 +174,7 @@
     left: 50%;
     transform: translatex(-50%) translatey(-40%);
 
-    .spending {
+    .inner-info {
       top: 110%;
     }
   }

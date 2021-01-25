@@ -112,7 +112,8 @@ export default ({
             !hasFolded);
         const guess = (revealGuess || id === playerId) &&
           guesses &&
-          guesses[id] && (
+          guesses[id] &&
+          questionType && (
             <FormattedGuess
               {...{
                 guess: guesses[id],
