@@ -7,11 +7,10 @@ import {
   QuestionRound,
   QuestionTypes,
 } from "../../../interfaces";
-
-import "./styles.scss";
-import { getCurrentBettingRound } from "../helpers";
+import { getCurrentBettingRound, hasPlayerFolded } from "../helpers";
 import GuessMap from "../GuessMap";
 
+import "./styles.scss";
 interface Props {
   game: Game;
   usedQuestionRound?: QuestionRound;
@@ -44,6 +43,9 @@ const PokerTable = ({
               usedQuestionRound?.results?.find(
                 ({ playerId }) => player.id === playerId
               ) || {};
+            const hasFolded = !!(
+              usedQuestionRound && hasPlayerFolded(usedQuestionRound, player.id)
+            );
             return (
               <PlayerComp
                 key={player.id}
@@ -56,6 +58,7 @@ const PokerTable = ({
                   isTurnPlayer:
                     player.id === currentBettingRound?.currentPlayer.id,
                   isQuestionRoundOver: !!usedQuestionRound?.isOver,
+                  hasFolded,
                 }}
               />
             );

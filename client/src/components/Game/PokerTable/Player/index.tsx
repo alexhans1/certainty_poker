@@ -1,14 +1,10 @@
 import React from "react";
-import {
-  MonetizationOn,
-  SentimentDissatisfied,
-  SentimentVerySatisfied,
-} from "@material-ui/icons";
+import { MonetizationOn } from "@material-ui/icons";
+import Status from "./Status";
 import { BettingRound, Player } from "../../../../interfaces";
+import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
 
 import "./styles.scss";
-import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
-import { spawn } from "child_process";
 
 interface Props {
   player: Player;
@@ -19,6 +15,7 @@ interface Props {
   isAppPlayer: boolean;
   isWinningPlayer?: boolean;
   isQuestionRoundOver: boolean;
+  hasFolded: boolean;
 }
 
 export default ({
@@ -30,6 +27,7 @@ export default ({
   isQuestionRoundOver,
   currentBettingRound,
   changeInMoney,
+  hasFolded,
 }: Props) => {
   const isTurnPlayerClass =
     isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : "";
@@ -45,15 +43,15 @@ export default ({
       } ${isTurnPlayerClass} ${isAppPlayerClass}`}
     >
       <span className="status">
-        {isWinningPlayer && isQuestionRoundOver && (
-          <SentimentVerySatisfied fontSize="large" />
-        )}
-        {isQuestionRoundOver && changeInMoney && changeInMoney > 0 && (
-          <SentimentVerySatisfied fontSize="large" />
-        )}
-        {isQuestionRoundOver && changeInMoney && changeInMoney < 0 && (
-          <SentimentDissatisfied fontSize="large" />
-        )}
+        <Status
+          {...{
+            isWinningPlayer,
+            changeInMoney,
+            isQuestionRoundOver,
+            isDead: player.isDead,
+            hasFolded,
+          }}
+        />
       </span>
       <div className="info">
         <span className="name">{player.name}</span>
