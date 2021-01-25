@@ -26,6 +26,7 @@ export interface Marker {
 interface Props {
   markers?: Marker[];
   handleOnClick?: HandleOnClick;
+  className?: string;
 }
 
 const getNumberOfDecimals = (val: number = 0) => {
@@ -75,7 +76,7 @@ function MarkerContainer({
 }
 
 export default React.memo(
-  ({ markers = [], handleOnClick }: Props) => {
+  ({ markers = [], handleOnClick, className }: Props) => {
     const answerMarker = markers.find((m) => m.isAnswer);
     const distanceLines =
       !!answerMarker &&
@@ -99,7 +100,7 @@ export default React.memo(
         center={[0, 0]}
         zoom={1}
         scrollWheelZoom={true}
-        className="mb-5"
+        className={className}
       >
         <TileLayer
           attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

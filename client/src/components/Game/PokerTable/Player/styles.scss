@@ -7,6 +7,7 @@
   color: #393d4e;
   display: flex;
   position: absolute;
+  z-index: 1001;
 
   .info {
     display: flex;
@@ -23,6 +24,9 @@
     background-color: grey;
     border-radius: 50%;
     margin-left: -1.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &.isAppPlayer {
@@ -45,7 +49,7 @@
 
   .spending {
     position: absolute;
-    font-size: 2em;
+    font-size: 1.7em;
     color: #ebebeb;
     display: flex;
     align-items: center;
@@ -64,7 +68,7 @@
   &.player-2 {
     top: 0;
     left: 75%;
-    transform: translatex(-50%) translatey(-65%);
+    transform: translatex(-50%) translatey(-40%);
 
     .spending {
       top: 110%;
@@ -73,7 +77,7 @@
   &.player-3 {
     bottom: 0;
     left: 25%;
-    transform: translatex(-50%) translatey(65%);
+    transform: translatex(-50%) translatey(40%);
 
     .spending {
       bottom: 110%;
@@ -102,7 +106,7 @@
   &.player-6 {
     bottom: 0;
     left: 75%;
-    transform: translatex(-50%) translatey(65%);
+    transform: translatex(-50%) translatey(40%);
 
     .spending {
       bottom: 110%;
@@ -111,7 +115,7 @@
   &.player-7 {
     top: 0;
     left: 25%;
-    transform: translatex(-50%) translatey(-65%);
+    transform: translatex(-50%) translatey(-40%);
 
     .spending {
       top: 110%;
@@ -130,7 +134,7 @@
   &.player-9 {
     top: 50%;
     left: 0;
-    transform: translatex(-75%) translatey(-65%);
+    transform: translatex(-75%) translatey(-40%);
 
     .spending {
       right: -3%;
@@ -140,7 +144,7 @@
   &.player-10 {
     bottom: 0;
     left: 50%;
-    transform: translatex(-50%) translatey(65%);
+    transform: translatex(-50%) translatey(40%);
 
     .spending {
       bottom: 110%;
@@ -159,7 +163,7 @@
   &.player-12 {
     top: 0;
     left: 50%;
-    transform: translatex(-50%) translatey(-65%);
+    transform: translatex(-50%) translatey(-40%);
 
     .spending {
       top: 110%;

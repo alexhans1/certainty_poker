@@ -25,7 +25,7 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
     !usedQuestionRound.isOver;
   const totalQuestions = game.questionRounds.length + game.questions.length;
   return (
-    <div className="mb-4">
+    <div>
       <p className="mb-0" style={(!noHints && { fontSize: "0.7em" }) || {}}>
         Question ({game.questionRounds.length}/{totalQuestions}):
       </p>
