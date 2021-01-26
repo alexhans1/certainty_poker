@@ -94,15 +94,19 @@ export default ({
         <div className="inner-info">
           {!isQuestionRoundOver && !!bettingRoundSpending && (
             <div className="d-flex align-items-center">
-              <MonetizationOn className="mr-1" fontSize="inherit" />
+              <MonetizationOn className="mx-1" fontSize="inherit" />
               <span>{bettingRoundSpending}</span>
             </div>
           )}
           {revealGuess && question?.type && guess?.guess && (
             <div className="d-flex align-items-center">
-              <EmojiObjects className="mr-1" fontSize="inherit" />
+              <EmojiObjects className="mx-1" fontSize="inherit" />
               <FormattedGuess
-                {...{ guess: guess?.guess, questionType: question.type }}
+                {...{
+                  guess: guess?.guess,
+                  questionType: question.type,
+                  alternatives: question.alternatives,
+                }}
               />
             </div>
           )}

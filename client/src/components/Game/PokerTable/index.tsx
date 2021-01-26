@@ -14,6 +14,7 @@ import {
   haveAllPlayersPlacedTheirGuess,
 } from "../helpers";
 import GuessMap from "../GuessMap";
+import MultipleChoiceOptions from "../MultipleChoiceOptions";
 
 import "./styles.scss";
 interface Props {
@@ -31,6 +32,8 @@ const PokerTable = ({
 }: Props) => {
   const currentBettingRound = getCurrentBettingRound(usedQuestionRound);
   const isGeoQuestion = usedQuestionRound?.question.type === QuestionTypes.GEO;
+  const isMultipleChoiceQuestion =
+    usedQuestionRound?.question.type === QuestionTypes.MULTIPLE_CHOICE;
   const allPlayersPlacedTheirGuess =
     usedQuestionRound &&
     game.players &&
@@ -75,7 +78,7 @@ const PokerTable = ({
                   isSpectator,
                   allPlayersPlacedTheirGuess,
                   guess,
-                  questionType: usedQuestionRound?.question.type,
+                  question: usedQuestionRound?.question,
                 }}
               />
             );
@@ -89,15 +92,34 @@ const PokerTable = ({
                 }}
               />
             )}
-            <GuessMap
-              {...{
-                usedQuestionRound,
-                isSpectator,
-                playerId,
-                players: game.players,
-                className: "map",
-              }}
-            />
+            {isGeoQuestion && (
+              <GuessMap
+                {...{
+                  usedQuestionRound,
+                  isSpectator,
+                  playerId,
+                  players: game.players,
+                  className: "map",
+                }}
+              />
+            )}
+            {isMultipleChoiceQuestion && (
+              <MultipleChoiceOptions
+                {...{
+                  usedQuestionRound,
+                  alternatives:
+                    usedQuestionRound?.question.alternatives?.map((alt) => ({
+                      value: alt,
+                      active: !usedQuestionRound.question.hiddenAlternatives?.includes(
+                        alt
+                      ),
+                    })) || [],
+                  guess: usedQuestionRound?.guesses.find(
+                    (g) => g.playerId === playerId
+                  )?.guess.numerical,
+                }}
+              />
+            )}
           </div>
         </div>
       </div>

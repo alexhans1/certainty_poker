@@ -68,6 +68,7 @@ function MarkerContainer({
   });
   bounds.isValid() &&
     map.flyToBounds(bounds, {
+      // todo: make padding dependend on zoom level
       padding: [10, 10],
       maxZoom: markers.length > 1 ? 15 : 5,
     });

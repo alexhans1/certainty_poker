@@ -1,18 +1,3 @@
-.grid {
-  display: grid;
-  grid-template-columns: auto;
-}
-
-@media (min-width: 992px) {
-  .grid {
-    grid-row-gap: 2em;
-  }
-
-  .new-question-button {
-    grid-column-start: span 2;
-  }
-}
-
 .leave-game {
   position: absolute;
   top: 8px;
