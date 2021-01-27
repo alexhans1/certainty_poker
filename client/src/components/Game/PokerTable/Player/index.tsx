@@ -9,9 +9,10 @@ import {
   QuestionTypes,
 } from "../../../../interfaces";
 import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
+import FormattedGuess from "../../Guess";
+import { getCurrentPlayerAction } from "./helpers";
 
 import "./styles.scss";
-import FormattedGuess from "../../Guess";
 
 interface Props {
   player: Player;
@@ -57,22 +58,36 @@ export default ({
     question?.type !== QuestionTypes.GEO &&
     (isSpectator || (!!isQuestionRoundOver && isShowdown && !hasFolded));
 
+  const playerAction = getCurrentPlayerAction(
+    player,
+    bettingRoundSpending,
+    currentBettingRound
+  );
+
   return (
     <div
       className={`player player-${
         index + 1
       } ${isTurnPlayerClass} ${isAppPlayerClass}`}
     >
-      <span className="status">
+      <span
+        className={`status ${
+          isQuestionRoundOver && changeInMoney && changeInMoney > 0
+            ? "bg-success"
+            : ""
+        }`}
+      >
         <Status
           {...{
             isWinningPlayer,
+            isTurnPlayer,
             changeInMoney,
             isQuestionRoundOver,
             isDead: player.isDead,
             hasFolded,
             allPlayersPlacedTheirGuess,
             playerHasPlacedTheirGuess: !!guess,
+            playerAction,
           }}
         />
       </span>
