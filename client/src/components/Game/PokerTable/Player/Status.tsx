@@ -1,7 +1,7 @@
 import React from "react";
 import { Close, EmojiObjects, MoreHoriz } from "@material-ui/icons";
-import { GiLaurelsTrophy, GiPartyPopper, GiTombstone } from "react-icons/gi";
-import { FaSadCry } from "react-icons/fa";
+import { GiLaurelsTrophy, GiPartyPopper } from "react-icons/gi";
+import { FaSadCry, FaSkullCrossbones } from "react-icons/fa";
 import { FiArrowUp, FiMinus } from "react-icons/fi";
 import { CgMore } from "react-icons/cg";
 
@@ -36,7 +36,7 @@ function Status({
   isTurnPlayer,
 }: Props) {
   if (isDead) {
-    return <GiTombstone />;
+    return <FaSkullCrossbones />;
   }
   if (hasFolded) {
     return <Close fontSize="large" />;
