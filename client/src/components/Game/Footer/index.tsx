@@ -49,17 +49,6 @@ export default ({
             gameId={game.id}
             isDisabled={game.players.length <= 1}
           />
-          // <button
-          //   className="btn btn-lg btn-primary mt-auto mx-5"
-          //   disabled={game.players.length <= 1}
-          //   onClick={() => {
-          //     startGame({
-          //       variables: { gameId: game.id },
-          //     });
-          //   }}
-          // >
-          //   Start Game
-          // </button>
         )}
         {!hasPlayerPlacedGuessInCurrentQuestionRound &&
           game.questionRounds.length > 1 && (
