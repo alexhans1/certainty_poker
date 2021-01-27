@@ -17,6 +17,7 @@ import GuessMap from "../GuessMap";
 import MultipleChoiceOptions from "../MultipleChoiceOptions";
 
 import "./styles.scss";
+import { getWinningPlayerArray } from "./helpers";
 interface Props {
   game: Game;
   usedQuestionRound?: QuestionRound;
@@ -38,6 +39,8 @@ const PokerTable = ({
     usedQuestionRound &&
     game.players &&
     haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
+  const winningPlayerIds = getWinningPlayerArray(game) || [];
+
   return (
     <div className="d-flex flex-column align-items-center">
       {usedQuestionRound && isGeoQuestion && (
@@ -79,6 +82,7 @@ const PokerTable = ({
                   allPlayersPlacedTheirGuess,
                   guess,
                   question: usedQuestionRound?.question,
+                  isWinningPlayer: winningPlayerIds.includes(player.id),
                 }}
               />
             );

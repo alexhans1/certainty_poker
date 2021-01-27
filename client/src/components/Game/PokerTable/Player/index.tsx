@@ -10,7 +10,7 @@ import {
 } from "../../../../interfaces";
 import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
 import FormattedGuess from "../../Guess";
-import { getCurrentPlayerAction } from "./helpers";
+import { getCurrentPlayerAction } from "../helpers";
 
 import "./styles.scss";
 
@@ -50,6 +50,7 @@ export default ({
   const isTurnPlayerClass =
     isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : "";
   const isAppPlayerClass = isAppPlayer ? "isAppPlayer" : "";
+  const isDeadClass = player.isDead ? "is-dead" : "";
 
   const bettingRoundSpending = currentBettingRound
     ? calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id)
@@ -68,7 +69,7 @@ export default ({
     <div
       className={`player player-${
         index + 1
-      } ${isTurnPlayerClass} ${isAppPlayerClass}`}
+      } ${isTurnPlayerClass} ${isAppPlayerClass} ${isDeadClass}`}
     >
       <span
         className={`status ${

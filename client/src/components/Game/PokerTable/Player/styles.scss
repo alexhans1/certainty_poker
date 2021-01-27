@@ -44,6 +44,10 @@
     }
   }
 
+  &.is-dead {
+    filter: brightness(0.6);
+  }
+
   .name {
     width: 100%;
     white-space: nowrap;
