@@ -38,7 +38,7 @@ export default ({
     : calculateAmountToCall(currentBettingRound, playerId);
   return (
     <div
-      className="d-flex w-100 flex-row  justify-content-between pb-3 px-1"
+      className="d-flex flex-row  justify-content-between pb-3 px-1"
       style={styles}
     >
       <span>
@@ -47,13 +47,6 @@ export default ({
           💰
         </span>
         {totalPot}/{playerPot}
-      </span>
-      <span>
-        To call:{" "}
-        <span role="img" aria-label="money">
-          💰
-        </span>
-        {amountToCall}
       </span>
     </div>
   );

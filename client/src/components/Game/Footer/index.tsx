@@ -1,6 +1,10 @@
 import React from "react";
 import { QuestionRound, Game, BettingRound, Player } from "../../../interfaces";
 import ActionButtons, { ActionButtonsProps } from "../ActionButtons";
+import {
+  getCurrentBettingRound,
+  haveAllPlayersPlacedTheirGuess,
+} from "../helpers";
 import Pot from "../Pot";
 import StartGameButton from "./StartGameButton";
 
@@ -13,19 +17,20 @@ export type StartGame = ({
 }) => void;
 
 interface FooterProps
-  extends Omit<ActionButtonsProps, "currentQuestionRound" | "playerId"> {
+  extends Omit<
+    ActionButtonsProps,
+    "currentQuestionRound" | "playerId" | "isAppPlayerTurn"
+  > {
   startGame: StartGame;
   playerId?: Player["id"];
-  currentQuestionRound?: QuestionRound;
-  currentBettingRound?: BettingRound;
+  usedQuestionRound: QuestionRound;
   hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
   setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default ({
   game,
-  currentQuestionRound,
-  currentBettingRound,
+  usedQuestionRound,
   playerId,
   placeBet,
   startGame,
@@ -36,9 +41,13 @@ export default ({
     game?.isOver ||
     (game &&
       game.questionRounds.length > 1 &&
-      !currentQuestionRound?.guesses.find(
-        (guess) => guess.playerId === playerId
-      ));
+      !usedQuestionRound?.guesses.find((guess) => guess.playerId === playerId));
+
+  const currentBettingRound = getCurrentBettingRound(usedQuestionRound);
+
+  const isAppPlayerTurn =
+    currentBettingRound?.currentPlayer.id === playerId &&
+    haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
 
   return (
     <div className="footer">
@@ -61,28 +70,26 @@ export default ({
               Answer New Question
             </button>
           )}
-        {hasPlayerPlacedGuessInCurrentQuestionRound &&
-          currentQuestionRound &&
-          currentBettingRound &&
-          playerId && (
-            <>
-              <Pot
+        {hasPlayerPlacedGuessInCurrentQuestionRound && playerId && (
+          <>
+            {/* <Pot
                 playerId={playerId}
                 currentQuestionRound={currentQuestionRound}
                 currentBettingRound={currentBettingRound}
                 revealPreviousAnswers={revealPreviousAnswers}
-              />
-              <ActionButtons
-                {...{
-                  game,
-                  currentQuestionRound,
-                  currentBettingRound,
-                  placeBet,
-                  playerId,
-                }}
-              />
-            </>
-          )}
+              /> */}
+            <ActionButtons
+              {...{
+                game,
+                usedQuestionRound,
+                currentBettingRound,
+                placeBet,
+                playerId,
+                isAppPlayerTurn,
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );
