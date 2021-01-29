@@ -22,7 +22,7 @@ import {
   setFingerprintToStorage,
   setPlayerIdToStorage,
 } from "../../storage";
-import PlayerTable from "./PlayerTable";
+import PokerTable from "./PokerTable";
 import Question from "./Question";
 import AnswerDrawer from "./AnswerDrawer";
 import NameInputDrawer from "./NameInputDrawer";
@@ -190,7 +190,7 @@ function GameComponent() {
         Certainty Poker
       </a>
       <div
-        className="grid mt-3"
+        className="d-flex flex-column mt-4"
         style={{ fontWeight: 300, paddingBottom: "130px" }}
       >
         {!gameHasStarted && (
@@ -210,7 +210,7 @@ function GameComponent() {
             </div>
           </h5>
         )}
-        <div>
+        {/* <div>
           {usedQuestionRound && (
             <Question
               {...{
@@ -243,15 +243,13 @@ function GameComponent() {
               )?.guess.numerical,
             }}
           />
-        </div>
-        <PlayerTable
+        </div> */}
+        <PokerTable
           {...{
-            players: game?.players,
-            playerId,
-            usedQuestionRound,
-            currentBettingRound,
-            isSpectator,
             game,
+            usedQuestionRound,
+            playerId,
+            isSpectator,
           }}
         />
         {isSpectator && usedQuestionRound?.isOver && !game.isOver && (
@@ -278,12 +276,11 @@ function GameComponent() {
           }}
         />
       )}
-      {!game.isOver && !isSpectator && (
+      {!game.isOver && !isSpectator && usedQuestionRound && (
         <Footer
           {...{
             game,
-            currentQuestionRound,
-            currentBettingRound,
+            usedQuestionRound,
             placeBet,
             playerId,
             startGame,
