@@ -37,10 +37,7 @@ export default ({
     ? 0
     : calculateAmountToCall(currentBettingRound, playerId);
   return (
-    <div
-      className="d-flex flex-row  justify-content-between pb-3 px-1"
-      style={styles}
-    >
+    <div className="flex flex-row  justify-between pb-3 px-1" style={styles}>
       <span>
         Pot (total/you):{" "}
         <span role="img" aria-label="money">

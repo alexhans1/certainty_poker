@@ -14,7 +14,7 @@ import {
 } from "../../../interfaces";
 import PlayerRow from "./PlayerRow";
 
-import "./styles.scss";
+import "./styles.css";
 import colors, { GradientColor } from "./colors";
 
 interface ExtendedPlayer extends Player {

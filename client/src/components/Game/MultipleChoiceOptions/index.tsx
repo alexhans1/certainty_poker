@@ -2,7 +2,7 @@ import React from "react";
 import { QuestionRound, QuestionTypes } from "../../../interfaces";
 import { getRevealAnswer } from "../helpers";
 
-import "./index.scss";
+import "./index.css";
 
 interface Props {
   usedQuestionRound?: QuestionRound;

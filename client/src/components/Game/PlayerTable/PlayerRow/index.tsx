@@ -2,7 +2,7 @@ import React from "react";
 import { Player } from "../../../../interfaces";
 import { GradientColor } from "../colors";
 
-import "./styles.scss";
+import "./styles.css";
 
 export interface Props {
   id: Player["id"];
@@ -80,7 +80,7 @@ export default ({
         )}
       </div>
       <div className="money-container">
-        <div className="d-flex">
+        <div className="flex">
           <span role="img" aria-label="money bag">
             💰
           </span>
@@ -89,7 +89,7 @@ export default ({
             <span
               className={`ml-2 ${
                 questionRoundIsOver &&
-                (moneyChange > 0 ? "text-success" : "text-danger")
+                (moneyChange > 0 ? "text-green-500" : "text-red-500")
               }`}
             >
               {" "}

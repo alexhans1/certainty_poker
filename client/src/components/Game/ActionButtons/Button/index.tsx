@@ -9,7 +9,7 @@ interface ActionButtonProps {
 export default ({ text, handleOnClick, isDisabled }: ActionButtonProps) => {
   return (
     <button
-      className="btn btn-primary w-100"
+      className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 w-full"
       onClick={handleOnClick}
       disabled={isDisabled}
     >

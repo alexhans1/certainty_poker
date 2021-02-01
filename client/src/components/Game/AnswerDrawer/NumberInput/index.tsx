@@ -32,7 +32,7 @@ export default ({ handleSubmit }: Props) => {
       <div className="input-group-append">
         <button
           type="submit"
-          className="btn btn-primary"
+          className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
           disabled={typeof guess === "string" || (!guess && guess !== 0)}
           onClick={() => {
             handleSubmit(guess);

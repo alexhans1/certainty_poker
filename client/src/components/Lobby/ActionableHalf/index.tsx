@@ -8,7 +8,7 @@ import { CREATE_GAME_QUERY } from "../../../api/queries";
 import errorHandler from "../../../api/errorHandler";
 import UploadModal from "../UploadModal";
 
-import "./styles.scss";
+import "./styles.css";
 
 interface Props {
   sets?: Set[];
@@ -93,7 +93,7 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
           </p>
         </>
       )}
-      <div className="d-flex my-3">
+      <div className="flex my-3">
         {languages.map((language) => (
           <span
             key={language}

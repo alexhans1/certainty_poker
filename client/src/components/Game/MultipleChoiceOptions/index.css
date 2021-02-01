@@ -1,0 +1,15 @@
+.mc-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px 15px;
+}
+.mc-container button {
+  border-radius: 0;
+}
+.mc-container button.no-pointer {
+  cursor: default !important;
+  pointer-events: none;
+}
+.mc-container button.box-shadow {
+  box-shadow: 7px 7px 12px #222;
+}

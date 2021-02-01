@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useSound from "use-sound";
-import FileCopy from "@material-ui/icons/FileCopy";
 import {
   useLazyQuery,
   useMutation,
@@ -22,14 +21,13 @@ import {
   setFingerprintToStorage,
   setPlayerIdToStorage,
 } from "../../storage";
+import { ButtonLink } from "../base/Button";
+import PreGameLobby from "./PreGameLobby";
 import PokerTable from "./PokerTable";
-import Question from "./Question";
 import AnswerDrawer from "./AnswerDrawer";
 import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
 import LeaveGameButton from "./LeaveGameButton";
-import GuessMap from "./GuessMap";
-import MultipleChoiceOptions from "./MultipleChoiceOptions";
 import {
   getCurrentQuestionRound,
   getCurrentBettingRound,
@@ -38,7 +36,7 @@ import {
 } from "./helpers";
 import errorLogger from "../../api/errorHandler";
 
-import "./styles.scss";
+import "./styles.css";
 
 const vibrate = (t: number) => {
   window.navigator.vibrate && window.navigator.vibrate(t);
@@ -185,30 +183,20 @@ function GameComponent() {
     : currentQuestionRound;
 
   return (
-    <div className="container-sm py-2">
-      <a href="/" id="title" className="unstyled-link">
+    <div className="py-6 flex flex-col justify-center">
+      <a href="/" className="mr-auto text-3xl font-bold">
         Certainty Poker
       </a>
-      <div
-        className="d-flex flex-column mt-4"
-        style={{ fontWeight: 300, paddingBottom: "130px" }}
-      >
+      <div className="flex flex-col mt-4">
         {!gameHasStarted && (
-          <h5>
-            Share this link with your friends who want to join the game:
-            <br />
-            <div className="d-flex align-items-center">
-              {window.location.href}{" "}
-              <button
-                className="btn btn-link p-0"
-                onClick={async () => {
-                  await navigator.clipboard.writeText(window.location.href);
-                }}
-              >
-                <FileCopy className="ml-1" />
-              </button>
-            </div>
-          </h5>
+          <PreGameLobby
+            players={game.players}
+            gameLink={window.location.href}
+            startGame={startGame}
+            gameId={game.id}
+            createPlayer={createPlayer}
+            playerId={playerId}
+          />
         )}
         {/* <div>
           {usedQuestionRound && (
@@ -244,14 +232,16 @@ function GameComponent() {
             }}
           />
         </div> */}
-        <PokerTable
-          {...{
-            game,
-            usedQuestionRound,
-            playerId,
-            isSpectator,
-          }}
-        />
+        {gameHasStarted && (
+          <PokerTable
+            {...{
+              game,
+              usedQuestionRound,
+              playerId,
+              isSpectator,
+            }}
+          />
+        )}
         {isSpectator && usedQuestionRound?.isOver && !game.isOver && (
           <button
             className="new-question-button btn btn-light mx-auto mt-5"
@@ -288,9 +278,6 @@ function GameComponent() {
             setShowAnswerDrawer,
           }}
         />
-      )}
-      {!gameHasStarted && (
-        <NameInputDrawer {...{ gameId, createPlayer, playerId }} />
       )}
 
       <LeaveGameButton {...{ gameId, playerId, gameHasStarted, setPlayerId }} />

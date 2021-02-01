@@ -33,7 +33,7 @@ export default ({ usedQuestionRound }: HintsProps) => {
     return null;
   }
   return (
-    <div className="d-flex flex-column">
+    <div className="flex flex-col">
       <span style={styles.title}>
         Hint{numberOfHints > 1 && "s"} ({numberOfHints}/{hints.length}):
       </span>

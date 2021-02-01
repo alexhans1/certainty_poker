@@ -13,7 +13,7 @@ import {
 import { equals } from "ramda";
 import { GeoCoordinate } from "../../../interfaces";
 
-import "./styles.scss";
+import "./styles.css";
 
 type HandleOnClick = (p: GeoCoordinate) => void;
 export interface Marker {

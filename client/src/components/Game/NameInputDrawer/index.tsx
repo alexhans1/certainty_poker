@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Drawer from "../../Drawer";
 import { Game, Player } from "../../../interfaces";
 
-type CreatePlayer = ({
+export type CreatePlayer = ({
   variables: {
     input: { gameId, playerName },
   },
@@ -31,11 +31,12 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
       anchor={"bottom"}
       open={!playerId}
       variant="persistent"
-      className="drawer"
     >
       <>
-        <p>Add you name to join the game</p>
-        <div className="input-group mb-3">
+        <p className="font-bold">Enter your name</p>
+        <p className="mt-4 text-sm">Username</p>
+
+        <div className="grid grid-cols-2 gap-4">
           <input
             value={name}
             onChange={(e) => {
@@ -47,22 +48,20 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
               }
             }}
             type="text"
-            className="form-control form-control-lg"
-            placeholder="Type an emoji or letter"
+            className="bg-white border border-gray-400 px-4"
+            placeholder="Your name"
             aria-label="Your answer"
             aria-describedby="basic-addon2"
             autoFocus
           />
-          <div className="input-group-append">
-            <button
-              type="submit"
-              disabled={!name.length}
-              className="btn btn-primary"
-              onClick={handleSubmit}
-            >
-              ⮑
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={!name.length}
+            className="bg-blue-500 mr-auto rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </div>
       </>
     </Drawer>

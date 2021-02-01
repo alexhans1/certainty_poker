@@ -25,7 +25,7 @@ export default ({ usedQuestionRound, handleSubmit, alternatives }: Props) => {
         guess={guess}
       />
       <button
-        className="btn btn-primary ml-auto"
+        className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 ml-auto"
         onClick={() => {
           if (guess || guess === 0) {
             handleSubmit(guess);

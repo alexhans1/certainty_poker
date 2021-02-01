@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import Lobby from "../Lobby";
 import Game from "../Game";
 
-import "./styles.scss";
+import "./styles.css";
 
 function PageNotFound() {
   return <p>Page not found.</p>;
@@ -11,7 +11,10 @@ function PageNotFound() {
 
 function App() {
   return (
-    <div id="app">
+    <div
+      id="app"
+      className="mx-auto max-w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl"
+    >
       <Switch>
         <Route path="/" component={Lobby} exact />
         <Route path="/:gameId" component={Game} exact />

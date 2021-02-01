@@ -1,0 +1,32 @@
+.grid-container {
+  display: grid;
+}
+.grid-container .text-smaller {
+  font-size: 0.8em;
+}
+@media (min-width: 992px) {
+  .grid-container {
+    flex-direction: column;
+    grid-template-columns: 1fr 1fr;
+  }
+  .grid-container .actionable-container {
+    height: 100vh;
+    overflow-y: scroll;
+  }
+  .grid-container .actionable-container::-webkit-scrollbar {
+    display: none;
+  }
+  .grid-container .image-container {
+    height: 100vh;
+  }
+}
+.grid-container .image-container {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.grid-container .image-container img {
+  max-width: 100%;
+  height: auto;
+}

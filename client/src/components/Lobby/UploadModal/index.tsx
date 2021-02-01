@@ -177,7 +177,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
                 <>
                   <br />
                   <span key={alt}>
-                    <b className={i === 0 ? "text-success" : ""}>{alt}</b>
+                    <b className={i === 0 ? "text-green-500" : ""}>{alt}</b>
                   </span>
                 </>
               ))}
@@ -211,7 +211,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
         </label>
       </div>
       <button
-        className="btn btn-primary"
+        className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
         disabled={!setName || !language}
         onClick={() => {
           uploadQuestions();
@@ -236,7 +236,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
       disableEnforceFocus
       disableAutoFocus
       open={open}
-      className="d-flex justify-content-center align-items-center p-5"
+      className="flex justify-center items-center p-5"
       onClose={handleClose}
       closeAfterTransition
       BackdropComponent={Backdrop}

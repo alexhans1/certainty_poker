@@ -8,20 +8,13 @@ import {
 import Pot from "../Pot";
 import StartGameButton from "./StartGameButton";
 
-import "./styles.scss";
-
-export type StartGame = ({
-  variables: { gameId },
-}: {
-  variables: { gameId: Game["id"] };
-}) => void;
+import "./styles.css";
 
 interface FooterProps
   extends Omit<
     ActionButtonsProps,
     "currentQuestionRound" | "playerId" | "isAppPlayerTurn"
   > {
-  startGame: StartGame;
   playerId?: Player["id"];
   usedQuestionRound: QuestionRound;
   hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
@@ -33,7 +26,6 @@ export default ({
   usedQuestionRound,
   playerId,
   placeBet,
-  startGame,
   hasPlayerPlacedGuessInCurrentQuestionRound,
   setShowAnswerDrawer,
 }: FooterProps) => {
@@ -52,17 +44,10 @@ export default ({
   return (
     <div className="footer">
       <div className="footer-content">
-        {!game.questionRounds.length && (
-          <StartGameButton
-            startGame={startGame}
-            gameId={game.id}
-            isDisabled={game.players.length <= 1}
-          />
-        )}
         {!hasPlayerPlacedGuessInCurrentQuestionRound &&
           game.questionRounds.length > 1 && (
             <button
-              className="new-question-button btn btn-primary mx-auto"
+              className="new-question-button bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
               onClick={() => {
                 setShowAnswerDrawer(true);
               }}

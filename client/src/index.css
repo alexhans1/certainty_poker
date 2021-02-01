@@ -1,3 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-overflow-ellipsis {
+    text-overflow: ellipsis;
+  }
+}
+
 html,
 body,
 #root {
@@ -12,17 +22,4 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #282c39;
-  background: linear-gradient(#393d4e, #282c39);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
 }
-
-$body-color: #ebebeb;
-$theme-colors: (
-  "primary": #face37,
-  "success": #269e5c,
-);
-
-// Bootstrap and its default variables
-@import "node_modules/bootstrap/scss/bootstrap";

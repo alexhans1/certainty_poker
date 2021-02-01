@@ -12,7 +12,7 @@ import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
 import FormattedGuess from "../../Guess";
 import { getCurrentPlayerAction } from "../helpers";
 
-import "./styles.scss";
+import "./styles.css";
 
 interface Props {
   player: Player;
@@ -94,28 +94,28 @@ export default ({
       </span>
       <div className="info">
         <span className="name">{player.name}</span>
-        <div className="d-flex align-items-center">
+        <div className="flex items-center">
           <MonetizationOn className="mr-1" fontSize="small" />
           <span>{player.money}</span>
           {isQuestionRoundOver && changeInMoney && (
             <span
               className={`ml-1 ${
-                changeInMoney > 0 ? "text-success" : "text-danger"
+                changeInMoney > 0 ? "text-green-500" : "text-red-500"
               }`}
             >
               ({changeInMoney})
             </span>
           )}
         </div>
-        <div className="inner-info">
+        <div className="inner-info text-gray-800">
           {!isQuestionRoundOver && !!bettingRoundSpending && (
-            <div className="d-flex align-items-center">
+            <div className="flex items-center">
               <MonetizationOn className="mx-1" fontSize="inherit" />
               <span>{bettingRoundSpending}</span>
             </div>
           )}
           {revealGuess && question?.type && guess?.guess && (
-            <div className="d-flex align-items-center">
+            <div className="flex items-center">
               <EmojiObjects className="mx-1" fontSize="inherit" />
               <FormattedGuess
                 {...{

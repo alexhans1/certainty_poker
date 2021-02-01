@@ -16,7 +16,7 @@ import {
 import GuessMap from "../GuessMap";
 import MultipleChoiceOptions from "../MultipleChoiceOptions";
 
-import "./styles.scss";
+import "./styles.css";
 import { getWinningPlayerArray } from "./helpers";
 interface Props {
   game: Game;
@@ -42,7 +42,7 @@ const PokerTable = ({
   const winningPlayerIds = getWinningPlayerArray(game) || [];
 
   return (
-    <div className="d-flex flex-column align-items-center">
+    <div className="flex flex-col items-center">
       {usedQuestionRound && isGeoQuestion && (
         <Question
           {...{

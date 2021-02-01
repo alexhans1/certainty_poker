@@ -39,7 +39,7 @@ export default ({
   const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
 
   return (
-    <div className="d-flex flex-column w-100">
+    <div className="flex flex-col w-full">
       <ActionButton
         text={amountToCall > 0 ? `Call for ${amountToCall}` : "Check"}
         handleOnClick={() => {
@@ -47,7 +47,7 @@ export default ({
         }}
         isDisabled={amountToCall <= 0 || !isAppPlayerTurn}
       />
-      <div className="d-flex justify-content-between flex-row my-2">
+      <div className="flex justify-between flex-row my-2">
         <ActionButton
           text="Raise"
           handleOnClick={() => {
