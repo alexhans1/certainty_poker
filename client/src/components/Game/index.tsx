@@ -21,11 +21,9 @@ import {
   setFingerprintToStorage,
   setPlayerIdToStorage,
 } from "../../storage";
-import { ButtonLink } from "../base/Button";
 import PreGameLobby from "./PreGameLobby";
 import PokerTable from "./PokerTable";
 import AnswerDrawer from "./AnswerDrawer";
-import NameInputDrawer from "./NameInputDrawer";
 import Footer from "./Footer";
 import LeaveGameButton from "./LeaveGameButton";
 import {

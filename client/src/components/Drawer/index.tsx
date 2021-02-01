@@ -3,12 +3,12 @@ import Drawer, { DrawerProps } from "@material-ui/core/Drawer";
 
 import "./styles.css";
 
-interface QuestionProps extends DrawerProps {
+interface Props extends DrawerProps {
   children: ReactNode;
   onClose?: () => void;
 }
 
-export default ({ children, onClose, ...drawerProps }: QuestionProps) => {
+export default ({ children, onClose, ...drawerProps }: Props) => {
   return (
     <Drawer
       {...{
@@ -17,7 +17,11 @@ export default ({ children, onClose, ...drawerProps }: QuestionProps) => {
     >
       <div className="flex items-center flex-col bg-gray-200 py-4">
         {onClose && (
-          <span id="drawer-close" className="ml-auto mr-3" onClick={onClose}>
+          <span
+            id="drawer-close"
+            className="ml-auto mr-3 -mb-4 -mt-2"
+            onClick={onClose}
+          >
             ╳
           </span>
         )}

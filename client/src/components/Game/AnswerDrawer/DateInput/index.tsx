@@ -18,7 +18,7 @@ export default ({ handleSubmit }: Props) => {
   };
 
   return (
-    <div className="input-group mb-3">
+    <div className="grid grid-cols-2 gap-4">
       <input
         value={guess}
         onChange={(e) => {
@@ -30,24 +30,22 @@ export default ({ handleSubmit }: Props) => {
           }
         }}
         type="date"
-        className="form-control form-control-lg"
+        className="bg-white border border-gray-400 px-4"
         placeholder="Your answer"
         aria-label="Your answer"
         aria-describedby="basic-addon2"
         autoFocus
       />
-      <div className="input-group-append">
-        <button
-          type="submit"
-          className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
-          disabled={!guess}
-          onClick={() => {
-            submit(guess);
-          }}
-        >
-          ⮑
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="bg-blue-500 mr-auto rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
+        disabled={!guess}
+        onClick={() => {
+          submit(guess);
+        }}
+      >
+        Submit
+      </button>
     </div>
   );
 };

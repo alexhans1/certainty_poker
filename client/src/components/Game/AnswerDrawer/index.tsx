@@ -85,7 +85,6 @@ export default ({
 
   return (
     <Drawer
-      title="New Question"
       onClose={() => {
         setShowAnswerDrawer(false);
       }}
@@ -97,7 +96,8 @@ export default ({
       variant="persistent"
     >
       <>
-        <p>{currentQuestionRound.question.question}</p>
+        <p className="font-bold">{currentQuestionRound.question.question}</p>
+        <p className="mt-4 text-sm">Your answer</p>
         {getInput()}
       </>
     </Drawer>
