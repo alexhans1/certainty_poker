@@ -2,6 +2,7 @@ import React from "react";
 import PlayerComp from "./Player";
 import Question from "../Question";
 import {
+  BettingRound,
   Game,
   Guess,
   Player,
@@ -21,6 +22,7 @@ import { getWinningPlayerArray } from "./helpers";
 interface Props {
   game: Game;
   usedQuestionRound?: QuestionRound;
+  currentBettingRound?: BettingRound;
   playerId?: Player["id"];
   isSpectator: boolean;
 }
@@ -28,10 +30,10 @@ interface Props {
 const PokerTable = ({
   game,
   usedQuestionRound,
+  currentBettingRound,
   playerId,
   isSpectator,
 }: Props) => {
-  const currentBettingRound = getCurrentBettingRound(usedQuestionRound);
   const isGeoQuestion = usedQuestionRound?.question.type === QuestionTypes.GEO;
   const isMultipleChoiceQuestion =
     usedQuestionRound?.question.type === QuestionTypes.MULTIPLE_CHOICE;

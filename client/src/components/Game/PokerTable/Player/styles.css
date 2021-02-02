@@ -20,7 +20,6 @@
 .player .status {
   height: 5em;
   width: 5em;
-  background-color: lightgrey;
   border-radius: 50%;
   margin-left: -1.5em;
   display: flex;

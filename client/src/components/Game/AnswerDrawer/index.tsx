@@ -93,7 +93,7 @@ export default ({
         (showAnswerDrawer || game.questionRounds.length === 1) &&
         !hasPlayerPlacedGuessInCurrentQuestionRound
       }
-      variant="persistent"
+      variant="temporary"
     >
       <>
         <p className="font-bold">{currentQuestionRound.question.question}</p>

@@ -3,7 +3,7 @@ import { FiCopy } from "react-icons/fi";
 import PlayerSpot from "./PlayerSpot";
 import { Game, Player } from "../../../interfaces";
 import { ButtonLink } from "../../base/Button";
-import StartGameButton, { StartGame } from "../Footer/StartGameButton";
+import StartGameButton, { StartGame } from "./StartGameButton";
 import NameInputDrawer, { CreatePlayer } from "../NameInputDrawer";
 
 interface Props {

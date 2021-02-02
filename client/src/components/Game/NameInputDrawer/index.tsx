@@ -30,7 +30,7 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
       title="Your name"
       anchor={"bottom"}
       open={!playerId}
-      variant="persistent"
+      variant="temporary"
     >
       <>
         <p className="font-bold">Enter your name</p>

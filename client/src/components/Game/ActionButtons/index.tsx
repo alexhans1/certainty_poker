@@ -39,32 +39,30 @@ export default ({
   const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="grid grid-cols-3 gap-4">
       <ActionButton
         text={amountToCall > 0 ? `Call for ${amountToCall}` : "Check"}
         handleOnClick={() => {
           call(placeBet, game, playerId);
         }}
-        isDisabled={amountToCall <= 0 || !isAppPlayerTurn}
+        isDisabled={!isAppPlayerTurn}
       />
-      <div className="flex justify-between flex-row my-2">
-        <ActionButton
-          text="Raise"
-          handleOnClick={() => {
-            setShowRaiseDrawer(true);
-          }}
-          isDisabled={
-            (player?.money && amountToCall >= player?.money) || !isAppPlayerTurn
-          }
-        />
-        <ActionButton
-          text="Fold"
-          handleOnClick={() => {
-            fold(placeBet, game, playerId);
-          }}
-          isDisabled={!isAppPlayerTurn}
-        />
-      </div>
+      <ActionButton
+        text="Raise"
+        handleOnClick={() => {
+          setShowRaiseDrawer(true);
+        }}
+        isDisabled={
+          (player?.money && amountToCall >= player?.money) || !isAppPlayerTurn
+        }
+      />
+      <ActionButton
+        text="Fold"
+        handleOnClick={() => {
+          fold(placeBet, game, playerId);
+        }}
+        isDisabled={!isAppPlayerTurn}
+      />
       {/* {[
         {
           text: amountToCall > 0 ? `Call for ${amountToCall}` : "Check",

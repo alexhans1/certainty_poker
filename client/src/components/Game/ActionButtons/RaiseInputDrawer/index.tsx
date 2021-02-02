@@ -52,7 +52,7 @@ export default ({
     >
       <>
         <p>Raise by how much?</p>
-        <div className="input-group mb-3">
+        <div className="grid grid-cols-2 gap-4">
           <input
             value={amount}
             onChange={(e) => {
@@ -67,30 +67,28 @@ export default ({
             pattern="[0-9]"
             min={amountToCall}
             max={moneyRemaining}
-            className="form-control form-control-lg"
+            className="bg-white border border-gray-400 px-4"
             placeholder="Amount to raise"
             aria-label="Amount to raise"
             aria-describedby="basic-addon2"
             autoFocus
           />
-          <div className="input-group-append">
-            <button
-              disabled={
-                !!moneyRemaining &&
-                (amount < amountToCall || amount > moneyRemaining)
-              }
-              className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
-              onClick={handleSubmit}
-            >
-              ⮑
-            </button>
-          </div>
+          <button
+            disabled={
+              !!moneyRemaining &&
+              (amount < amountToCall || amount > moneyRemaining)
+            }
+            className="bg-blue-500 mr-auto rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </div>
         {moneyRemaining && (
           <span
             style={{ cursor: "pointer" }}
             onClick={() => setAmount(moneyRemaining)}
-            className="badge badge-pill badge-primary mr-auto px-4"
+            className="mt-2 text-white bg-blue-500 mr-auto px-4 rounded-2xl hover:bg-blue-600"
           >
             All in
           </span>

@@ -6,6 +6,9 @@
   .text-overflow-ellipsis {
     text-overflow: ellipsis;
   }
+  .z-1003 {
+    z-index: 1003;
+  }
 }
 
 html,

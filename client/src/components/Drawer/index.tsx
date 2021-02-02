@@ -15,7 +15,7 @@ export default ({ children, onClose, ...drawerProps }: Props) => {
         ...drawerProps,
       }}
     >
-      <div className="flex items-center flex-col bg-gray-200 py-4">
+      <div className="flex items-center flex-col bg-gray-200 py-4 min-h-52">
         {onClose && (
           <span
             id="drawer-close"

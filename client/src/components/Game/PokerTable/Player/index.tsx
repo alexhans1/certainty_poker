@@ -65,6 +65,11 @@ export default ({
     currentBettingRound
   );
 
+  let playerMoney = player.money;
+  if (isQuestionRoundOver) {
+    playerMoney += bettingRoundSpending;
+  }
+
   return (
     <div
       className={`player player-${
@@ -72,10 +77,10 @@ export default ({
       } ${isTurnPlayerClass} ${isAppPlayerClass} ${isDeadClass}`}
     >
       <span
-        className={`status ${
+        className={`status text-gray-900 ${
           isQuestionRoundOver && changeInMoney && changeInMoney > 0
-            ? "bg-success"
-            : ""
+            ? "bg-green-500"
+            : "bg-gray-400"
         }`}
       >
         <Status
@@ -96,14 +101,15 @@ export default ({
         <span className="name">{player.name}</span>
         <div className="flex items-center">
           <MonetizationOn className="mr-1" fontSize="small" />
-          <span>{player.money}</span>
+          <span>{playerMoney}</span>
           {isQuestionRoundOver && changeInMoney && (
             <span
               className={`ml-1 ${
                 changeInMoney > 0 ? "text-green-500" : "text-red-500"
               }`}
             >
-              ({changeInMoney})
+              ({changeInMoney > 0 ? "+" : ""}
+              {changeInMoney})
             </span>
           )}
         </div>

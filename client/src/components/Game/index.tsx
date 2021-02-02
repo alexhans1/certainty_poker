@@ -181,7 +181,7 @@ function GameComponent() {
     : currentQuestionRound;
 
   return (
-    <div className="py-6 flex flex-col justify-center">
+    <div className="py-2 flex flex-col justify-center mb-44">
       <a href="/" className="mr-auto text-3xl font-bold">
         Certainty Poker
       </a>
@@ -235,6 +235,7 @@ function GameComponent() {
             {...{
               game,
               usedQuestionRound,
+              currentBettingRound,
               playerId,
               isSpectator,
             }}
@@ -264,16 +265,17 @@ function GameComponent() {
           }}
         />
       )}
-      {!game.isOver && !isSpectator && usedQuestionRound && (
+      {!game.isOver && player && !isSpectator && usedQuestionRound && (
         <Footer
           {...{
             game,
             usedQuestionRound,
             placeBet,
-            playerId,
+            player,
             startGame,
             hasPlayerPlacedGuessInCurrentQuestionRound,
             setShowAnswerDrawer,
+            currentBettingRound,
           }}
         />
       )}
