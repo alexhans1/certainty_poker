@@ -13,12 +13,6 @@ import countryCodes from "../../../assets/countryCodes";
 import processCsvData from "./processCsvData";
 import Guess from "../../Game/Guess";
 
-const styles = {
-  card: {
-    maxHeight: "95vh",
-  },
-};
-
 export interface CSVDataRow {
   question: string;
   type: QuestionTypes;
@@ -83,9 +77,10 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
 
   const content = showCSVInput ? (
     <>
-      <p>
+      <p className="mb-3">
         An example of the file format can be found{" "}
         <a
+          className="text-blue-700 hover:text-blue-900"
           target="_blank"
           rel="noopener noreferrer"
           href="https://docs.google.com/spreadsheets/d/1_cUrvCc3R2qTL_ME-A9wc9HmyH-zoAQkRnBs80dOPb8/edit?usp=sharing"
@@ -106,23 +101,21 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
     </>
   ) : (
     <>
-      <div className="input-group mb-2">
+      <div className="flex">
         <input
           value={setName}
           onChange={(e) => {
             setSetName(e.target.value);
           }}
           type="text"
-          className="form-control form-control-lg"
+          className="rounded-md bg-white border border-gray-400 px-4 py-2 mr-4"
           placeholder="Name for the question set"
           aria-label="Name for the question set"
           required
           autoFocus
         />
-      </div>
-      <div className="input-group mb-3">
         <select
-          className="custom-select"
+          className="rounded-md bg-white border border-gray-400 px-4 py-2"
           required
           value={language}
           onChange={(e) => {
@@ -138,15 +131,16 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
           ))}
         </select>
       </div>
-      <h3>Review your upload:</h3>
+      <h3 className="text-2xl mb-3 mt-5">Review your upload:</h3>
       <hr />
       {(data || []).map((q) => (
         <div key={q.question} className="small">
-          <p>
+          <p className="my-3">
             Question: <b>{q.question}</b>
           </p>
+
           {q.type !== QuestionTypes.MULTIPLE_CHOICE && (
-            <p>
+            <p className="my-3">
               Answer:{" "}
               <b>
                 <Guess
@@ -158,7 +152,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
             </p>
           )}
           {!!q.hints?.length && (
-            <p>
+            <p className="my-3">
               Hints:{" "}
               {q.hints.map((h: string) => (
                 <>
@@ -171,7 +165,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
             </p>
           )}
           {!!q.alternatives?.length && (
-            <p>
+            <p className="my-3">
               Alternatives:{" "}
               {q.alternatives.map((alt, i) => (
                 <>
@@ -184,24 +178,24 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
             </p>
           )}
           {q.explanation && (
-            <p>
+            <p className="my-3">
               Explanation: <b>{q.explanation}</b>
             </p>
           )}
-          <hr />
+          <hr className="my-3" />
         </div>
       ))}
-      <div className="form-check">
+      <div className="flex">
         <input
           type="checkbox"
-          className="form-check-input mt-2"
+          className="mt-2"
           id="isPrivateCheckbox"
           value={isPrivate}
           onChange={() => {
             setIsPrivate(isPrivate ? 0 : 1);
           }}
         />
-        <label className="form-check-label" htmlFor="isPrivateCheckbox">
+        <label className="ml-2" htmlFor="isPrivateCheckbox">
           Questions are private
           <br />
           <span>
@@ -210,23 +204,25 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
           </span>
         </label>
       </div>
-      <button
-        className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
-        disabled={!setName || !language}
-        onClick={() => {
-          uploadQuestions();
-        }}
-      >
-        Submit
-      </button>
-      <button
-        className="btn btn-outline-dark ml-3"
-        onClick={() => {
-          setShowCSVInput(true);
-        }}
-      >
-        Upload new file
-      </button>
+      <div className="flex mt-3">
+        <button
+          className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
+          disabled={!setName || !language}
+          onClick={() => {
+            uploadQuestions();
+          }}
+        >
+          Submit
+        </button>
+        <button
+          className="border-2 boder-gray-800 rounded-lg font-bold hover:text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-800 ml-3"
+          onClick={() => {
+            setShowCSVInput(true);
+          }}
+        >
+          Upload new file
+        </button>
+      </div>
     </>
   );
 
@@ -244,9 +240,11 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
         timeout: 500,
       }}
     >
-      <div className="card" style={styles.card}>
-        <div className="card-body text-dark overflow-auto">
-          <h3>Upload a CSV file with custom questions</h3>
+      <div className="flex py-6 px-6 md:px-8 my-2 md:my-6 mx-2 md:mx-6 lg:mx-10 max-h-full bg-white rounded-md focus:outline-none">
+        <div className="overflow-y-auto flex-shrink-0 max-w-full flex flex-col">
+          <h3 className="text-2xl mb-2">
+            Upload a CSV file with custom questions
+          </h3>
           {content}
           {error && <div className="alert alert-danger">{error.message}</div>}
         </div>

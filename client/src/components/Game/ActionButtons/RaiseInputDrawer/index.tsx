@@ -21,7 +21,7 @@ interface Props {
   setShowRaiseDrawer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default ({
+export default function RaiseInputDrawer({
   currentBettingRound,
   game,
   handleRaise,
@@ -29,7 +29,7 @@ export default ({
   playerId,
   showRaiseDrawer,
   setShowRaiseDrawer,
-}: Props) => {
+}: Props) {
   const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
   const moneyRemaining = game.players.find(({ id }) => id === playerId)?.money;
   const [amount, setAmount] = useState(amountToCall);
@@ -96,4 +96,4 @@ export default ({
       </>
     </Drawer>
   );
-};
+}

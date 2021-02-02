@@ -51,7 +51,7 @@ export default function ActionableHalf({
   };
 
   return (
-    <div className="actionable-container container-sm px-sm-5 py-2">
+    <div className="actionable-container container-sm px-4 py-2">
       <a href="/" id="title" className="unstyled-link">
         Certainty Poker
       </a>
@@ -87,7 +87,7 @@ export default function ActionableHalf({
             <br />
             You don't like our questions? Upload your own{" "}
             <button
-              className="btn btn-link p-0"
+              className="text-blue-700 hover:text-blue-900 p-0"
               onClick={() => {
                 setIsUploadModalOpen(true);
               }}
@@ -163,7 +163,7 @@ export default function ActionableHalf({
       <p className="mt-4">
         Don't know the rules? Find them{" "}
         <a
-          className="btn btn-link p-0"
+          className="text-blue-700 hover:text-blue-900 p-0"
           href="https://docs.google.com/document/d/13pwz8yzrPdY1DcQqXvhejJAxXdWdPrvxR6GUxg5PJPs/edit?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
