@@ -9,6 +9,9 @@
   .z-1003 {
     z-index: 1003;
   }
+  .max-w-2xs {
+    max-width: 10rem;
+  }
 }
 
 html,

@@ -10,7 +10,11 @@ interface Props {
   guess?: number;
 }
 
-export default ({ usedQuestionRound, handleClick, guess }: Props) => {
+export default function MultipleChoiceOptions({
+  usedQuestionRound,
+  handleClick,
+  guess,
+}: Props) {
   if (usedQuestionRound?.question.type !== QuestionTypes.MULTIPLE_CHOICE) {
     return null;
   }
@@ -26,35 +30,31 @@ export default ({ usedQuestionRound, handleClick, guess }: Props) => {
   const answer = usedQuestionRound.question.answer.numerical;
 
   return (
-    <div className="mc-container mb-3">
+    <div className="mc-container my-2">
       {alternatives.map((alt, i) => {
-        let buttonClassName = "btn";
+        let optionClassName =
+          "text-center border-2 border-blue-600 rounded-lg shadow px-4 py-3 font-bold focus:outline-none";
         if (!handleClick) {
-          buttonClassName += " no-pointer";
-        }
-        if (guess === i) {
-          buttonClassName += handleClick ? " shadow" : " box-shadow";
+          optionClassName += " no-pointer";
         }
         if (alt.active) {
-          if (revealAnswer && i === answer) {
-            buttonClassName += " btn-outline-success";
-          } else {
-            if (handleClick) {
-              buttonClassName += " btn-outline-dark";
-              if (guess === i) {
-                buttonClassName += " bg-dark text-light";
-              }
+          if (handleClick) {
+            optionClassName += " hover:bg-blue-600 hover:text-white";
+            if (guess === i) {
+              optionClassName += " text-white bg-blue-600";
             } else {
-              buttonClassName += " btn-outline-light";
+              optionClassName += " text-blue-600";
             }
+          } else {
+            optionClassName += " text-blue-600";
           }
         } else {
-          buttonClassName += " btn-outline-danger";
+          optionClassName += " text-blue-600";
         }
         return (
           <button
             key={`${alt.value}_${i}`}
-            className={buttonClassName}
+            className={optionClassName}
             onClick={() => handleClick && handleClick(i)}
             disabled={!alt.active || (revealAnswer && i !== answer)}
           >
@@ -64,4 +64,4 @@ export default ({ usedQuestionRound, handleClick, guess }: Props) => {
       })}
     </div>
   );
-};
+}

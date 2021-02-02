@@ -31,7 +31,7 @@ interface Props {
   question?: Question;
 }
 
-export default ({
+const PlayerComp = ({
   player,
   index,
   isTurnPlayer,
@@ -49,7 +49,7 @@ export default ({
 }: Props) => {
   const isTurnPlayerClass =
     isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : "";
-  const isAppPlayerClass = isAppPlayer ? "isAppPlayer" : "";
+  const isAppPlayerClass = isAppPlayer ? "bg-blue-200" : "bg-gray-200";
   const isDeadClass = player.isDead ? "is-dead" : "";
 
   const bettingRoundSpending = currentBettingRound
@@ -137,3 +137,5 @@ export default ({
     </div>
   );
 };
+
+export default PlayerComp;

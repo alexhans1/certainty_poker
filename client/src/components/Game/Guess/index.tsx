@@ -8,7 +8,7 @@ interface Props {
   alternatives?: Question["alternatives"];
 }
 
-export default ({ guess, questionType, alternatives }: Props) => {
+export default function Guess({ guess, questionType, alternatives }: Props) {
   if (!guess) return null;
   switch (questionType) {
     case QuestionTypes.NUMERICAL:
@@ -42,4 +42,4 @@ export default ({ guess, questionType, alternatives }: Props) => {
     default:
       throw new Error("Invalid question type");
   }
-};
+}

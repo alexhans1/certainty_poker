@@ -1,10 +1,8 @@
 .player {
   height: 5em;
   width: 14em;
-  background-color: #ebebeb;
   border-radius: 1em;
   font-size: 0.7em;
-  color: #393d4e;
   display: flex;
   position: absolute;
   z-index: 1001;

@@ -243,7 +243,7 @@ function GameComponent() {
         )}
         {isSpectator && usedQuestionRound?.isOver && !game.isOver && (
           <button
-            className="new-question-button btn btn-light mx-auto mt-5"
+            className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mx-auto mt-5"
             onClick={() => {
               setShowNewQuestionRoundForSpectator(true);
             }}

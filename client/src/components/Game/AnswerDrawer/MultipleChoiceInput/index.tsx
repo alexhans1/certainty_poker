@@ -11,7 +11,11 @@ interface Props {
   handleSubmit: (guess: number) => void;
 }
 
-export default ({ usedQuestionRound, handleSubmit, alternatives }: Props) => {
+export default function MultipleChoiceInput({
+  usedQuestionRound,
+  handleSubmit,
+  alternatives,
+}: Props) {
   const [guess, setGuess] = useState<number>();
   if (alternatives?.length !== 4) {
     throw new Error("missing alternatives for multiple choice question");
@@ -38,4 +42,4 @@ export default ({ usedQuestionRound, handleSubmit, alternatives }: Props) => {
       </button>
     </>
   );
-};
+}

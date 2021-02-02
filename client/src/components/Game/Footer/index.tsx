@@ -29,7 +29,7 @@ interface Props
   currentBettingRound?: BettingRound;
 }
 
-export default ({
+const Footer = ({
   game,
   usedQuestionRound,
   player,
@@ -70,12 +70,16 @@ export default ({
   return (
     <footer className="fixed bottom-0 left-0 w-full h-44 bg-gray-200 px-4 pt-2 pb-6 flex flex-col justify-end z-1003">
       <div className="w-full flex flex-col items-center justify-center mx-auto max-w-xl">
-        <div className="absolute left-10 top-0 flex flex-col items-center">
+        <div className="absolute left-10 top-0 flex flex-col items-center max-w-2xs text-center">
           <span
-            className={`absolute top-0 left-0 h-20 w-20 -mt-10 rounded-full flex items-center justify-center text-4xl ${
+            className={`absolute top-0 h-20 w-20 -mt-10 rounded-full flex items-center justify-center text-4xl ${
               usedQuestionRound.isOver && changeInMoney > 0
                 ? "bg-green-500"
                 : "bg-gray-400"
+            } ${
+              usedQuestionRound.question.type === QuestionTypes.GEO
+                ? "left-0"
+                : ""
             }`}
           >
             <Status
@@ -98,11 +102,12 @@ export default ({
           {questionType !== QuestionTypes.GEO && (
             <>
               <p className="text-xs mt-12">Your Answer</p>
-              <span className="text-2xl">
+              <span className="text-2xl overflow-hidden max-h-24">
                 {appPlayerAnswer && (
                   <FormattedGuess
                     guess={appPlayerAnswer.guess}
                     questionType={questionType}
+                    alternatives={usedQuestionRound.question.alternatives}
                   />
                 )}
               </span>
@@ -151,3 +156,5 @@ export default ({
     </footer>
   );
 };
+
+export default Footer;
