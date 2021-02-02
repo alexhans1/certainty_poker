@@ -4,17 +4,3 @@
   grid-auto-flow: dense;
   grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
 }
-.set-container .set {
-  white-space: unset;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  border-width: 1px;
-  border-style: solid;
-  padding: 0.7em 1.5em;
-  box-shadow: pink;
-}
-.language {
-  font-size: 2em;
-}

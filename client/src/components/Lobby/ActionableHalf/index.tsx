@@ -19,7 +19,12 @@ interface Props {
   ) => void;
 }
 
-export default ({ sets = [], setName, languages, fetchSets }: Props) => {
+export default function ActionableHalf({
+  sets = [],
+  setName,
+  languages,
+  fetchSets,
+}: Props) {
   const history = useHistory();
   const location = useLocation();
   const [selectedSets, setSelectedSets] = useState<string[]>(
@@ -97,7 +102,7 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
         {languages.map((language) => (
           <span
             key={language}
-            className={`language mx-1 ${
+            className={`text-4xl mx-1 ${
               language === shownLanguage ? "" : "text-black-50"
             }`}
             onClick={() => {
@@ -117,8 +122,10 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
           .map((set) => (
             <span
               key={set.setName}
-              className={`set badge border-light ${
-                selectedSets?.includes(set.setName) ? "badge-light" : ""
+              className={`flex justify-center items-center rounded-md text-center px-4 py-3 border border-gray-800 hover:bg-gray-800 hover:text-white cursor-pointer ${
+                selectedSets?.includes(set.setName)
+                  ? "bg-gray-800 text-white"
+                  : ""
               } ${setName ? "mr-auto" : ""}`}
               style={{
                 gridColumn: `span ${Math.round(
@@ -147,7 +154,7 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
           ))}
       </div>
       <button
-        className="btn btn-lg btn-primary mt-auto mb-3"
+        className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
         onClick={handleCreateGame}
         disabled={!selectedSets.length}
       >
@@ -185,4 +192,4 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
       />
     </div>
   );
-};
+}
