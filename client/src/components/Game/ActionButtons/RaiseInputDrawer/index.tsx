@@ -84,15 +84,30 @@ export default function RaiseInputDrawer({
             Submit
           </button>
         </div>
-        {moneyRemaining && (
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={() => setAmount(moneyRemaining)}
-            className="mt-2 text-white bg-blue-500 mr-auto px-4 rounded-2xl hover:bg-blue-600"
-          >
-            All in
-          </span>
-        )}
+        <div className="flex">
+          {moneyRemaining && (
+            <>
+              {[5, 10, 20, 50]
+                .filter((amount) => amount < moneyRemaining)
+                .map((amount) => (
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setAmount(amount)}
+                    className="mt-2 text-white bg-blue-500 mr-2 px-4 rounded-2xl hover:bg-blue-600"
+                  >
+                    {amount}
+                  </span>
+                ))}
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() => setAmount(moneyRemaining)}
+                className="mt-2 text-white bg-blue-500 mr-2 px-4 rounded-2xl hover:bg-blue-600"
+              >
+                All in
+              </span>
+            </>
+          )}
+        </div>
       </>
     </Drawer>
   );
