@@ -1,5 +1,6 @@
 import React from "react";
-import { MonetizationOn, EmojiObjects } from "@material-ui/icons";
+import { EmojiObjects } from "@material-ui/icons";
+import { GrMoney } from "react-icons/gr";
 import Status from "./Status";
 import {
   BettingRound,
@@ -14,8 +15,11 @@ import { getCurrentPlayerAction } from "../helpers";
 
 import "./styles.css";
 
+const playerSeatingOrder = [1, 9, 5, 2, 11, 4, 8, 10, 6, 3, 12, 7];
+
 interface Props {
   player: Player;
+  numberOfPlayers: number;
   currentBettingRound?: BettingRound;
   changeInMoney?: number;
   index: number;
@@ -34,6 +38,7 @@ interface Props {
 const PlayerComp = ({
   player,
   index,
+  numberOfPlayers,
   isTurnPlayer,
   isAppPlayer,
   isWinningPlayer,
@@ -65,16 +70,13 @@ const PlayerComp = ({
     currentBettingRound
   );
 
-  let playerMoney = player.money;
-  if (isQuestionRoundOver) {
-    playerMoney += bettingRoundSpending;
-  }
+  const positionIndex = playerSeatingOrder.filter((i) => i <= numberOfPlayers)[
+    index
+  ];
 
   return (
     <div
-      className={`player player-${
-        index + 1
-      } ${isTurnPlayerClass} ${isAppPlayerClass} ${isDeadClass}`}
+      className={`player player-${positionIndex} ${isTurnPlayerClass} ${isAppPlayerClass} ${isDeadClass}`}
     >
       <span
         className={`status text-gray-900 ${
@@ -94,14 +96,15 @@ const PlayerComp = ({
             allPlayersPlacedTheirGuess,
             playerHasPlacedTheirGuess: !!guess,
             playerAction,
+            playerIsAllIn: !player.isDead && player.money === 0,
           }}
         />
       </span>
       <div className="info">
         <span className="name">{player.name}</span>
         <div className="flex items-center">
-          <MonetizationOn className="mr-1" fontSize="small" />
-          <span>{playerMoney}</span>
+          <GrMoney className="mr-1" />
+          <span>{player.money}</span>
           {isQuestionRoundOver && changeInMoney && (
             <span
               className={`ml-1 ${
@@ -116,7 +119,7 @@ const PlayerComp = ({
         <div className="inner-info text-gray-800">
           {!isQuestionRoundOver && !!bettingRoundSpending && (
             <div className="flex items-center">
-              <MonetizationOn className="mx-1" fontSize="inherit" />
+              <GrMoney className="mx-1" />
               <span>{bettingRoundSpending}</span>
             </div>
           )}

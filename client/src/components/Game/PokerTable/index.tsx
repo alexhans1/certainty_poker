@@ -4,16 +4,11 @@ import Question from "../Question";
 import {
   BettingRound,
   Game,
-  Guess,
   Player,
   QuestionRound,
   QuestionTypes,
 } from "../../../interfaces";
-import {
-  getCurrentBettingRound,
-  hasPlayerFolded,
-  haveAllPlayersPlacedTheirGuess,
-} from "../helpers";
+import { hasPlayerFolded, haveAllPlayersPlacedTheirGuess } from "../helpers";
 import GuessMap from "../GuessMap";
 import MultipleChoiceOptions from "../MultipleChoiceOptions";
 
@@ -72,6 +67,7 @@ const PokerTable = ({
                 {...{
                   player,
                   index,
+                  numberOfPlayers: game.players.length,
                   currentBettingRound,
                   changeInMoney,
                   isAppPlayer: player.id === playerId,
