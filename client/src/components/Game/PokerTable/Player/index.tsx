@@ -24,6 +24,7 @@ interface Props {
   changeInMoney?: number;
   index: number;
   isTurnPlayer: boolean;
+  isGameOver: boolean;
   isAppPlayer: boolean;
   isWinningPlayer?: boolean;
   isQuestionRoundOver: boolean;
@@ -51,6 +52,7 @@ const PlayerComp = ({
   allPlayersPlacedTheirGuess,
   guess,
   question,
+  isGameOver,
 }: Props) => {
   const isTurnPlayerClass =
     isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : "";
@@ -73,6 +75,11 @@ const PlayerComp = ({
   const positionIndex = playerSeatingOrder.filter((i) => i <= numberOfPlayers)[
     index
   ];
+
+  let playerMoney = player.money;
+  if (isQuestionRoundOver && !isGameOver) {
+    playerMoney += bettingRoundSpending;
+  }
 
   return (
     <div
@@ -104,7 +111,7 @@ const PlayerComp = ({
         <span className="name">{player.name}</span>
         <div className="flex items-center">
           <GrMoney className="mr-1" />
-          <span>{player.money}</span>
+          <span>{playerMoney}</span>
           {isQuestionRoundOver && changeInMoney && (
             <span
               className={`ml-1 ${

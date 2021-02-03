@@ -81,6 +81,7 @@ const PokerTable = ({
                   guess,
                   question: usedQuestionRound?.question,
                   isWinningPlayer: winningPlayerIds.includes(player.id),
+                  isGameOver: game.isOver,
                 }}
               />
             );
