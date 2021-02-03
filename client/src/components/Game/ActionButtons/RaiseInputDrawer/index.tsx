@@ -91,6 +91,7 @@ export default function RaiseInputDrawer({
                 .filter((amount) => amount < moneyRemaining)
                 .map((amount) => (
                   <span
+                    key={amount}
                     style={{ cursor: "pointer" }}
                     onClick={() => setAmount(amount)}
                     className="mt-2 text-white bg-blue-500 mr-2 px-4 rounded-2xl hover:bg-blue-600"
