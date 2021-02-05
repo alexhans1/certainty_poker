@@ -181,7 +181,7 @@ function GameComponent() {
     : currentQuestionRound;
 
   return (
-    <div className="py-2 flex flex-col justify-center mb-44">
+    <div className="py-2 flex flex-col justify-center mb-48">
       <a href="/" className="mr-auto text-3xl font-bold">
         Certainty Poker
       </a>

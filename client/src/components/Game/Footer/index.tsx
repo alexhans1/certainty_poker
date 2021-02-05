@@ -1,5 +1,5 @@
 import React from "react";
-import { MonetizationOn } from "@material-ui/icons";
+import { GrMoney } from "react-icons/gr";
 import {
   QuestionRound,
   BettingRound,
@@ -47,11 +47,11 @@ const Footer = ({
   );
 
   let appPlayerMoney = game.players.find((p) => p.id === player.id)?.money ?? 0;
+  const bettingRoundSpending =
+    (currentBettingRound &&
+      calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id)) ||
+    0;
   if (usedQuestionRound.isOver && player.id && currentBettingRound) {
-    const bettingRoundSpending = calculateBettingRoundSpendingForPlayer(
-      currentBettingRound,
-      player.id
-    );
     appPlayerMoney += bettingRoundSpending;
   }
 
@@ -84,8 +84,10 @@ const Footer = ({
           >
             <Status
               {...{
+                player,
+                bettingRoundSpending,
+                currentBettingRound,
                 isQuestionRoundOver: usedQuestionRound.isOver,
-                isDead: player.isDead,
                 isTurnPlayer:
                   !usedQuestionRound.isOver &&
                   player.id === currentBettingRound?.currentPlayer.id,
@@ -116,7 +118,7 @@ const Footer = ({
         </div>
         <p className="text-xs">Available money</p>
         <div className="flex items-center mb-6 text-2xl">
-          <MonetizationOn className="mx-1" fontSize="inherit" />
+          <GrMoney className="mx-1" />
           <span>{appPlayerMoney}</span>
           {changeInMoney !== 0 && (
             <span

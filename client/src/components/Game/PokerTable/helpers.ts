@@ -18,13 +18,11 @@ export const getCurrentPlayerAction = (
     return "waiting";
   }
 
-  const playerIsAllIn = !player.isDead && player.money === 0;
   const amountToCallForPlayer = calculateAmountToCall(
     currentBettingRound,
     player.id
   );
-  const playerIsWaitingForAnotherTurn =
-    !playerIsAllIn && amountToCallForPlayer > 0;
+  const playerIsWaitingForAnotherTurn = amountToCallForPlayer > 0;
   if (playerIsWaitingForAnotherTurn) {
     return "waiting";
   }

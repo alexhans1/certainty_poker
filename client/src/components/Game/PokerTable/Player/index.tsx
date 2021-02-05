@@ -11,7 +11,6 @@ import {
 } from "../../../../interfaces";
 import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
 import FormattedGuess from "../../Guess";
-import { getCurrentPlayerAction } from "../helpers";
 
 import "./styles.css";
 
@@ -66,12 +65,6 @@ const PlayerComp = ({
     question?.type !== QuestionTypes.GEO &&
     (isSpectator || (!!isQuestionRoundOver && isShowdown && !hasFolded));
 
-  const playerAction = getCurrentPlayerAction(
-    player,
-    bettingRoundSpending,
-    currentBettingRound
-  );
-
   const positionIndex = playerSeatingOrder.filter((i) => i <= numberOfPlayers)[
     index
   ];
@@ -94,6 +87,9 @@ const PlayerComp = ({
       >
         <Status
           {...{
+            bettingRoundSpending,
+            player,
+            currentBettingRound,
             isWinningPlayer,
             isTurnPlayer,
             changeInMoney,
@@ -102,7 +98,6 @@ const PlayerComp = ({
             hasFolded,
             allPlayersPlacedTheirGuess,
             playerHasPlacedTheirGuess: !!guess,
-            playerAction,
             playerIsAllIn: !player.isDead && player.money === 0,
           }}
         />
