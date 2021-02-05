@@ -1,23 +1,14 @@
-.relative-wrap {
-  position: relative;
-  width: 85%;
-  margin: 1.5em 0;
-}
-.relative-wrap .poker-table {
-  width: 100%;
-  min-height: 500px;
+.poker-table {
   border-radius: 200px;
-  border: 15px solid #f2f1ff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 6em 12em;
+  @media screen and (min-width: 768px) {
+    min-height: 500px;
+  }
 }
-.relative-wrap .poker-table.isGeoQuestion {
+.poker-table.isGeoQuestion {
   padding: 0;
   overflow: hidden;
 }
-.relative-wrap .poker-table .inner-content {
+.poker-table .table-content {
   display: flex;
   flex-direction: column;
   grid-gap: 0.5em;
@@ -26,7 +17,7 @@
   width: 100%;
   height: 100%;
 }
-.relative-wrap .poker-table .inner-content .map {
+.poker-table .table-content .map {
   width: 100%;
   height: calc(500px - 2 * 15px) !important;
 }

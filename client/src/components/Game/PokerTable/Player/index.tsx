@@ -76,7 +76,7 @@ const PlayerComp = ({
 
   return (
     <div
-      className={`player player-${positionIndex} ${isTurnPlayerClass} ${isAppPlayerClass} ${isDeadClass}`}
+      className={`player player-${positionIndex} ${isTurnPlayerClass} ${isAppPlayerClass} ${isDeadClass} md:absolute`}
     >
       <span
         className={`status text-gray-900 ${
@@ -118,7 +118,7 @@ const PlayerComp = ({
             </span>
           )}
         </div>
-        <div className="inner-info text-gray-800">
+        <div className="inner-info text-gray-800 w-1/2 md:w-full">
           {!isQuestionRoundOver && !!bettingRoundSpending && (
             <div className="flex items-center">
               <GrMoney className="mx-1" />

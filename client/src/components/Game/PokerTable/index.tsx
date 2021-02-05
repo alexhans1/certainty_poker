@@ -48,45 +48,52 @@ const PokerTable = ({
           }}
         />
       )}
-      <div className="relative-wrap">
-        <div className={`poker-table ${isGeoQuestion ? "isGeoQuestion" : ""}`}>
-          {game.players.map((player, index) => {
-            const { changeInMoney } =
-              usedQuestionRound?.results?.find(
-                ({ playerId }) => player.id === playerId
-              ) || {};
-            const hasFolded = !!(
-              usedQuestionRound && hasPlayerFolded(usedQuestionRound, player.id)
-            );
-            const guess = usedQuestionRound?.guesses.find(
-              (g) => g.playerId === player.id
-            );
-            return (
-              <PlayerComp
-                key={player.id}
-                {...{
-                  player,
-                  index,
-                  numberOfPlayers: game.players.length,
-                  currentBettingRound,
-                  changeInMoney,
-                  isAppPlayer: player.id === playerId,
-                  isTurnPlayer:
-                    player.id === currentBettingRound?.currentPlayer.id,
-                  isQuestionRoundOver: !!usedQuestionRound?.isOver,
-                  isShowdown: !!usedQuestionRound?.isShowdown,
-                  hasFolded,
-                  isSpectator,
-                  allPlayersPlacedTheirGuess,
-                  guess,
-                  question: usedQuestionRound?.question,
-                  isWinningPlayer: winningPlayerIds.includes(player.id),
-                  isGameOver: game.isOver,
-                }}
-              />
-            );
-          })}
-          <div className="inner-content">
+      <div className="relative w-4/5 my-6">
+        <div
+          className={`poker-table ${
+            isGeoQuestion ? "isGeoQuestion" : ""
+          } flex flex-col-reverse md:grid-cols-2 md:justify-center md:items-center md:py-24 md:px-48 md:w-full md:border-8 md:border-indigo-200`}
+        >
+          <div className="grid gap-y-4 mt-7">
+            {game.players.map((player, index) => {
+              const { changeInMoney } =
+                usedQuestionRound?.results?.find(
+                  ({ playerId }) => player.id === playerId
+                ) || {};
+              const hasFolded = !!(
+                usedQuestionRound &&
+                hasPlayerFolded(usedQuestionRound, player.id)
+              );
+              const guess = usedQuestionRound?.guesses.find(
+                (g) => g.playerId === player.id
+              );
+              return (
+                <PlayerComp
+                  key={player.id}
+                  {...{
+                    player,
+                    index,
+                    numberOfPlayers: game.players.length,
+                    currentBettingRound,
+                    changeInMoney,
+                    isAppPlayer: player.id === playerId,
+                    isTurnPlayer:
+                      player.id === currentBettingRound?.currentPlayer.id,
+                    isQuestionRoundOver: !!usedQuestionRound?.isOver,
+                    isShowdown: !!usedQuestionRound?.isShowdown,
+                    hasFolded,
+                    isSpectator,
+                    allPlayersPlacedTheirGuess,
+                    guess,
+                    question: usedQuestionRound?.question,
+                    isWinningPlayer: winningPlayerIds.includes(player.id),
+                    isGameOver: game.isOver,
+                  }}
+                />
+              );
+            })}
+          </div>
+          <div className="table-content">
             {usedQuestionRound && !isGeoQuestion && (
               <Question
                 {...{

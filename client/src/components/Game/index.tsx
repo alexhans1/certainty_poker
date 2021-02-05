@@ -181,7 +181,7 @@ function GameComponent() {
     : currentQuestionRound;
 
   return (
-    <div className="py-2 flex flex-col justify-center mb-48">
+    <div className="p-2 flex flex-col justify-center mb-48">
       <a href="/" className="mr-auto text-3xl font-bold">
         Certainty Poker
       </a>
@@ -196,40 +196,6 @@ function GameComponent() {
             playerId={playerId}
           />
         )}
-        {/* <div>
-          {usedQuestionRound && (
-            <Question
-              {...{
-                game,
-                usedQuestionRound,
-                playerId,
-              }}
-            />
-          )}
-          <GuessMap
-            {...{
-              usedQuestionRound,
-              isSpectator,
-              playerId,
-              players: game.players,
-            }}
-          />
-          <MultipleChoiceOptions
-            {...{
-              usedQuestionRound,
-              alternatives:
-                usedQuestionRound?.question.alternatives?.map((alt) => ({
-                  value: alt,
-                  active: !usedQuestionRound.question.hiddenAlternatives?.includes(
-                    alt
-                  ),
-                })) || [],
-              guess: usedQuestionRound?.guesses.find(
-                (g) => g.playerId === playerId
-              )?.guess.numerical,
-            }}
-          />
-        </div> */}
         {gameHasStarted && (
           <PokerTable
             {...{

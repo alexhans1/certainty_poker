@@ -51,7 +51,7 @@ export default function ActionableHalf({
   };
 
   return (
-    <div className="actionable-container container-sm px-4 py-2">
+    <div className="actionable-container px-4 py-2">
       <a href="/" id="title" className="unstyled-link">
         Certainty Poker
       </a>

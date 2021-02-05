@@ -8,7 +8,11 @@ interface Props extends DrawerProps {
   onClose?: () => void;
 }
 
-export default ({ children, onClose, ...drawerProps }: Props) => {
+export default function DrawerComp({
+  children,
+  onClose,
+  ...drawerProps
+}: Props) {
   return (
     <Drawer
       {...{
@@ -30,4 +34,4 @@ export default ({ children, onClose, ...drawerProps }: Props) => {
       </div>
     </Drawer>
   );
-};
+}
