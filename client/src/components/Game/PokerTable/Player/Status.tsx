@@ -1,18 +1,51 @@
 import React from "react";
-import { Close, EmojiObjects, MoreHoriz } from "@material-ui/icons";
+import Tooltip from "@material-ui/core/Tooltip";
 import { GiLaurelsTrophy, GiPartyPopper } from "react-icons/gi";
-import { FaBell, FaSadCry, FaSkullCrossbones } from "react-icons/fa";
+import {
+  FaBell,
+  FaRegLightbulb,
+  FaSadCry,
+  FaSkullCrossbones,
+} from "react-icons/fa";
 import { FiArrowUp, FiMinus } from "react-icons/fi";
 import { CgMore } from "react-icons/cg";
-import { GrMoney } from "react-icons/gr";
+import { GrClose, GrMoney } from "react-icons/gr";
 import { BettingRound, Player } from "../../../../interfaces";
 import { getCurrentPlayerAction } from "../helpers";
 
+const StatusWithTooltip = ({
+  tooltipTitle,
+  children,
+}: {
+  tooltipTitle: string;
+  children: React.ReactNode;
+}) => (
+  <Tooltip title={tooltipTitle}>
+    <span>{children}</span>
+  </Tooltip>
+);
+
 export const actionIcons = {
-  raised: <FiArrowUp />,
-  called: <FiMinus />,
-  checked: <FiMinus />,
-  waiting: <CgMore />,
+  raised: (
+    <StatusWithTooltip tooltipTitle="Raised">
+      <FiArrowUp />
+    </StatusWithTooltip>
+  ),
+  called: (
+    <StatusWithTooltip tooltipTitle="Called">
+      <FiMinus />
+    </StatusWithTooltip>
+  ),
+  checked: (
+    <StatusWithTooltip tooltipTitle="Checked">
+      <FiMinus />
+    </StatusWithTooltip>
+  ),
+  waiting: (
+    <StatusWithTooltip tooltipTitle="Waiting for turn">
+      <CgMore />
+    </StatusWithTooltip>
+  ),
 };
 
 interface Props {
@@ -45,13 +78,25 @@ function Status({
   playerIsAllIn,
 }: Props) {
   if (isDead) {
-    return <FaSkullCrossbones />;
+    return (
+      <StatusWithTooltip tooltipTitle="Out">
+        <FaSkullCrossbones />
+      </StatusWithTooltip>
+    );
   }
   if (hasFolded) {
-    return <Close fontSize="large" />;
+    return (
+      <StatusWithTooltip tooltipTitle="Folded">
+        <GrClose />
+      </StatusWithTooltip>
+    );
   }
   if (playerIsAllIn) {
-    return <GrMoney />;
+    return (
+      <StatusWithTooltip tooltipTitle="All in">
+        <GrMoney />
+      </StatusWithTooltip>
+    );
   }
   if (isWinningPlayer && isQuestionRoundOver) {
     return <GiLaurelsTrophy />;
@@ -64,13 +109,25 @@ function Status({
   }
   if (!allPlayersPlacedTheirGuess) {
     if (playerHasPlacedTheirGuess) {
-      return <EmojiObjects fontSize="large" />;
+      return (
+        <StatusWithTooltip tooltipTitle="Already submitted guess">
+          <FaRegLightbulb />
+        </StatusWithTooltip>
+      );
     } else {
-      return <MoreHoriz fontSize="large" />;
+      return (
+        <StatusWithTooltip tooltipTitle="Not yet submitted guess">
+          <CgMore />
+        </StatusWithTooltip>
+      );
     }
   }
   if (isTurnPlayer) {
-    return <FaBell className="text-red-600" />;
+    return (
+      <StatusWithTooltip tooltipTitle="Player's turn">
+        <FaBell className="text-red-600" />
+      </StatusWithTooltip>
+    );
   }
   const playerAction = getCurrentPlayerAction(
     player,

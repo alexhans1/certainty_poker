@@ -1,5 +1,5 @@
 import React from "react";
-import { EmojiObjects } from "@material-ui/icons";
+import { FaRegLightbulb } from "react-icons/fa";
 import { GrMoney } from "react-icons/gr";
 import Status from "./Status";
 import {
@@ -127,7 +127,7 @@ const PlayerComp = ({
           )}
           {revealGuess && question?.type && guess?.guess && (
             <div className="flex items-center">
-              <EmojiObjects className="mx-1" fontSize="inherit" />
+              <FaRegLightbulb className="mx-1" />
               <FormattedGuess
                 {...{
                   guess: guess?.guess,
