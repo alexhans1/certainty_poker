@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { QuestionRound, Player, Game, BettingRound } from "../../../interfaces";
+import {
+  QuestionRound,
+  Player,
+  Game,
+  BettingRound,
+} from "../../../../interfaces";
 import {
   PlaceBet,
-  check,
   call,
   raise,
   fold,
-  haveAllPlayersPlacedTheirGuess,
   calculateAmountToCall,
-} from "../helpers";
+} from "../../helpers";
 import ActionButton from "./Button";
 import RaiseInputDrawer from "./RaiseInputDrawer";
 
@@ -21,19 +24,19 @@ export interface ActionButtonsProps {
   isAppPlayerTurn: boolean;
 }
 
-export default ({
+export default function ActionButtons({
   game,
   usedQuestionRound,
   currentBettingRound,
   playerId,
   placeBet,
   isAppPlayerTurn,
-}: ActionButtonsProps) => {
+}: ActionButtonsProps) {
+  const [showRaiseDrawer, setShowRaiseDrawer] = useState(false);
   if (!usedQuestionRound || !currentBettingRound) {
     return null;
   }
 
-  const [showRaiseDrawer, setShowRaiseDrawer] = useState(false);
   const player = game.players.find((p) => p.id === playerId);
 
   const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
@@ -63,37 +66,6 @@ export default ({
         }}
         isDisabled={!isAppPlayerTurn}
       />
-      {/* {[
-        {
-          text: amountToCall > 0 ? `Call for ${amountToCall}` : "Check",
-          handleOnClick: () => {
-            call(placeBet, game, playerId);
-          },
-          isDisabled: amountToCall <= 0,
-        },
-        {
-          text: "Raise",
-          handleOnClick: () => {
-            setShowRaiseDrawer(true);
-          },
-          isDisabled: player?.money && amountToCall >= player?.money,
-        },
-        {
-          text: "Fold",
-          handleOnClick: () => {
-            fold(placeBet, game, playerId);
-          },
-        },
-      ].map((actionButtonProps) => (
-        <ActionButton
-          key={actionButtonProps.text}
-          {...actionButtonProps}
-          isDisabled={
-            actionButtonProps.isDisabled ||
-            !isAppPlayerTurn
-          }
-        />
-      ))} */}
       <RaiseInputDrawer
         {...{
           game,
@@ -107,4 +79,4 @@ export default ({
       />
     </div>
   );
-};
+}

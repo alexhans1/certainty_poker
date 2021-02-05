@@ -6,7 +6,11 @@ interface ActionButtonProps {
   isDisabled?: boolean;
 }
 
-export default ({ text, handleOnClick, isDisabled }: ActionButtonProps) => {
+export default function ActionButton({
+  text,
+  handleOnClick,
+  isDisabled,
+}: ActionButtonProps) {
   return (
     <button
       className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 w-full"
@@ -16,4 +20,4 @@ export default ({ text, handleOnClick, isDisabled }: ActionButtonProps) => {
       {text}
     </button>
   );
-};
+}

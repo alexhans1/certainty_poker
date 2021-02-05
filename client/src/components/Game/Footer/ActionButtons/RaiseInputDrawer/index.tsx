@@ -1,15 +1,7 @@
 import React, { useState } from "react";
-import Drawer from "../../../Drawer";
-import { BettingRound, Game, Player } from "../../../../interfaces";
-import { calculateAmountToCall, PlaceBet, raise } from "../../helpers";
-
-type CreatePlayer = ({
-  variables: {
-    input: { gameId, playerName },
-  },
-}: {
-  variables: { input: { gameId: Game["id"]; playerName: Player["name"] } };
-}) => void;
+import Drawer from "../../../../Drawer";
+import { BettingRound, Game, Player } from "../../../../../interfaces";
+import { calculateAmountToCall, PlaceBet, raise } from "../../../helpers";
 
 interface Props {
   currentBettingRound: BettingRound;

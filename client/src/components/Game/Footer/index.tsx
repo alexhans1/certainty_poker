@@ -6,7 +6,7 @@ import {
   Player,
   QuestionTypes,
 } from "../../../interfaces";
-import ActionButtons, { ActionButtonsProps } from "../ActionButtons";
+import ActionButtons, { ActionButtonsProps } from "./ActionButtons";
 import {
   calculateBettingRoundSpendingForPlayer,
   hasPlayerFolded,
@@ -69,7 +69,7 @@ const Footer = ({
 
   return (
     <footer className="fixed bottom-0 left-0 w-full h-44 bg-gray-200 px-4 pt-2 pb-6 flex flex-col justify-end z-1003">
-      <div className="w-full flex flex-col items-center justify-center mx-auto max-w-xl">
+      <div className="w-full flex flex-col items-end md:items-center justify-center mx-auto max-w-xl">
         <div className="absolute left-10 top-0 flex flex-col items-center max-w-2xs text-center">
           <span
             className={`absolute top-0 h-20 w-20 -mt-10 rounded-full flex items-center justify-center text-4xl ${
@@ -116,44 +116,46 @@ const Footer = ({
             </>
           )}
         </div>
-        <p className="text-xs">Available money</p>
-        <div className="flex items-center mb-6 text-2xl">
-          <GrMoney className="mx-1" />
-          <span>{appPlayerMoney}</span>
-          {changeInMoney !== 0 && (
-            <span
-              className={`ml-2 ${
-                changeInMoney > 0 ? "text-green-500" : "text-red-500"
-              }`}
-            >
-              ({changeInMoney > 0 ? "+" : ""}
-              {changeInMoney})
-            </span>
+        <div className="flex flex-col items-center">
+          <p className="text-xs">Available money</p>
+          <div className="flex items-center mb-6 text-2xl">
+            <GrMoney className="mx-1" />
+            <span>{appPlayerMoney}</span>
+            {changeInMoney !== 0 && (
+              <span
+                className={`ml-2 ${
+                  changeInMoney > 0 ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                ({changeInMoney > 0 ? "+" : ""}
+                {changeInMoney})
+              </span>
+            )}
+          </div>
+          {!hasPlayerPlacedGuessInCurrentQuestionRound &&
+            game.questionRounds.length > 1 && (
+              <button
+                className="new-question-button bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
+                onClick={() => {
+                  setShowAnswerDrawer(true);
+                }}
+              >
+                Answer New Question
+              </button>
+            )}
+          {hasPlayerPlacedGuessInCurrentQuestionRound && player.id && (
+            <ActionButtons
+              {...{
+                game,
+                usedQuestionRound,
+                currentBettingRound,
+                placeBet,
+                playerId: player.id,
+                isAppPlayerTurn,
+              }}
+            />
           )}
         </div>
-        {!hasPlayerPlacedGuessInCurrentQuestionRound &&
-          game.questionRounds.length > 1 && (
-            <button
-              className="new-question-button bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
-              onClick={() => {
-                setShowAnswerDrawer(true);
-              }}
-            >
-              Answer New Question
-            </button>
-          )}
-        {hasPlayerPlacedGuessInCurrentQuestionRound && player.id && (
-          <ActionButtons
-            {...{
-              game,
-              usedQuestionRound,
-              currentBettingRound,
-              placeBet,
-              playerId: player.id,
-              isAppPlayerTurn,
-            }}
-          />
-        )}
       </div>
     </footer>
   );
