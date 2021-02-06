@@ -51,10 +51,10 @@ const PokerTable = ({
       <div className="relative w-4/5 my-6">
         <div
           className={`poker-table ${
-            isGeoQuestion ? "isGeoQuestion" : ""
+            isGeoQuestion ? "md:p-0 md:overflow-hidden" : ""
           } flex flex-col-reverse md:grid-cols-2 md:justify-center md:items-center md:py-24 md:px-48 md:w-full md:border-8 md:border-indigo-200`}
         >
-          <div className="grid gap-y-4 mt-7">
+          <div className="grid gap-y-6 mt-7">
             {game.players.map((player, index) => {
               const { changeInMoney } =
                 usedQuestionRound?.results?.find(
@@ -93,7 +93,7 @@ const PokerTable = ({
               );
             })}
           </div>
-          <div className="table-content">
+          <div className="flex flex-col gap-2 justify-center items-center w-full h-full">
             {usedQuestionRound && !isGeoQuestion && (
               <Question
                 {...{

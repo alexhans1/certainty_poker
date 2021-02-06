@@ -1,23 +1,12 @@
 .poker-table {
   border-radius: 200px;
-  @media screen and (min-width: 768px) {
+}
+@media screen and (min-width: 768px) {
+  .poker-table {
     min-height: 500px;
   }
 }
-.poker-table.isGeoQuestion {
-  padding: 0;
-  overflow: hidden;
-}
-.poker-table .table-content {
-  display: flex;
-  flex-direction: column;
-  grid-gap: 0.5em;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-.poker-table .table-content .map {
+.poker-table .map {
   width: 100%;
   height: calc(500px - 2 * 15px) !important;
 }

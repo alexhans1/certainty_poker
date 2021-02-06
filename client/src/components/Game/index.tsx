@@ -181,7 +181,11 @@ function GameComponent() {
     : currentQuestionRound;
 
   return (
-    <div className="p-2 flex flex-col justify-center mb-48">
+    <div
+      className={`p-2 flex flex-col justify-center ${
+        isSpectator ? "" : "mb-52"
+      }`}
+    >
       <a href="/" className="mr-auto text-3xl font-bold">
         Certainty Poker
       </a>

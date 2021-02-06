@@ -13,7 +13,7 @@ export default function ActionButton({
 }: ActionButtonProps) {
   return (
     <button
-      className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 w-full"
+      className="bg-blue-500 rounded-lg font-bold text-white text-center px-3 py-3 md:px-4 md:py-3 transition duration-300 ease-in-out hover:bg-blue-600 w-full text-xs md:text-base"
       onClick={handleOnClick}
       disabled={isDisabled}
     >

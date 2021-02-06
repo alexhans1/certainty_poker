@@ -68,9 +68,9 @@ const Footer = ({
     haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full h-44 bg-gray-200 px-4 pt-2 pb-6 flex flex-col justify-end z-1003">
-      <div className="w-full flex flex-col items-end md:items-center justify-center mx-auto max-w-xl">
-        <div className="absolute left-10 top-0 flex flex-col items-center max-w-2xs text-center">
+    <footer className="fixed bottom-0 left-0 w-full h-44 bg-gray-200 px-4 flex flex-col items-center justify-end z-1003">
+      <div className="w-full flex flex-col items-end md:items-center justify-center max-w-xl my-auto">
+        <div className="absolute left-4 md:left-10 top-0 flex flex-col items-center max-w-2xs text-center">
           <span
             className={`absolute top-0 h-20 w-20 -mt-10 rounded-full flex items-center justify-center text-4xl ${
               usedQuestionRound.isOver && changeInMoney > 0
@@ -116,26 +116,32 @@ const Footer = ({
             </>
           )}
         </div>
-        <div className="flex flex-col items-center">
-          <p className="text-xs">Available money</p>
-          <div className="flex items-center mb-6 text-2xl">
-            <GrMoney className="mx-1" />
-            <span>{appPlayerMoney}</span>
-            {changeInMoney !== 0 && (
-              <span
-                className={`ml-2 ${
-                  changeInMoney > 0 ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                ({changeInMoney > 0 ? "+" : ""}
-                {changeInMoney})
-              </span>
-            )}
+        <div
+          className={`flex items-center ${
+            usedQuestionRound.isOver ? "flex-col" : "md:flex-col"
+          }`}
+        >
+          <div className="flex flex-col items-center mr-3 sm:mr-5 md:mr-0">
+            <p className="text-xs">Available money</p>
+            <div className="flex items-center mb-6 text-2xl">
+              <GrMoney className="mx-1" />
+              <span>{appPlayerMoney}</span>
+              {changeInMoney !== 0 && (
+                <span
+                  className={`ml-2 ${
+                    changeInMoney > 0 ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  ({changeInMoney > 0 ? "+" : ""}
+                  {changeInMoney})
+                </span>
+              )}
+            </div>
           </div>
           {!hasPlayerPlacedGuessInCurrentQuestionRound &&
             game.questionRounds.length > 1 && (
               <button
-                className="new-question-button bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
+                className="new-question-button bg-blue-500 rounded-lg font-bold text-white text-center px-3 py-2 md:px-4 md:py-3 text-sm md:text-base transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
                 onClick={() => {
                   setShowAnswerDrawer(true);
                 }}

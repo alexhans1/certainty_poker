@@ -42,7 +42,7 @@ export default function ActionButtons({
   const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid md:grid-cols-3 gap-3 md:gap-4">
       <ActionButton
         text={amountToCall > 0 ? `Call for ${amountToCall}` : "Check"}
         handleOnClick={() => {

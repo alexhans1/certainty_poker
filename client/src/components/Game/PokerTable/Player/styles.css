@@ -39,17 +39,9 @@
   text-overflow: ellipsis;
 }
 .player .inner-info {
-  position: absolute;
-  font-size: 1.3em;
-  display: grid;
   grid-gap: 0.1em 0.3em;
-  grid-auto-flow: column;
-  left: 12em;
 }
 @media screen and (min-width: 768px) {
-  .player .inner-info {
-    left: unset;
-  }
   .player.player-1 {
     top: 25%;
     left: 0;

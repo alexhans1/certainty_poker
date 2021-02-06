@@ -118,7 +118,7 @@ const PlayerComp = ({
             </span>
           )}
         </div>
-        <div className="inner-info text-gray-800 w-1/2 md:w-full">
+        <div className="inner-info grid absolute text-sm -right-8 sm:-right-3 md:right-0 md:text-lg md:grid-flow-auto text-gray-800 w-1/2 md:w-full">
           {!isQuestionRoundOver && !!bettingRoundSpending && (
             <div className="flex items-center">
               <GrMoney className="mx-1" />
