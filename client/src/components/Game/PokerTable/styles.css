@@ -8,5 +8,5 @@
 }
 .poker-table .map {
   width: 100%;
-  height: calc(500px - 2 * 15px) !important;
+  min-height: 500px;
 }

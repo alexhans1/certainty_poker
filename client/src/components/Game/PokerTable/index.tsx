@@ -48,13 +48,13 @@ const PokerTable = ({
           }}
         />
       )}
-      <div className="relative w-4/5 my-6">
+      <div className="relative w-full md:w-4/5 my-6">
         <div
           className={`poker-table ${
-            isGeoQuestion ? "md:p-0 md:overflow-hidden" : ""
-          } flex flex-col-reverse md:grid-cols-2 md:justify-center md:items-center md:py-24 md:px-48 md:w-full md:border-8 md:border-indigo-200`}
+            isGeoQuestion ? "md:p-0 md:overflow-hidden" : "md:px-48 md:py-24"
+          } flex md:justify-center flex-col-reverse md:flex-col md:items-center md:w-full md:border-8 md:border-indigo-200`}
         >
-          <div className="grid gap-y-6 mt-7">
+          <div className="grid gap-y-6 mt-7 px-10 md:mt-0 md:px-0">
             {game.players.map((player, index) => {
               const { changeInMoney } =
                 usedQuestionRound?.results?.find(
