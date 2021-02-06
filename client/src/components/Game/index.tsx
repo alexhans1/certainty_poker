@@ -183,7 +183,7 @@ function GameComponent() {
   return (
     <div
       className={`p-2 flex flex-col justify-center ${
-        isSpectator ? "" : "mb-52"
+        isSpectator || !gameHasStarted ? "" : "mb-52"
       }`}
     >
       <a href="/" className="mr-auto text-3xl font-bold">
