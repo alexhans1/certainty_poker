@@ -165,11 +165,11 @@ func (q *QuestionRound) PlaceBlinds() {
 	q.CurrentBettingRound().AddBet(&Bet{
 		PlayerID: dealer.FindNextInPlayer().ID,
 		Amount:   q.Game.SmallBlind(),
-	})
+	}, true)
 	q.CurrentBettingRound().AddBet(&Bet{
 		PlayerID: dealer.FindNextInPlayer().FindNextInPlayer().ID,
 		Amount:   q.Game.BigBlind(),
-	})
+	}, true)
 }
 
 // AddGuess adds to the guesses slice of the question round

@@ -6,6 +6,12 @@ enum QuestionTypes {
   GEO
 }
 
+enum BettingStates {
+  CHECKED
+  CALLED
+  RAISED
+}
+
 # Types
 type Game {
   id: ID!
@@ -22,6 +28,7 @@ type Player {
   name: String!
   game: Game!
   isDead: Boolean!
+  bettingState: BettingStates
 }
 
 type GeoCoordinate {

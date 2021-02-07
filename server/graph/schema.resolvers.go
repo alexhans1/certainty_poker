@@ -186,7 +186,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 			Amount:   input.Amount,
 			PlayerID: input.PlayerID,
 		}
-		bettingRound.AddBet(&newBet)
+		bettingRound.AddBet(&newBet, false)
 	}
 
 	if bettingRound.IsFinished() {
