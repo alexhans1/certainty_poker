@@ -1,6 +1,0 @@
-.table-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
-  grid-gap: 1em 1.5em;
-  height: min-content;
-}
