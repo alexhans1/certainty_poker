@@ -1,6 +1,8 @@
 package model
 
 import (
+	"math"
+
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
@@ -9,6 +11,7 @@ func (b *BettingRound) AddBet(bet *Bet, isBlind bool) {
 	for _, player := range b.QuestionRound.Game.Players {
 		if player.ID == bet.PlayerID {
 			amountToCall := b.AmountToCall() - player.MoneyInQuestionRound()
+			bet.Amount = int(math.Min(float64(bet.Amount), float64(player.Money)))
 			b.Bets = append(b.Bets, bet)
 			player.Money -= bet.Amount
 
