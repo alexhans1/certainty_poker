@@ -51,6 +51,7 @@
     "build:prod": "REACT_APP_SERVER_URL=s://certainty-poker.herokuapp.com craco build && cp build/index.html build/404.html",
     "predeploy": "npm run build:prod && echo certainty.poker >> build/CNAME",
     "deploy": "gh-pages -d build",
+    "deploy:staging": "npm run build:prod && mv build/index.html build/200.html && surge build staging.certainty.poker",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
