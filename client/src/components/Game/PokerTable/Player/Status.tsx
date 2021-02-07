@@ -10,8 +10,7 @@ import {
 import { FiArrowUp, FiMinus } from "react-icons/fi";
 import { CgMore } from "react-icons/cg";
 import { GrClose, GrMoney } from "react-icons/gr";
-import { BettingRound, Player } from "../../../../interfaces";
-import { getCurrentPlayerAction } from "../helpers";
+import { BettingStates, Player } from "../../../../interfaces";
 
 const StatusWithTooltip = ({
   tooltipTitle,
@@ -25,33 +24,26 @@ const StatusWithTooltip = ({
   </Tooltip>
 );
 
-export const actionIcons = {
-  raised: (
+const actionIcons = {
+  [BettingStates.RAISED]: (
     <StatusWithTooltip tooltipTitle="Raised">
       <FiArrowUp />
     </StatusWithTooltip>
   ),
-  called: (
+  [BettingStates.CALLED]: (
     <StatusWithTooltip tooltipTitle="Called">
       <FiMinus />
     </StatusWithTooltip>
   ),
-  checked: (
+  [BettingStates.CHECKED]: (
     <StatusWithTooltip tooltipTitle="Checked">
       <FiMinus />
-    </StatusWithTooltip>
-  ),
-  waiting: (
-    <StatusWithTooltip tooltipTitle="Waiting for turn">
-      <CgMore />
     </StatusWithTooltip>
   ),
 };
 
 interface Props {
   player: Player;
-  currentBettingRound?: BettingRound;
-  bettingRoundSpending: number;
   isQuestionRoundOver: boolean;
   isWinningPlayer?: boolean;
   changeInMoney?: number;
@@ -65,8 +57,6 @@ interface Props {
 
 function Status({
   player,
-  currentBettingRound,
-  bettingRoundSpending,
   isWinningPlayer,
   isQuestionRoundOver,
   changeInMoney,
@@ -129,15 +119,15 @@ function Status({
       </StatusWithTooltip>
     );
   }
-  const playerAction = getCurrentPlayerAction(
-    player,
-    bettingRoundSpending,
-    currentBettingRound
-  );
-  if (playerAction) {
+  const playerAction = player.bettingState;
+  if (playerAction && actionIcons[playerAction]) {
     return actionIcons[playerAction];
   }
-  return null;
+  return (
+    <StatusWithTooltip tooltipTitle="Waiting for turn">
+      <CgMore />
+    </StatusWithTooltip>
+  );
 }
 
 export default Status;

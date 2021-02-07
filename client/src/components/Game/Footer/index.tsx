@@ -61,6 +61,7 @@ const Footer = ({
     usedQuestionRound?.results?.find(
       ({ playerId }) => player.id === playerId
     ) || {};
+  console.log("changeInMoney", changeInMoney);
 
   const allPlayersPlacedTheirGuess =
     usedQuestionRound &&
@@ -85,8 +86,6 @@ const Footer = ({
             <Status
               {...{
                 player,
-                bettingRoundSpending,
-                currentBettingRound,
                 isQuestionRoundOver: usedQuestionRound.isOver,
                 isTurnPlayer:
                   !usedQuestionRound.isOver &&

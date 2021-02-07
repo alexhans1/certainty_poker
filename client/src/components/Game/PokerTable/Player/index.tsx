@@ -87,9 +87,7 @@ const PlayerComp = ({
       >
         <Status
           {...{
-            bettingRoundSpending,
             player,
-            currentBettingRound,
             isWinningPlayer,
             isTurnPlayer,
             changeInMoney,
