@@ -5,7 +5,7 @@ import { getRevealAnswer } from "../helpers";
 import "./index.css";
 
 interface Props {
-  usedQuestionRound?: QuestionRound;
+  usedQuestionRound: QuestionRound;
   handleClick?: (i: number) => void;
   guess?: number;
 }
@@ -15,7 +15,7 @@ export default function MultipleChoiceOptions({
   handleClick,
   guess,
 }: Props) {
-  if (usedQuestionRound?.question.type !== QuestionTypes.MULTIPLE_CHOICE) {
+  if (usedQuestionRound.question.type !== QuestionTypes.MULTIPLE_CHOICE) {
     return null;
   }
   if (usedQuestionRound.question.alternatives?.length !== 4) {

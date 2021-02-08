@@ -18,7 +18,7 @@ const styles = {
   },
 };
 
-export default ({ game, usedQuestionRound }: QuestionProps) => {
+export default function Question({ game, usedQuestionRound }: QuestionProps) {
   const noHints =
     usedQuestionRound.question.type !== QuestionTypes.MULTIPLE_CHOICE &&
     usedQuestionRound.bettingRounds.length <= 1 &&
@@ -58,4 +58,4 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
         )}
     </div>
   );
-};
+}

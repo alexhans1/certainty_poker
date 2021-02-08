@@ -200,7 +200,7 @@ function GameComponent() {
             playerId={playerId}
           />
         )}
-        {gameHasStarted && (
+        {gameHasStarted && usedQuestionRound && (
           <PokerTable
             {...{
               game,
