@@ -15,8 +15,6 @@ import {
 import FormattedGuess from "../Guess";
 import Status from "../PokerTable/Player/Status";
 
-import "./styles.css";
-
 interface Props
   extends Omit<
     ActionButtonsProps,
@@ -68,11 +66,11 @@ const Footer = ({
     haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full h-44 bg-gray-200 px-4 flex flex-col items-center justify-end z-1003">
+    <footer className="fixed shadow-top-md bottom-0 left-0 w-full h-44 bg-gray-200 px-4 flex flex-col items-center justify-end z-1003">
       <div className="w-full flex flex-col items-end md:items-center justify-center max-w-xl my-auto">
         <div className="absolute left-4 md:left-10 top-0 flex flex-col items-center max-w-2xs text-center">
           <span
-            className={`absolute top-0 h-20 w-20 -mt-10 rounded-full flex items-center justify-center text-4xl ${
+            className={`absolute shadow-top-md top-0 h-20 w-20 -mt-10 rounded-full flex items-center justify-center text-4xl ${
               usedQuestionRound.isOver && changeInMoney > 0
                 ? "bg-green-500"
                 : "bg-gray-400"

@@ -17,7 +17,7 @@ export default function Pot({ usedQuestionRound, isGameFull }: Props) {
 
   const positioning = isGameFull
     ? "md:-right-5 md:-top-10"
-    : "md:left-24 md:bottom-16";
+    : "md:left-24 md:bottom-20";
 
   return (
     <div

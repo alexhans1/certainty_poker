@@ -76,10 +76,10 @@ const PlayerComp = ({
 
   return (
     <div
-      className={`player player-${positionIndex} ${isTurnPlayerClass} ${isAppPlayerClass} ${isDeadClass} md:absolute`}
+      className={`player player-${positionIndex} shadow-md ${isTurnPlayerClass} ${isAppPlayerClass} ${isDeadClass} md:absolute`}
     >
       <span
-        className={`status text-gray-900 ${
+        className={`status text-gray-900 shadow-lg ${
           isQuestionRoundOver && changeInMoney && changeInMoney > 0
             ? "bg-green-500"
             : "bg-gray-400"
