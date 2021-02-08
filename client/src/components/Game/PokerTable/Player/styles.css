@@ -59,7 +59,6 @@
   }
   .player.player-2 .inner-info {
     top: 110%;
-    transform: translatex(-37%) translatey(0);
     justify-content: center;
   }
   .player.player-3 {
@@ -69,7 +68,6 @@
   }
   .player.player-3 .inner-info {
     bottom: 110%;
-    transform: translatex(-37%) translatey(0);
     justify-content: center;
   }
   .player.player-4 {
@@ -95,7 +93,6 @@
   }
   .player.player-5 .inner-info {
     top: 110%;
-    transform: translatex(-37%) translatey(0);
     justify-content: center;
   }
   .player.player-6 {
@@ -105,7 +102,6 @@
   }
   .player.player-6 .inner-info {
     bottom: 110%;
-    transform: translatex(-37%) translatey(0);
     justify-content: center;
   }
   .player.player-7 {
@@ -141,7 +137,6 @@
   }
   .player.player-9 .inner-info {
     top: 110%;
-    transform: translatex(-37%) translatey(0);
     justify-content: center;
   }
   .player.player-10 {
@@ -151,7 +146,6 @@
   }
   .player.player-10 .inner-info {
     bottom: 110%;
-    transform: translatex(-37%) translatey(0);
     justify-content: center;
   }
   .player.player-11 {

@@ -61,7 +61,6 @@ const Footer = ({
     usedQuestionRound?.results?.find(
       ({ playerId }) => player.id === playerId
     ) || {};
-  console.log("changeInMoney", changeInMoney);
 
   const allPlayersPlacedTheirGuess =
     usedQuestionRound &&
@@ -140,7 +139,7 @@ const Footer = ({
           {!hasPlayerPlacedGuessInCurrentQuestionRound &&
             game.questionRounds.length > 1 && (
               <button
-                className="new-question-button bg-blue-500 rounded-lg font-bold text-white text-center px-3 py-2 md:px-4 md:py-3 text-sm md:text-base transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
+                className="new-question-button bg-blue-500 rounded-lg font-bold text-white text-center px-3 py-2 md:px-4 md:py-3 text-xs md:text-base transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
                 onClick={() => {
                   setShowAnswerDrawer(true);
                 }}

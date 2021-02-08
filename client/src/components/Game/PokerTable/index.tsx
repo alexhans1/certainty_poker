@@ -54,8 +54,14 @@ const PokerTable = ({
             isGeoQuestion ? "md:p-0 md:overflow-hidden" : "md:px-48 md:py-24"
           } flex md:justify-center flex-col-reverse md:flex-col md:items-center md:w-full md:border-8 md:border-indigo-200`}
         >
-          <div className="grid gap-y-6 mt-7 px-10 md:mt-0 md:px-0">
-            {game.players.map((player, index) => {
+          <div className="grid gap-y-6 mt-7 px-5 md:mt-0 md:px-0">
+            {[
+              ...game.players,
+              ...game.players,
+              ...game.players,
+              ...game.players,
+              ...game.players,
+            ].map((player, index) => {
               const { changeInMoney } =
                 usedQuestionRound?.results?.find(
                   ({ playerId }) => player.id === playerId
@@ -73,7 +79,7 @@ const PokerTable = ({
                   {...{
                     player,
                     index,
-                    numberOfPlayers: game.players.length,
+                    numberOfPlayers: game.players.length * 5,
                     currentBettingRound,
                     changeInMoney,
                     isAppPlayer: player.id === playerId,
