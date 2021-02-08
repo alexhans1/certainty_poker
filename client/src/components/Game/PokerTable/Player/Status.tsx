@@ -1,5 +1,6 @@
 import React from "react";
 import Tooltip from "@material-ui/core/Tooltip";
+import { AiOutlineQuestion } from "react-icons/ai";
 import { GiLaurelsTrophy, GiPartyPopper } from "react-icons/gi";
 import {
   FaBell,
@@ -107,7 +108,7 @@ function Status({
     } else {
       return (
         <StatusWithTooltip tooltipTitle="Not yet submitted guess">
-          <CgMore />
+          <AiOutlineQuestion />
         </StatusWithTooltip>
       );
     }
