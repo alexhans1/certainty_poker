@@ -22,7 +22,10 @@ func (q *QuestionRound) guessDeviation(playerID string) (float64, error) {
 				return math.Abs(*q.Question.Answer.Numerical - *guess.Guess.Numerical), nil
 			}
 			if q.Question.Type == QuestionTypesGeo {
-				dist := guess.GetGeoDistance(q.Question.Answer)
+				dist := math.Max(
+					q.Question.ToleranceRadius, 
+					guess.GetGeoDistance(q.Question.Answer)
+				)
 				return dist, nil
 			}
 			if q.Question.Type == QuestionTypesMultipleChoice {
