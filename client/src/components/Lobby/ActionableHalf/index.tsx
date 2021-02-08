@@ -52,7 +52,7 @@ export default function ActionableHalf({
 
   return (
     <div className="actionable-container px-4 py-2">
-      <a href="/" id="title" className="unstyled-link">
+      <a href="/" className="mr-auto text-3xl font-bold">
         Certainty Poker
       </a>
       {setName ? (
