@@ -25,7 +25,6 @@ function PreGameLobby({
   createPlayer,
   playerId,
 }: Props) {
-  console.log("playerId", playerId);
   return (
     <>
       <div className="flex flex-col items-center font-semibold mt-4 container px-5 mx-auto">
