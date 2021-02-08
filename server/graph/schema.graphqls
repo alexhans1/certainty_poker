@@ -34,6 +34,7 @@ type Player {
 type GeoCoordinate {
   longitude: Float!
   latitude: Float!
+  toleranceRadius: Float
 }
 
 type Answer {
@@ -66,6 +67,7 @@ type Question {
   hiddenAlternatives: [String!]
   hints: [String!]!
   explanation: String
+  toleranceRadius: Float
 }
 
 type Guess {
