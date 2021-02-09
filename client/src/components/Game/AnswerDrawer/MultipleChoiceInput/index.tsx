@@ -11,7 +11,11 @@ interface Props {
   handleSubmit: (guess: number) => void;
 }
 
-export default ({ usedQuestionRound, handleSubmit, alternatives }: Props) => {
+export default function MultipleChoiceInput({
+  usedQuestionRound,
+  handleSubmit,
+  alternatives,
+}: Props) {
   const [guess, setGuess] = useState<number>();
   if (alternatives?.length !== 4) {
     throw new Error("missing alternatives for multiple choice question");
@@ -25,7 +29,7 @@ export default ({ usedQuestionRound, handleSubmit, alternatives }: Props) => {
         guess={guess}
       />
       <button
-        className="btn btn-primary ml-auto"
+        className="bg-blue-500 mr-auto rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
         onClick={() => {
           if (guess || guess === 0) {
             handleSubmit(guess);
@@ -38,4 +42,4 @@ export default ({ usedQuestionRound, handleSubmit, alternatives }: Props) => {
       </button>
     </>
   );
-};
+}

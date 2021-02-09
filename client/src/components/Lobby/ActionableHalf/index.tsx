@@ -8,7 +8,7 @@ import { CREATE_GAME_QUERY } from "../../../api/queries";
 import errorHandler from "../../../api/errorHandler";
 import UploadModal from "../UploadModal";
 
-import "./styles.scss";
+import "./styles.css";
 
 interface Props {
   sets?: Set[];
@@ -19,7 +19,12 @@ interface Props {
   ) => void;
 }
 
-export default ({ sets = [], setName, languages, fetchSets }: Props) => {
+export default function ActionableHalf({
+  sets = [],
+  setName,
+  languages,
+  fetchSets,
+}: Props) {
   const history = useHistory();
   const location = useLocation();
   const [selectedSets, setSelectedSets] = useState<string[]>(
@@ -46,8 +51,8 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
   };
 
   return (
-    <div className="actionable-container container-sm px-sm-5 py-2">
-      <a href="/" id="title" className="unstyled-link">
+    <div className="actionable-container px-4 py-2">
+      <a href="/" className="mr-auto text-3xl font-bold">
         Certainty Poker
       </a>
       {setName ? (
@@ -82,7 +87,7 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
             <br />
             You don't like our questions? Upload your own{" "}
             <button
-              className="btn btn-link p-0"
+              className="text-blue-700 hover:text-blue-900 p-0"
               onClick={() => {
                 setIsUploadModalOpen(true);
               }}
@@ -93,11 +98,11 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
           </p>
         </>
       )}
-      <div className="d-flex my-3">
+      <div className="flex my-3">
         {languages.map((language) => (
           <span
             key={language}
-            className={`language mx-1 ${
+            className={`text-4xl mx-1 ${
               language === shownLanguage ? "" : "text-black-50"
             }`}
             onClick={() => {
@@ -117,8 +122,10 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
           .map((set) => (
             <span
               key={set.setName}
-              className={`set badge border-light ${
-                selectedSets?.includes(set.setName) ? "badge-light" : ""
+              className={`flex justify-center items-center rounded-md text-center px-4 py-3 border border-gray-800 hover:bg-gray-800 hover:text-white cursor-pointer ${
+                selectedSets?.includes(set.setName)
+                  ? "bg-gray-800 text-white"
+                  : ""
               } ${setName ? "mr-auto" : ""}`}
               style={{
                 gridColumn: `span ${Math.round(
@@ -147,7 +154,7 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
           ))}
       </div>
       <button
-        className="btn btn-lg btn-primary mt-auto mb-3"
+        className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
         onClick={handleCreateGame}
         disabled={!selectedSets.length}
       >
@@ -156,7 +163,7 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
       <p className="mt-4">
         Don't know the rules? Find them{" "}
         <a
-          className="btn btn-link p-0"
+          className="text-blue-700 hover:text-blue-900 p-0"
           href="https://docs.google.com/document/d/13pwz8yzrPdY1DcQqXvhejJAxXdWdPrvxR6GUxg5PJPs/edit?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
@@ -185,4 +192,4 @@ export default ({ sets = [], setName, languages, fetchSets }: Props) => {
       />
     </div>
   );
-};
+}

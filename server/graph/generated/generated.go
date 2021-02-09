@@ -92,11 +92,12 @@ type ComplexityRoot struct {
 	}
 
 	Player struct {
-		Game   func(childComplexity int) int
-		ID     func(childComplexity int) int
-		IsDead func(childComplexity int) int
-		Money  func(childComplexity int) int
-		Name   func(childComplexity int) int
+		BettingState func(childComplexity int) int
+		Game         func(childComplexity int) int
+		ID           func(childComplexity int) int
+		IsDead       func(childComplexity int) int
+		Money        func(childComplexity int) int
+		Name         func(childComplexity int) int
 	}
 
 	Query struct {
@@ -384,6 +385,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UploadQuestions(childComplexity, args["questions"].([]*model.QuestionInput), args["setName"].(string), args["isPrivate"].(bool), args["language"].(string)), true
+
+	case "Player.bettingState":
+		if e.complexity.Player.BettingState == nil {
+			break
+		}
+
+		return e.complexity.Player.BettingState(childComplexity), true
 
 	case "Player.game":
 		if e.complexity.Player.Game == nil {
@@ -699,6 +707,12 @@ enum QuestionTypes {
   GEO
 }
 
+enum BettingStates {
+  CHECKED
+  CALLED
+  RAISED
+}
+
 # Types
 type Game {
   id: ID!
@@ -715,6 +729,7 @@ type Player {
   name: String!
   game: Game!
   isDead: Boolean!
+  bettingState: BettingStates
 }
 
 type GeoCoordinate {
@@ -2135,6 +2150,37 @@ func (ec *executionContext) _Player_isDead(ctx context.Context, field graphql.Co
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Player_bettingState(ctx context.Context, field graphql.CollectedField, obj *model.Player) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Player",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BettingState, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BettingStates)
+	fc.Result = res
+	return ec.marshalOBettingStates2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBettingStates(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_game(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4622,6 +4668,8 @@ func (ec *executionContext) _Player(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "bettingState":
+			out.Values[i] = ec._Player_bettingState(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5941,6 +5989,30 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalOBettingStates2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBettingStates(ctx context.Context, v interface{}) (model.BettingStates, error) {
+	var res model.BettingStates
+	return res, res.UnmarshalGQL(v)
+}
+
+func (ec *executionContext) marshalOBettingStates2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBettingStates(ctx context.Context, sel ast.SelectionSet, v model.BettingStates) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalOBettingStates2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBettingStates(ctx context.Context, v interface{}) (*model.BettingStates, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalOBettingStates2githubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBettingStates(ctx, v)
+	return &res, err
+}
+
+func (ec *executionContext) marshalOBettingStates2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐBettingStates(ctx context.Context, sel ast.SelectionSet, v *model.BettingStates) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

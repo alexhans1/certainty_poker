@@ -67,11 +67,12 @@ type GuessInput struct {
 }
 
 type Player struct {
-	ID     string `json:"id"`
-	Money  int    `json:"money"`
-	Name   string `json:"name"`
-	Game   *Game  `json:"game"`
-	IsDead bool   `json:"isDead"`
+	ID           string         `json:"id"`
+	Money        int            `json:"money"`
+	Name         string         `json:"name"`
+	Game         *Game          `json:"game"`
+	IsDead       bool           `json:"isDead"`
+	BettingState *BettingStates `json:"bettingState"`
 }
 
 type PlayerInput struct {
@@ -120,6 +121,49 @@ type Set struct {
 	NumberOfQuestions int    `json:"numberOfQuestions"`
 	IsPrivate         bool   `json:"isPrivate"`
 	Language          string `json:"language"`
+}
+
+type BettingStates string
+
+const (
+	BettingStatesChecked BettingStates = "CHECKED"
+	BettingStatesCalled  BettingStates = "CALLED"
+	BettingStatesRaised  BettingStates = "RAISED"
+)
+
+var AllBettingStates = []BettingStates{
+	BettingStatesChecked,
+	BettingStatesCalled,
+	BettingStatesRaised,
+}
+
+func (e BettingStates) IsValid() bool {
+	switch e {
+	case BettingStatesChecked, BettingStatesCalled, BettingStatesRaised:
+		return true
+	}
+	return false
+}
+
+func (e BettingStates) String() string {
+	return string(e)
+}
+
+func (e *BettingStates) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = BettingStates(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid BettingStates", str)
+	}
+	return nil
+}
+
+func (e BettingStates) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 type QuestionTypes string

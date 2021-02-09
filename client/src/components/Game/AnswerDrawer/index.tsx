@@ -85,7 +85,6 @@ export default ({
 
   return (
     <Drawer
-      title="New Question"
       onClose={() => {
         setShowAnswerDrawer(false);
       }}
@@ -94,10 +93,11 @@ export default ({
         (showAnswerDrawer || game.questionRounds.length === 1) &&
         !hasPlayerPlacedGuessInCurrentQuestionRound
       }
-      variant="persistent"
+      variant="temporary"
     >
       <>
-        <p>{currentQuestionRound.question.question}</p>
+        <p className="font-bold">{currentQuestionRound.question.question}</p>
+        <p className="mt-4 text-sm">Your answer</p>
         {getInput()}
       </>
     </Drawer>

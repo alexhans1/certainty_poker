@@ -13,6 +13,7 @@ interface Props {
   players: Game["players"];
   usedQuestionRound?: QuestionRound;
   isSpectator: Boolean;
+  className?: string;
 }
 
 export default ({
@@ -20,6 +21,7 @@ export default ({
   isSpectator,
   playerId,
   players,
+  className,
 }: Props) => {
   const questionType = usedQuestionRound?.question.type;
   if (!usedQuestionRound || questionType !== QuestionTypes.GEO) {
@@ -76,5 +78,5 @@ export default ({
     });
   }
 
-  return <Map markers={mapMarkers} />;
+  return <Map className={className} markers={mapMarkers} />;
 };

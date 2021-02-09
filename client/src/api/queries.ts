@@ -89,6 +89,7 @@ export const GET_GAME_BY_ID = gql`
         money
         name
         isDead
+        bettingState
       }
       dealerId
       questions {
@@ -153,6 +154,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
         money
         name
         isDead
+        bettingState
       }
       dealerId
       questions {

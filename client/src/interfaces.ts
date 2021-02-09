@@ -5,6 +5,12 @@ export enum QuestionTypes {
   DATE = "DATE",
 }
 
+export enum BettingStates {
+  CHECKED = "CHECKED",
+  CALLED = "CALLED",
+  RAISED = "RAISED",
+}
+
 export interface GeoCoordinate {
   latitude: number;
   longitude: number;
@@ -15,6 +21,7 @@ export interface Player {
   money: number;
   name: string;
   isDead: boolean;
+  bettingState?: BettingStates;
 }
 
 export interface Answer {

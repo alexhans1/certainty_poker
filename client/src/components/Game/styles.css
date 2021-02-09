@@ -1,0 +1,9 @@
+.leave-game {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+button:disabled {
+  opacity: 0.5 !important;
+}

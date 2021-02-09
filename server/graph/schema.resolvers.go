@@ -81,10 +81,16 @@ func (r *mutationResolver) AddPlayer(ctx context.Context, input model.PlayerInpu
 		return nil, errors.New("cannot join game after it started")
 	}
 
+	newPlayer := game.AddNewPlayer(input.PlayerName)
+
 	go updateGameChannel(r, game)
 
-	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("player added")
-	return game.AddNewPlayer(input.PlayerName), nil
+	r.logger.WithFields(logrus.Fields{
+		"game":       game.ID,
+		"playerId":   newPlayer.ID,
+		"playerName": newPlayer.Name,
+	}).Info("player added")
+	return newPlayer, nil
 }
 
 func (r *mutationResolver) RemovePlayer(ctx context.Context, gameID string, playerID string) (bool, error) {
@@ -115,7 +121,10 @@ func (r *mutationResolver) RemovePlayer(ctx context.Context, gameID string, play
 
 	go updateGameChannel(r, game)
 
-	r.logger.WithFields(logrus.Fields{"game": game.ID}).Info("player removed")
+	r.logger.WithFields(logrus.Fields{
+		"game":     game.ID,
+		"playerId": playerID,
+	}).Info("player removed")
 	return true, nil
 }
 
@@ -177,7 +186,7 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 			Amount:   input.Amount,
 			PlayerID: input.PlayerID,
 		}
-		bettingRound.AddBet(&newBet)
+		bettingRound.AddBet(&newBet, false)
 	}
 
 	if bettingRound.IsFinished() {

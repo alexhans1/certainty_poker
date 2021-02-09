@@ -2,20 +2,17 @@
   display: flex;
   flex-direction: column;
   min-height: -webkit-fill-available;
-  font-size: 1.3em;
 }
-
-#title {
-  font-size: 1.9em;
+#app #title {
+  font-size: 2.4em;
   font-family: "Staatliches", cursive;
-  text-shadow: 1px 1px 7px rgb(216, 216, 216);
+  text-shadow: 1px 1px 7px #d8d8d8;
 }
-
 .unstyled-link {
   color: inherit !important;
   text-decoration: none !important;
 }
-
-span {
+li,
+p {
   transition: font-size 200ms;
 }

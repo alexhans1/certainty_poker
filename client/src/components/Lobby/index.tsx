@@ -7,7 +7,7 @@ import errorHandler from "../../api/errorHandler";
 import PictureHalf from "./PictureHalf";
 import ActionableHalf from "./ActionableHalf";
 
-import "./styles.scss";
+import "./styles.css";
 
 function Lobby() {
   const { setName } = useParams<{ setName: string }>();

@@ -17,11 +17,11 @@ const styles = {
   },
 };
 
-interface HintsProps {
+interface Props {
   usedQuestionRound: QuestionRound;
 }
 
-export default ({ usedQuestionRound }: HintsProps) => {
+export default function Hints({ usedQuestionRound }: Props) {
   const hints = usedQuestionRound.question.hints;
   const numberOfHints = usedQuestionRound.isOver
     ? hints.length
@@ -33,7 +33,7 @@ export default ({ usedQuestionRound }: HintsProps) => {
     return null;
   }
   return (
-    <div className="d-flex flex-column">
+    <div className="flex flex-col">
       <span style={styles.title}>
         Hint{numberOfHints > 1 && "s"} ({numberOfHints}/{hints.length}):
       </span>
@@ -55,4 +55,4 @@ export default ({ usedQuestionRound }: HintsProps) => {
       </ol>
     </div>
   );
-};
+}

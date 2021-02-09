@@ -37,7 +37,10 @@ export default ({
   return (
     <>
       <button
-        className={btnClassName || "btn btn-primary"}
+        className={
+          btnClassName ||
+          "bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
+        }
         onClick={handleClickOpen}
         disabled={isDisabled}
       >
@@ -50,7 +53,10 @@ export default ({
             <button className="btn btn-outline-dark" onClick={handleClose}>
               Cancel
             </button>
-            <button className="btn btn-primary" onClick={handleConfirm}>
+            <button
+              className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
+              onClick={handleConfirm}
+            >
               {confirmLabel}
             </button>
           </DialogActions>

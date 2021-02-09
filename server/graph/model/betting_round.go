@@ -1,15 +1,40 @@
 package model
 
 import (
+	"math"
+
 	"github.com/alexhans1/certainty_poker/helpers"
 )
 
 // AddBet processes the bet
-func (b *BettingRound) AddBet(bet *Bet) {
+func (b *BettingRound) AddBet(bet *Bet, isBlind bool) {
 	for _, player := range b.QuestionRound.Game.Players {
 		if player.ID == bet.PlayerID {
+			amountToCall := b.AmountToCall() - player.MoneyInQuestionRound()
+			bet.Amount = int(math.Min(float64(bet.Amount), float64(player.Money)))
 			b.Bets = append(b.Bets, bet)
 			player.Money -= bet.Amount
+
+			// set the BettingState unless the bets are blinds
+			if !isBlind {
+				if bet.Amount == 0 {
+					player.BettingState = &AllBettingStates[0] // checked
+					return
+				}
+				if bet.Amount == amountToCall {
+					player.BettingState = &AllBettingStates[1] // called
+					return
+				}
+				if bet.Amount > amountToCall {
+					player.BettingState = &AllBettingStates[2] // raised
+					// if a player raises, set BettingState of all other players to nil
+					for _, p := range b.QuestionRound.Game.Players {
+						if p.ID != player.ID {
+							p.BettingState = nil
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -92,8 +117,10 @@ func (b *BettingRound) IsFinished() bool {
 }
 
 // Start sets current player id to next active player of dealer
+// and resets all player states to nil
 func (b *BettingRound) Start() {
 	for _, player := range b.QuestionRound.Game.Players {
+		player.BettingState = nil
 		if player.ID == b.QuestionRound.Game.DealerID {
 			if len(b.QuestionRound.BettingRounds) <= 1 {
 				// in the first betting round the player after the big blind starts

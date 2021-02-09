@@ -18,14 +18,14 @@ const styles = {
   },
 };
 
-export default ({ game, usedQuestionRound }: QuestionProps) => {
+export default function Question({ game, usedQuestionRound }: QuestionProps) {
   const noHints =
     usedQuestionRound.question.type !== QuestionTypes.MULTIPLE_CHOICE &&
     usedQuestionRound.bettingRounds.length <= 1 &&
     !usedQuestionRound.isOver;
   const totalQuestions = game.questionRounds.length + game.questions.length;
   return (
-    <div className="mb-4">
+    <div>
       <p className="mb-0" style={(!noHints && { fontSize: "0.7em" }) || {}}>
         Question ({game.questionRounds.length}/{totalQuestions}):
       </p>
@@ -58,4 +58,4 @@ export default ({ game, usedQuestionRound }: QuestionProps) => {
         )}
     </div>
   );
-};
+}

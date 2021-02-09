@@ -1,7 +1,12 @@
 import React from "react";
 import { Game } from "../../../../interfaces";
 import ConformDialogButton from "../../../shared/ConfirmDialogButton";
-import { StartGame } from "..";
+
+export type StartGame = ({
+  variables: { gameId },
+}: {
+  variables: { gameId: Game["id"] };
+}) => void;
 
 interface Props {
   gameId: Game["id"];
