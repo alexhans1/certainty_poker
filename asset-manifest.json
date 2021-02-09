@@ -1,28 +1,26 @@
 {
   "files": {
-    "main.css": "/static/css/main.ffe0f48d.chunk.css",
-    "main.js": "/static/js/main.78cb9d3d.chunk.js",
-    "main.js.map": "/static/js/main.78cb9d3d.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.c1e4e025.js",
-    "runtime-main.js.map": "/static/js/runtime-main.c1e4e025.js.map",
-    "static/js/2.c250da92.chunk.js": "/static/js/2.c250da92.chunk.js",
-    "static/js/2.c250da92.chunk.js.map": "/static/js/2.c250da92.chunk.js.map",
-    "static/js/3.735109c1.chunk.js": "/static/js/3.735109c1.chunk.js",
-    "static/js/3.735109c1.chunk.js.map": "/static/js/3.735109c1.chunk.js.map",
+    "main.css": "/static/css/main.cb70df0b.chunk.css",
+    "main.js": "/static/js/main.889d35b6.chunk.js",
+    "main.js.map": "/static/js/main.889d35b6.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.5b259fcc.js",
+    "runtime-main.js.map": "/static/js/runtime-main.5b259fcc.js.map",
+    "static/js/2.30ed908f.chunk.js": "/static/js/2.30ed908f.chunk.js",
+    "static/js/2.30ed908f.chunk.js.map": "/static/js/2.30ed908f.chunk.js.map",
+    "static/js/3.d810df7d.chunk.js": "/static/js/3.d810df7d.chunk.js",
+    "static/js/3.d810df7d.chunk.js.map": "/static/js/3.d810df7d.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.3c4d42f7590a11f660c465e6b93d3f77.js": "/precache-manifest.3c4d42f7590a11f660c465e6b93d3f77.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.ffe0f48d.chunk.css.map": "/static/css/main.ffe0f48d.chunk.css.map",
-    "static/js/2.c250da92.chunk.js.LICENSE.txt": "/static/js/2.c250da92.chunk.js.LICENSE.txt",
-    "static/js/3.735109c1.chunk.js.LICENSE.txt": "/static/js/3.735109c1.chunk.js.LICENSE.txt",
-    "static/media/certainty_poker_bg.png": "/static/media/certainty_poker_bg.d8967197.png",
-    "static/media/turn-alert.wav": "/static/media/turn-alert.3a60f09f.wav",
-    "static/media/turn-notification.mp3": "/static/media/turn-notification.15b0efd7.mp3"
+    "static/css/main.cb70df0b.chunk.css.map": "/static/css/main.cb70df0b.chunk.css.map",
+    "static/js/2.30ed908f.chunk.js.LICENSE.txt": "/static/js/2.30ed908f.chunk.js.LICENSE.txt",
+    "static/js/3.d810df7d.chunk.js.LICENSE.txt": "/static/js/3.d810df7d.chunk.js.LICENSE.txt",
+    "static/media/certainty_poker_bg.24a8fc3a.png": "/static/media/certainty_poker_bg.24a8fc3a.png",
+    "static/media/turn-alert.wav": "/static/media/turn-alert.11acdad1.wav",
+    "static/media/turn-notification.mp3": "/static/media/turn-notification.e2e956ce.mp3"
   },
   "entrypoints": [
-    "static/js/runtime-main.c1e4e025.js",
-    "static/js/2.c250da92.chunk.js",
-    "static/css/main.ffe0f48d.chunk.css",
-    "static/js/main.78cb9d3d.chunk.js"
+    "static/js/runtime-main.5b259fcc.js",
+    "static/js/2.30ed908f.chunk.js",
+    "static/css/main.cb70df0b.chunk.css",
+    "static/js/main.889d35b6.chunk.js"
   ]
 }
