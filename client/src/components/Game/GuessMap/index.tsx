@@ -6,33 +6,33 @@ import {
   QuestionTypes,
 } from "../../../interfaces";
 import { getRevealAnswer, hasPlayerFolded } from "../helpers";
-import Map, { Marker } from "../Map";
+import Map, { MarkerType } from "../Map";
 
 interface Props {
   playerId?: Player["id"];
   players: Game["players"];
-  usedQuestionRound?: QuestionRound;
+  usedQuestionRound: QuestionRound;
   isSpectator: Boolean;
   className?: string;
 }
 
-export default ({
+export default function GuessMap({
   usedQuestionRound,
   isSpectator,
   playerId,
   players,
   className,
-}: Props) => {
-  const questionType = usedQuestionRound?.question.type;
+}: Props) {
+  const questionType = usedQuestionRound.question.type;
   if (!usedQuestionRound || questionType !== QuestionTypes.GEO) {
     return null;
   }
 
-  const playerGuess = usedQuestionRound?.guesses.find(
+  const playerGuess = usedQuestionRound.guesses.find(
     (g) => g.playerId === playerId
   );
 
-  let mapMarkers: Marker[] = playerGuess?.guess.geo
+  let mapMarkers: MarkerType[] = playerGuess?.guess.geo
     ? [
         {
           position: playerGuess.guess.geo,
@@ -44,10 +44,10 @@ export default ({
 
   if (
     isSpectator ||
-    (usedQuestionRound?.isOver && usedQuestionRound?.isShowdown)
+    (usedQuestionRound.isOver && usedQuestionRound.isShowdown)
   ) {
     mapMarkers.push(
-      ...usedQuestionRound?.guesses.reduce<Marker[]>(
+      ...usedQuestionRound.guesses.reduce<MarkerType[]>(
         (acc, { guess, playerId: pId, difference }) => {
           if (
             guess.geo &&
@@ -79,4 +79,4 @@ export default ({
   }
 
   return <Map className={className} markers={mapMarkers} />;
-};
+}

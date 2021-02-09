@@ -16,7 +16,7 @@ import { GeoCoordinate } from "../../../interfaces";
 import "./styles.css";
 
 type HandleOnClick = (p: GeoCoordinate) => void;
-export interface Marker {
+export interface MarkerType {
   label?: string;
   position: GeoCoordinate;
   isAnswer?: boolean;
@@ -24,7 +24,7 @@ export interface Marker {
 }
 
 interface Props {
-  markers?: Marker[];
+  markers?: MarkerType[];
   handleOnClick?: HandleOnClick;
   className?: string;
 }
@@ -59,7 +59,7 @@ function MarkerContainer({
   markers,
 }: {
   children: ReactNode;
-  markers: Marker[];
+  markers: MarkerType[];
 }) {
   const map = useMap();
   const bounds = latLngBounds([]);
@@ -100,6 +100,11 @@ export default React.memo(
       <MapContainer
         center={[0, 0]}
         zoom={1}
+        maxBounds={[
+          [-90, -180],
+          [90, 180],
+        ]}
+        maxBoundsViscosity={1}
         scrollWheelZoom={true}
         className={className}
       >
