@@ -12,15 +12,14 @@ export default function Guess({ guess, questionType, alternatives }: Props) {
   if (!guess) return null;
   switch (questionType) {
     case QuestionTypes.NUMERICAL:
-      return (
-        <span>
-          {new Intl.NumberFormat().format(
-            typeof guess.numerical === "number"
-              ? guess.numerical
-              : parseFloat(guess.numerical || "")
-          )}
-        </span>
-      );
+      const number =
+        typeof guess.numerical === "number"
+          ? guess.numerical
+          : parseFloat(guess.numerical || "");
+      if (isNaN(number)) {
+        return null;
+      }
+      return <span>{new Intl.NumberFormat().format(number)}</span>;
     case QuestionTypes.DATE:
       if (!guess.numerical) {
         return null;

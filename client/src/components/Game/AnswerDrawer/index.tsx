@@ -24,7 +24,7 @@ interface QuestionProps {
   hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
 }
 
-export default ({
+export default function AnswerDrawer({
   currentQuestionRound,
   player,
   addGuessMutation,
@@ -32,7 +32,7 @@ export default ({
   showAnswerDrawer,
   setShowAnswerDrawer,
   hasPlayerPlacedGuessInCurrentQuestionRound,
-}: QuestionProps) => {
+}: QuestionProps) {
   if (!player || player.isDead) {
     return null;
   }
@@ -102,4 +102,4 @@ export default ({
       </>
     </Drawer>
   );
-};
+}
