@@ -182,14 +182,16 @@ function GameComponent() {
 
   return (
     <div
-      className={`p-2 flex flex-col justify-center ${
-        isSpectator || !gameHasStarted ? "" : "mb-52"
+      className={`p-2 flex flex-col md:justify-center ${
+        isSpectator || !gameHasStarted
+          ? "min-h-screen"
+          : "min-h-screen-minus-52 mb-52"
       }`}
     >
       <a href="/" className="mr-auto text-3xl font-bold">
         Certainty Poker
       </a>
-      <div className="flex flex-col mt-4">
+      <div className="flex flex-col md:my-auto">
         {!gameHasStarted && (
           <PreGameLobby
             players={game.players}

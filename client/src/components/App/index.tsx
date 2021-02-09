@@ -11,7 +11,7 @@ function PageNotFound() {
 
 function App() {
   return (
-    <div className="bg-gray-50 dark:bg-gray-700">
+    <div className="bg-gray-50 dark:bg-gray-700 min-h-screen">
       <div
         id="app"
         className="mx-auto max-w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl"

@@ -18,6 +18,9 @@
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
       var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
+  .min-h-screen-minus-52 {
+    min-height: calc(100vh - 13rem);
+  }
 }
 
 html,
