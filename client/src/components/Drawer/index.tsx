@@ -30,7 +30,9 @@ export default function DrawerComp({
           </span>
         )}
 
-        <div className="container px-5 pb-5 flex flex-col">{children}</div>
+        <div className="px-5 pb-5 flex flex-col md:max-w-screen-md">
+          {children}
+        </div>
       </div>
     </Drawer>
   );

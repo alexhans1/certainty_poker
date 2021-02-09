@@ -16,7 +16,11 @@ interface Props {
   playerId?: Player["id"];
 }
 
-export default ({ createPlayer, gameId, playerId }: Props) => {
+export default function NameInputDrawer({
+  createPlayer,
+  gameId,
+  playerId,
+}: Props) {
   const [name, setName] = useState("");
 
   const handleSubmit = () => {
@@ -66,4 +70,4 @@ export default ({ createPlayer, gameId, playerId }: Props) => {
       </>
     </Drawer>
   );
-};
+}

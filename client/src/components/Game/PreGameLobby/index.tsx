@@ -26,7 +26,7 @@ function PreGameLobby({
 }: Props) {
   return (
     <>
-      <div className="flex flex-col items-center font-semibold mt-4 container px-5 mx-auto">
+      <div className="flex flex-col items-center font-semibold mt-4 px-5 mx-auto md:max-w-screen-md">
         <h5>Share this link with friends who want to join the game</h5>
         <div className="flex items-center justify-between w-full break-all px-4 md:px-10 py-4 mt-4 bg-gray-200 rounded-md">
           <span className="w-3/4">{gameLink}</span>
@@ -45,7 +45,7 @@ function PreGameLobby({
           {maxNumberOfPlayers - players.length === 1 ? "" : "s"}
         </p>
         <hr />
-        <div className="mt-8 grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-8 grid gap-8 w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {players.map((player) => (
             <PlayerSpot key={player.id} playerName={player?.name} />
           ))}
