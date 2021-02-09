@@ -9,11 +9,11 @@ import { split } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { OperationDefinitionNode } from "graphql";
-import "./index.css";
-import "./index.css";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import { SERVER_URL } from "./config";
+
+import "./index.css";
 
 const httpLink = new HttpLink({
   uri: `http${SERVER_URL}/query`,
