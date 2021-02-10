@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useSound from "use-sound";
 import {
   useLazyQuery,
   useMutation,
@@ -33,6 +32,10 @@ import {
   haveAllPlayersPlacedTheirGuess,
 } from "./helpers";
 import errorLogger from "../../api/errorHandler";
+// @ts-ignore
+import notificationSound from "../../assets/turn-notification.mp3";
+// @ts-ignore
+import alertSound from "../../assets/turn-alert.wav";
 
 import "./styles.css";
 
@@ -53,10 +56,9 @@ function GameComponent() {
   ] = useState(false);
   const { gameId } = useParams<{ gameId: string }>();
   const [gqlErr, setGqlErr] = useState<Error>();
-  const [playNotification] = useSound(
-    require("../../assets/turn-notification.mp3")
-  );
-  const [playAlert] = useSound(require("../../assets/turn-alert.wav"));
+
+  const [playNotification] = useState(new Audio(notificationSound));
+  const [playAlert] = useState(new Audio(alertSound));
 
   const errorHandler = (err: Error) => {
     errorLogger(err);
@@ -114,10 +116,10 @@ function GameComponent() {
         cbr?.currentPlayer.id === playerId &&
         allPlayersPlacedTheirBet
       ) {
-        playNotification();
+        playNotification.play();
         vibrate(200);
         soundInterval = setInterval(() => {
-          playAlert();
+          playAlert.play();
           vibrate(200);
         }, 15000);
       }

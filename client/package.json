@@ -40,8 +40,7 @@
     "react-scripts": "^4.0.1",
     "subscriptions-transport-ws": "^0.9.18",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
-    "typescript": "^3.9.7",
-    "use-sound": "^2.0.1"
+    "typescript": "^3.9.7"
   },
   "scripts": {
     "start": "craco start",
