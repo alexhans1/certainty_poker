@@ -34,6 +34,7 @@ type Player {
 type GeoCoordinate {
   longitude: Float!
   latitude: Float!
+  toleranceRadius: Float
 }
 
 type Answer {
@@ -102,6 +103,7 @@ type Query {
 input GeoCoordinateInput {
   longitude: Float!
   latitude: Float!
+  toleranceRadius: Float
 }
 
 input AnswerInputType {

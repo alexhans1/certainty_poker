@@ -1,7 +1,9 @@
 import { Answer, Question, QuestionTypes } from "../../../interfaces";
 import { CSVDataRow } from ".";
 
-export default (rows: { data: CSVDataRow }[]): Omit<Question, "id">[] => {
+export default function processCsvData(
+  rows: { data: CSVDataRow }[]
+): Omit<Question, "id">[] {
   return rows.map((row) => {
     const {
       question,
@@ -9,6 +11,7 @@ export default (rows: { data: CSVDataRow }[]): Omit<Question, "id">[] => {
       answer: csvAnswer,
       latitude,
       longitude,
+      toleranceRadius,
       hint1,
       hint2,
       explanation,
@@ -30,6 +33,7 @@ export default (rows: { data: CSVDataRow }[]): Omit<Question, "id">[] => {
         answer.geo = {
           latitude: latitude as number,
           longitude: longitude as number,
+          toleranceRadius: toleranceRadius,
         };
         break;
       case QuestionTypes.MULTIPLE_CHOICE:
@@ -53,4 +57,4 @@ export default (rows: { data: CSVDataRow }[]): Omit<Question, "id">[] => {
       alternatives,
     };
   });
-};
+}
