@@ -48,6 +48,7 @@ export const GET_GAME_BY_ID = gql`
             geo {
               latitude
               longitude
+              toleranceRadius
             }
           }
           alternatives
@@ -113,6 +114,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
             geo {
               latitude
               longitude
+              toleranceRadius
             }
           }
           alternatives

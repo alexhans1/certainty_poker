@@ -6,6 +6,7 @@ import {
   Marker,
   Polyline,
   TileLayer,
+  Circle,
   Tooltip,
   useMap,
   useMapEvents,
@@ -21,6 +22,7 @@ export interface MarkerType {
   position: GeoCoordinate;
   isAnswer?: boolean;
   distanceToAnswer?: number;
+  radiusInKilometres?: number;
 }
 
 interface Props {
@@ -134,18 +136,36 @@ export default React.memo(
           ))}
         {markers.length && (
           <MarkerContainer markers={markers}>
-            {markers.map(({ position, label }) => (
-              <Marker
-                position={[position.latitude, position.longitude]}
-                key={position.latitude}
-              >
-                {label && (
-                  <Tooltip direction="bottom" offset={[-15, 20]} permanent>
-                    {label}
-                  </Tooltip>
-                )}
-              </Marker>
-            ))}
+            {markers.map(({ position, label, radiusInKilometres }) => {
+              if (radiusInKilometres) {
+                return (
+                  <Circle
+                    center={[position.latitude, position.longitude]}
+                    radius={radiusInKilometres * 1000}
+                    key={position.latitude}
+                    attribution={label}
+                  >
+                    {label && (
+                      <Tooltip direction="center" permanent>
+                        {label}
+                      </Tooltip>
+                    )}
+                  </Circle>
+                );
+              }
+              return (
+                <Marker
+                  position={[position.latitude, position.longitude]}
+                  key={position.latitude}
+                >
+                  {label && (
+                    <Tooltip direction="bottom" offset={[-15, 20]} permanent>
+                      {label}
+                    </Tooltip>
+                  )}
+                </Marker>
+              );
+            })}
           </MarkerContainer>
         )}
       </MapContainer>

@@ -75,6 +75,7 @@ export default function GuessMap({
       position: usedQuestionRound.question.answer.geo,
       label: "Correct Answer",
       isAnswer: true,
+      radiusInKilometres: usedQuestionRound.question.answer.geo.toleranceRadius,
     });
   }
 
