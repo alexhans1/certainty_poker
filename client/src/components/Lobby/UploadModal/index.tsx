@@ -19,6 +19,7 @@ export interface CSVDataRow {
   answer?: number | string;
   latitude?: number;
   longitude?: number;
+  toleranceRadius?: number;
   hint1?: string;
   hint2?: string;
   explanation?: string;
@@ -140,16 +141,23 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
           </p>
 
           {q.type !== QuestionTypes.MULTIPLE_CHOICE && (
-            <p className="my-3">
-              Answer:{" "}
-              <b>
-                <Guess
-                  guess={q.answer}
-                  questionType={q.type}
-                  alternatives={q.alternatives}
-                />
-              </b>
-            </p>
+            <>
+              <p className="my-3">
+                Answer:{" "}
+                <b>
+                  <Guess
+                    guess={q.answer}
+                    questionType={q.type}
+                    alternatives={q.alternatives}
+                  />
+                </b>
+              </p>
+              {q.answer.geo?.toleranceRadius && (
+                <p className="my-3">
+                  Tolerance radius in km: <b>{q.answer.geo.toleranceRadius}</b>
+                </p>
+              )}
+            </>
           )}
           {!!q.hints?.length && (
             <p className="my-3">
