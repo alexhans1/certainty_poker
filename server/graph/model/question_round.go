@@ -23,8 +23,8 @@ func (q *QuestionRound) guessDeviation(playerID string) (float64, error) {
 			}
 			if q.Question.Type == QuestionTypesGeo {
 				dist := math.Max(
-					q.Question.ToleranceRadius, 
-					guess.GetGeoDistance(q.Question.Answer)
+					0,
+					guess.GetGeoDistance(q.Question.Answer)-*q.Question.ToleranceRadius,
 				)
 				return dist, nil
 			}

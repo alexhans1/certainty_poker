@@ -45,13 +45,15 @@ type Game struct {
 }
 
 type GeoCoordinate struct {
-	Longitude float64 `json:"longitude"`
-	Latitude  float64 `json:"latitude"`
+	Longitude       float64  `json:"longitude"`
+	Latitude        float64  `json:"latitude"`
+	ToleranceRadius *float64 `json:"toleranceRadius"`
 }
 
 type GeoCoordinateInput struct {
-	Longitude float64 `json:"longitude"`
-	Latitude  float64 `json:"latitude"`
+	Longitude       float64  `json:"longitude"`
+	Latitude        float64  `json:"latitude"`
+	ToleranceRadius *float64 `json:"toleranceRadius"`
 }
 
 type Guess struct {
@@ -89,6 +91,7 @@ type Question struct {
 	HiddenAlternatives []string      `json:"hiddenAlternatives"`
 	Hints              []string      `json:"hints"`
 	Explanation        *string       `json:"explanation"`
+	ToleranceRadius    *float64      `json:"toleranceRadius"`
 }
 
 type QuestionInput struct {
