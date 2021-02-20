@@ -91,7 +91,6 @@ type Question struct {
 	HiddenAlternatives []string      `json:"hiddenAlternatives"`
 	Hints              []string      `json:"hints"`
 	Explanation        *string       `json:"explanation"`
-	ToleranceRadius    *float64      `json:"toleranceRadius"`
 }
 
 type QuestionInput struct {

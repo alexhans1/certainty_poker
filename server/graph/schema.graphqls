@@ -67,7 +67,6 @@ type Question {
   hiddenAlternatives: [String!]
   hints: [String!]!
   explanation: String
-  toleranceRadius: Float
 }
 
 type Guess {

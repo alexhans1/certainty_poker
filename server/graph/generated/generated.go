@@ -114,7 +114,6 @@ type ComplexityRoot struct {
 		Hints              func(childComplexity int) int
 		ID                 func(childComplexity int) int
 		Question           func(childComplexity int) int
-		ToleranceRadius    func(childComplexity int) int
 		Type               func(childComplexity int) int
 	}
 
@@ -510,13 +509,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Question.Question(childComplexity), true
 
-	case "Question.toleranceRadius":
-		if e.complexity.Question.ToleranceRadius == nil {
-			break
-		}
-
-		return e.complexity.Question.ToleranceRadius(childComplexity), true
-
 	case "Question.type":
 		if e.complexity.Question.Type == nil {
 			break
@@ -784,7 +776,6 @@ type Question {
   hiddenAlternatives: [String!]
   hints: [String!]!
   explanation: String
-  toleranceRadius: Float
 }
 
 type Guess {
@@ -2645,37 +2636,6 @@ func (ec *executionContext) _Question_explanation(ctx context.Context, field gra
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Question_toleranceRadius(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:   "Question",
-		Field:    field,
-		Args:     nil,
-		IsMethod: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ToleranceRadius, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*float64)
-	fc.Result = res
-	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _QuestionRound_game(ctx context.Context, field graphql.CollectedField, obj *model.QuestionRound) (ret graphql.Marshaler) {
@@ -4870,8 +4830,6 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "explanation":
 			out.Values[i] = ec._Question_explanation(ctx, field, obj)
-		case "toleranceRadius":
-			out.Values[i] = ec._Question_toleranceRadius(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
