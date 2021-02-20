@@ -14,6 +14,7 @@ export enum BettingStates {
 export interface GeoCoordinate {
   latitude: number;
   longitude: number;
+  toleranceRadius?: number;
 }
 
 export interface Player {
