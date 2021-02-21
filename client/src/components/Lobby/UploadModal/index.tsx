@@ -220,7 +220,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
             uploadQuestions();
           }}
         >
-          Submit
+          Upload
         </button>
         <button
           className="border-2 boder-gray-800 rounded-lg font-bold hover:text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-800 ml-3"
