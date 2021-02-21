@@ -1,4 +1,5 @@
 import React from "react";
+import { AiFillCheckCircle } from "react-icons/ai";
 import {
   Game,
   Player,
@@ -73,7 +74,7 @@ export default function GuessMap({
   ) {
     mapMarkers.push({
       position: usedQuestionRound.question.answer.geo,
-      label: "Correct Answer",
+      label: <AiFillCheckCircle className="text-green-500 text-2xl" />,
       isAnswer: true,
       radiusInKilometres: usedQuestionRound.question.answer.geo.toleranceRadius,
     });

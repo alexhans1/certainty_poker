@@ -18,7 +18,7 @@ import "./styles.css";
 
 type HandleOnClick = (p: GeoCoordinate) => void;
 export interface MarkerType {
-  label?: string;
+  label?: JSX.Element | string;
   position: GeoCoordinate;
   isAnswer?: boolean;
   distanceToAnswer?: number;
@@ -143,7 +143,6 @@ export default React.memo(
                     center={[position.latitude, position.longitude]}
                     radius={radiusInKilometres * 1000}
                     key={position.latitude}
-                    attribution={label}
                   >
                     {label && (
                       <Tooltip direction="center" permanent>
@@ -155,6 +154,7 @@ export default React.memo(
               }
               return (
                 <Marker
+                  alt="position marker"
                   position={[position.latitude, position.longitude]}
                   key={position.latitude}
                 >
