@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.7acf3b71.chunk.css",
-    "main.js": "/static/js/main.fe9867bc.chunk.js",
-    "main.js.map": "/static/js/main.fe9867bc.chunk.js.map",
+    "main.css": "/static/css/main.76475d56.chunk.css",
+    "main.js": "/static/js/main.9e33cf8a.chunk.js",
+    "main.js.map": "/static/js/main.9e33cf8a.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.c012fedc.js",
     "runtime-main.js.map": "/static/js/runtime-main.c012fedc.js.map",
     "static/js/2.6cc94d5a.chunk.js": "/static/js/2.6cc94d5a.chunk.js",
     "static/js/2.6cc94d5a.chunk.js.map": "/static/js/2.6cc94d5a.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.7acf3b71.chunk.css.map": "/static/css/main.7acf3b71.chunk.css.map",
+    "static/css/main.76475d56.chunk.css.map": "/static/css/main.76475d56.chunk.css.map",
     "static/js/2.6cc94d5a.chunk.js.LICENSE.txt": "/static/js/2.6cc94d5a.chunk.js.LICENSE.txt",
     "static/media/certainty_poker_bg.24a8fc3a.png": "/static/media/certainty_poker_bg.24a8fc3a.png",
     "static/media/turn-alert.11acdad1.wav": "/static/media/turn-alert.11acdad1.wav",
@@ -17,7 +17,7 @@
   "entrypoints": [
     "static/js/runtime-main.c012fedc.js",
     "static/js/2.6cc94d5a.chunk.js",
-    "static/css/main.7acf3b71.chunk.css",
-    "static/js/main.fe9867bc.chunk.js"
+    "static/css/main.76475d56.chunk.css",
+    "static/js/main.9e33cf8a.chunk.js"
   ]
 }
