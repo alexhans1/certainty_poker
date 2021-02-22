@@ -34,6 +34,7 @@ func (r *mutationResolver) CreateGame(ctx context.Context, setNames []string) (*
 		DealerID:       "dealerId",
 		Questions:      gameQuestions,
 		IsOver:         false,
+		SetNames:       setNames,
 	}
 
 	r.games[gameID] = &game

@@ -74,6 +74,7 @@ export interface QuestionRound {
 
 export interface Game {
   id: string;
+  setNames: string[];
   players: Player[];
   questionRounds: QuestionRound[];
   dealerId: Player["id"];

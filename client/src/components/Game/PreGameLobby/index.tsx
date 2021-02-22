@@ -12,6 +12,7 @@ interface Props {
   gameId: Game["id"];
   createPlayer: CreatePlayer;
   playerId?: Player["id"];
+  setNames: Game["setNames"];
 }
 
 export const maxNumberOfPlayers = 12;
@@ -23,6 +24,7 @@ function PreGameLobby({
   gameId,
   createPlayer,
   playerId,
+  setNames,
 }: Props) {
   return (
     <>
@@ -39,6 +41,9 @@ function PreGameLobby({
             <FiCopy />
           </button>
         </div>
+        <h4 className="mt-4 self-start text-lg">
+          Question Set{setNames.length > 1 ? "s" : ""}: {setNames.join(", ")}
+        </h4>
         <p className="mt-20 self-start">Players</p>
         <p className="text-xs font-normal self-start w-full pb-2 border-b-2 border-grey-200">
           {maxNumberOfPlayers - players.length} Open spot

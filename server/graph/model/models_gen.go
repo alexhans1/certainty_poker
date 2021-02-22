@@ -42,6 +42,7 @@ type Game struct {
 	DealerID       string           `json:"dealerId"`
 	Questions      []*Question      `json:"questions"`
 	IsOver         bool             `json:"isOver"`
+	SetNames       []string         `json:"setNames"`
 }
 
 type GeoCoordinate struct {

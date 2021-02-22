@@ -20,6 +20,7 @@ type Game {
   dealerId: ID!
   questions: [Question]!
   isOver: Boolean!
+  setNames: [String!]!
 }
 
 type Player {

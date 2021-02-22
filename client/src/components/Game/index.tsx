@@ -202,6 +202,7 @@ function GameComponent() {
             gameId={game.id}
             createPlayer={createPlayer}
             playerId={playerId}
+            setNames={game.setNames}
           />
         )}
         {gameHasStarted && usedQuestionRound && (

@@ -39,6 +39,7 @@ export const GET_GAME_BY_ID = gql`
   query findGame($gameId: ID!) {
     game(gameId: $gameId) {
       id
+      setNames
       questionRounds {
         question {
           id
@@ -105,6 +106,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
   subscription GameUpdated($gameId: ID!, $hash: String!) {
     gameUpdated(gameId: $gameId, hash: $hash) {
       id
+      setNames
       questionRounds {
         question {
           id
