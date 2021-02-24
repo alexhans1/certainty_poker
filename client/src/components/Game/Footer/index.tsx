@@ -1,4 +1,5 @@
 import React from "react";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { GrMoney } from "react-icons/gr";
 import {
   QuestionRound,
@@ -80,22 +81,39 @@ const Footer = ({
                 : ""
             }`}
           >
-            <Status
-              {...{
-                player,
-                isQuestionRoundOver: usedQuestionRound.isOver,
-                isTurnPlayer:
-                  !usedQuestionRound.isOver &&
-                  player.id === currentBettingRound?.currentPlayer.id,
-                hasFolded: !!(
-                  usedQuestionRound &&
-                  hasPlayerFolded(usedQuestionRound, player.id)
-                ),
-                changeInMoney,
-                allPlayersPlacedTheirGuess,
-                playerHasPlacedTheirGuess: !!appPlayerAnswer,
-              }}
-            />
+            {isAppPlayerTurn && !usedQuestionRound.isOver && (
+              <span className="absolute">
+                <CountdownCircleTimer
+                  isPlaying={isAppPlayerTurn}
+                  size={80}
+                  strokeWidth={5}
+                  duration={15}
+                  colors={[
+                    ["#004777", 0.5],
+                    ["#A30000", 1],
+                  ]}
+                  trailColor="#9ca3af"
+                />
+              </span>
+            )}
+            <span>
+              <Status
+                {...{
+                  player,
+                  isQuestionRoundOver: usedQuestionRound.isOver,
+                  isTurnPlayer:
+                    !usedQuestionRound.isOver &&
+                    player.id === currentBettingRound?.currentPlayer.id,
+                  hasFolded: !!(
+                    usedQuestionRound &&
+                    hasPlayerFolded(usedQuestionRound, player.id)
+                  ),
+                  changeInMoney,
+                  allPlayersPlacedTheirGuess,
+                  playerHasPlacedTheirGuess: !!appPlayerAnswer,
+                }}
+              />
+            </span>
           </span>
           {questionType !== QuestionTypes.GEO && (
             <>
