@@ -89,14 +89,17 @@ function Status({
       </StatusWithTooltip>
     );
   }
-  if (isWinningPlayer && isQuestionRoundOver) {
-    return <GiLaurelsTrophy />;
-  }
-  if (isQuestionRoundOver && changeInMoney && changeInMoney > 0) {
-    return <GiPartyPopper />;
-  }
-  if (isQuestionRoundOver && changeInMoney && changeInMoney < 0) {
-    return <FaSadCry />;
+  if (isQuestionRoundOver) {
+    if (isWinningPlayer) {
+      return <GiLaurelsTrophy />;
+    }
+    if (changeInMoney && changeInMoney > 0) {
+      return <GiPartyPopper />;
+    }
+    if (changeInMoney && changeInMoney < 0) {
+      return <FaSadCry />;
+    }
+    return null;
   }
   if (!allPlayersPlacedTheirGuess) {
     if (playerHasPlacedTheirGuess) {
