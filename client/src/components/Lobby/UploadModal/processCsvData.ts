@@ -45,6 +45,11 @@ export default function processCsvData(
           multiple_choice_alternative3 as string,
         ];
         break;
+      case QuestionTypes.ORDER:
+        answer.order = (csvAnswer as string).split(";").map(
+          element=>element.trim()
+        );
+        break;
       default:
         throw new Error("invalid question type");
     }

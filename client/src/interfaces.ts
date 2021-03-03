@@ -3,6 +3,7 @@ export enum QuestionTypes {
   NUMERICAL = "NUMERICAL",
   MULTIPLE_CHOICE = "MULTIPLE_CHOICE",
   DATE = "DATE",
+  ORDER = "ORDER",
 }
 
 export enum BettingStates {
@@ -28,6 +29,7 @@ export interface Player {
 export interface Answer {
   numerical?: number;
   geo?: GeoCoordinate;
+  order?: string[];
 }
 
 export interface Question {
