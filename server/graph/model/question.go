@@ -36,8 +36,13 @@ func validateQuestions(questions []*QuestionInput) error {
 		if q.Type == QuestionTypesMultipleChoice && (q.Alternatives == nil || len(q.Alternatives) < 4) {
 			return errors.New("all \"alternatives\" must be set for multiple choice questions at question " + strconv.Itoa(i+1))
 		}
-		if q.Type == QuestionTypesOrder && q.Answer.Order == nil && len(q.Answer.Order) < 2 {
-			return errors.New("\"order\" must have at least two items at question " + strconv.Itoa(i+1))
+		if q.Type == QuestionTypesOrder {
+			if q.Answer.Order == nil {
+				return errors.New("\"order\" must be set at question " + strconv.Itoa(i+1))
+			}
+			if len(q.Answer.Order) < 2 {
+				return errors.New("\"order\" must have at least two items at question " + strconv.Itoa(i+1))
+			}
 		}
 	}
 	return nil
@@ -132,7 +137,8 @@ func LoadQuestions(redisClient *redis.Client, setName string) ([]*Question, erro
 			}
 		}
 		if q.Type == QuestionTypesOrder {
-			q.ShuffledOrder = q.Answer.Order
+			q.ShuffledOrder = make([]string, len(q.Answer.Order))
+			copy(q.ShuffledOrder, q.Answer.Order)
 			funk.ShuffleString(q.ShuffledOrder)
 		}
 	}
