@@ -729,6 +729,7 @@ enum QuestionTypes {
   MULTIPLE_CHOICE
   DATE
   GEO
+  ORDER
 }
 
 enum BettingStates {
