@@ -92,6 +92,7 @@ type Question struct {
 	Answer             *Answer       `json:"answer"`
 	Alternatives       []string      `json:"alternatives"`
 	HiddenAlternatives []string      `json:"hiddenAlternatives"`
+	ShuffledOrder      []string      `json:"shuffledOrder"`
 	Hints              []string      `json:"hints"`
 	Explanation        *string       `json:"explanation"`
 }

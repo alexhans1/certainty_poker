@@ -116,6 +116,7 @@ type ComplexityRoot struct {
 		Hints              func(childComplexity int) int
 		ID                 func(childComplexity int) int
 		Question           func(childComplexity int) int
+		ShuffledOrder      func(childComplexity int) int
 		Type               func(childComplexity int) int
 	}
 
@@ -525,6 +526,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Question.Question(childComplexity), true
 
+	case "Question.shuffledOrder":
+		if e.complexity.Question.ShuffledOrder == nil {
+			break
+		}
+
+		return e.complexity.Question.ShuffledOrder(childComplexity), true
+
 	case "Question.type":
 		if e.complexity.Question.Type == nil {
 			break
@@ -793,6 +801,7 @@ type Question {
   answer: Answer!
   alternatives: [String!]
   hiddenAlternatives: [String!]
+  shuffledOrder: [String!]
   hints: [String!]!
   explanation: String
 }
@@ -2645,6 +2654,37 @@ func (ec *executionContext) _Question_hiddenAlternatives(ctx context.Context, fi
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.HiddenAlternatives, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Question_shuffledOrder(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Question",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ShuffledOrder, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4921,6 +4961,8 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._Question_alternatives(ctx, field, obj)
 		case "hiddenAlternatives":
 			out.Values[i] = ec._Question_hiddenAlternatives(ctx, field, obj)
+		case "shuffledOrder":
+			out.Values[i] = ec._Question_shuffledOrder(ctx, field, obj)
 		case "hints":
 			out.Values[i] = ec._Question_hints(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

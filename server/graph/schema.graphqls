@@ -68,6 +68,7 @@ type Question {
   answer: Answer!
   alternatives: [String!]
   hiddenAlternatives: [String!]
+  shuffledOrder: [String!]
   hints: [String!]!
   explanation: String
 }
