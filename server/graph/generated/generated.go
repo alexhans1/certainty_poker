@@ -48,6 +48,7 @@ type ComplexityRoot struct {
 	Answer struct {
 		Geo       func(childComplexity int) int
 		Numerical func(childComplexity int) int
+		Order     func(childComplexity int) int
 	}
 
 	Bet struct {
@@ -191,6 +192,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Answer.Numerical(childComplexity), true
+
+	case "Answer.order":
+		if e.complexity.Answer.Order == nil {
+			break
+		}
+
+		return e.complexity.Answer.Order(childComplexity), true
 
 	case "Bet.amount":
 		if e.complexity.Bet.Amount == nil {
@@ -758,6 +766,7 @@ type GeoCoordinate {
 type Answer {
   numerical: Float
   geo: GeoCoordinate
+  order: [String!]
 }
 
 type QuestionRoundResult {
@@ -827,6 +836,7 @@ input GeoCoordinateInput {
 input AnswerInputType {
   numerical: Float
   geo: GeoCoordinateInput
+  order: [String!]
 }
 
 input GuessInput {
@@ -1171,6 +1181,37 @@ func (ec *executionContext) _Answer_geo(ctx context.Context, field graphql.Colle
 	res := resTmp.(*model.GeoCoordinate)
 	fc.Result = res
 	return ec.marshalOGeoCoordinate2ᚖgithubᚗcomᚋalexhans1ᚋcertainty_pokerᚋgraphᚋmodelᚐGeoCoordinate(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Answer_order(ctx context.Context, field graphql.CollectedField, obj *model.Answer) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Answer",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Order, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Bet_playerId(ctx context.Context, field graphql.CollectedField, obj *model.Bet) (ret graphql.Marshaler) {
@@ -4272,6 +4313,12 @@ func (ec *executionContext) unmarshalInputAnswerInputType(ctx context.Context, o
 			if err != nil {
 				return it, err
 			}
+		case "order":
+			var err error
+			it.Order, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -4463,6 +4510,8 @@ func (ec *executionContext) _Answer(ctx context.Context, sel ast.SelectionSet, o
 			out.Values[i] = ec._Answer_numerical(ctx, field, obj)
 		case "geo":
 			out.Values[i] = ec._Answer_geo(ctx, field, obj)
+		case "order":
+			out.Values[i] = ec._Answer_order(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

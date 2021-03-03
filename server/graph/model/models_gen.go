@@ -11,11 +11,13 @@ import (
 type Answer struct {
 	Numerical *float64       `json:"numerical"`
 	Geo       *GeoCoordinate `json:"geo"`
+	Order     []string       `json:"order"`
 }
 
 type AnswerInputType struct {
 	Numerical *float64            `json:"numerical"`
 	Geo       *GeoCoordinateInput `json:"geo"`
+	Order     []string            `json:"order"`
 }
 
 type Bet struct {
