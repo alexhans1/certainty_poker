@@ -3,6 +3,7 @@ package model
 import (
 	"math"
 
+	"github.com/thoas/go-funk"
 	"github.com/umahmood/haversine"
 )
 
@@ -21,4 +22,13 @@ func (g *Guess) GetGeoDistance(a *Answer) float64 {
 	)
 	g.Difference = &diff
 	return diff
+}
+
+// GetOrderDistance returns the distance between the guess and answer order
+func (g *Guess) GetOrderDistance(a *Answer) float64 {
+	dist := 0.0
+	for index, guessOrderItem := range g.Guess.Order {
+		dist += math.Abs(float64(index - funk.IndexOf(a.Order, guessOrderItem)))
+	}
+	return dist / 2
 }
