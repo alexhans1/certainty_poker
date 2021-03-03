@@ -51,10 +51,7 @@ export default function ActionableHalf({
   };
 
   return (
-    <div className="actionable-container px-4 py-2">
-      <a href="/" className="mr-auto text-3xl font-bold">
-        Certainty Poker
-      </a>
+    <div className="actionable-container py-2">
       {setName ? (
         <p>
           You can only start a game with these questions from this link{" "}

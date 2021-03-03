@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import Lobby from "../Lobby";
 import Game from "../Game";
 
@@ -16,6 +16,9 @@ function App() {
         id="app"
         className="mx-auto max-w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl"
       >
+        <Link to="/" className="mt-4 text-3xl font-bold">
+          Certainty Poker
+        </Link>
         <Switch>
           <Route path="/" component={Lobby} exact />
           <Route path="/:gameId" component={Game} exact />
