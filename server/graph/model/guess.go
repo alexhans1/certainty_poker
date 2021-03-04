@@ -9,6 +9,8 @@ import (
 
 // GetGeoDistance returns the distance between the geo guess and answer in km
 func (g *Guess) GetGeoDistance(a *Answer) float64 {
+	// We calculate the distance of the guess point to the circle with a radius
+	//   of a.Geo.ToleranceRadius around the center of the answer point.
 	var radius float64 = 0
 	if a.Geo.ToleranceRadius != nil {
 		radius = *a.Geo.ToleranceRadius
@@ -26,6 +28,8 @@ func (g *Guess) GetGeoDistance(a *Answer) float64 {
 
 // GetOrderDistance returns the distance between the guess and answer order
 func (g *Guess) GetOrderDistance(a *Answer) float64 {
+	// We calculate the distance of each item to its correct position in the
+	//   order. This counts every mistake twice, so in the end we divide by 2.
 	dist := 0.0
 	for index, guessOrderItem := range g.Guess.Order {
 		dist += math.Abs(float64(index - funk.IndexOf(a.Order, guessOrderItem)))
