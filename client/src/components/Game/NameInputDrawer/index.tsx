@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Drawer from "../../Drawer";
+import Drawer from "../../shared/Drawer";
 import { Game, Player } from "../../../interfaces";
 
 export type CreatePlayer = ({

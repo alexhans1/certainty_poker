@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Drawer from "../../../../Drawer";
+import Drawer from "../../../../shared/Drawer";
 import { BettingRound, Game, Player } from "../../../../../interfaces";
 import { calculateAmountToCall, PlaceBet, raise } from "../../../helpers";
 
