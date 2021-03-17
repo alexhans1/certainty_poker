@@ -190,9 +190,6 @@ function GameComponent() {
           : "min-h-screen-minus-52 mb-52"
       }`}
     >
-      <a href="/" className="mr-auto text-3xl font-bold">
-        Certainty Poker
-      </a>
       <div className="flex flex-col md:my-auto">
         {!gameHasStarted && (
           <PreGameLobby

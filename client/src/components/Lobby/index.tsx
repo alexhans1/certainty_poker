@@ -23,26 +23,9 @@ function Lobby() {
     fetchSets();
   }, [fetchSets, setName]);
 
-  const languages =
-    sets?.sets
-      .reduce<string[]>((uniqueLanguages, s) => {
-        if (!uniqueLanguages.includes(s.language)) {
-          uniqueLanguages.push(s.language);
-        }
-        return uniqueLanguages;
-      }, [])
-      .sort((a, b) => {
-        if (a === "GB") {
-          return -1;
-        }
-        return parseInt(a) - parseInt(b);
-      }) || [];
-
   return (
-    <div className="grid-container">
-      <ActionableHalf
-        {...{ sets: sets?.sets, languages, setName, fetchSets }}
-      />
+    <div className="grid lg:grid-cols-2 gap-x-8 relative landing-page">
+      <ActionableHalf {...{ sets: sets?.sets, setName, fetchSets }} />
       <PictureHalf />
     </div>
   );

@@ -21,6 +21,10 @@
   .min-h-screen-minus-52 {
     min-height: calc(100vh - 13rem);
   }
+
+  .bg-beige {
+    background-color: #f0eeea;
+  }
 }
 
 html,
@@ -37,4 +41,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+li,
+p {
+  transition: font-size 200ms;
 }
