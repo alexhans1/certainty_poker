@@ -22,12 +22,11 @@ export default function PictureHalf() {
       <div className="col-span-2 row-span-2 overflow-hidden rounded-lg flex justify-center items-center p-5 bg-beige">
         <img src={backgroundImage2} className="rounded-xl" alt="background" />
       </div>
-      <div className="col-span-3 row-span-4" />
 
-      <div className="absolute rounded-2xl -mt-24 h-3/4 w-2/3 self-center justify-self-center">
+      <div className="absolute rounded-2xl h-3/4 w-2/3 self-center justify-self-center flex justify-center">
         <img
           src={backgroundImagePhone}
-          className="rounded-xl"
+          className="rounded-xl h-full"
           alt="background"
         />
       </div>
