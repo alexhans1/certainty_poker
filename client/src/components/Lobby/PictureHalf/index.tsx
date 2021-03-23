@@ -8,7 +8,7 @@ import backgroundImagePhone from "../../../assets/landing-page-image-phone.png";
 
 export default function PictureHalf() {
   return (
-    <div className="grid grid-cols-3 gap-4 grid-flow-row-dense py-4 md:pb-12 relative">
+    <div className="grid grid-cols-3 gap-4 grid-flow-row-dense py-4 md:pb-12 h-full relative lg:overflow-hidden">
       <div className="col-span-2 row-span-3 rounded-lg flex justify-center items-center p-5 bg-beige">
         <img src={backgroundImage3} className="rounded-xl" alt="background" />
       </div>
