@@ -34,10 +34,17 @@ interface Props {
   fetchSets: (
     options?: QueryLazyOptions<Record<string, any>> | undefined
   ) => void;
+  setShownLanguage: React.Dispatch<React.SetStateAction<string>>;
   setSelectedSets: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
+function UploadModal({
+  open,
+  handleClose,
+  fetchSets,
+  setSelectedSets,
+  setShownLanguage,
+}: Props) {
   const history = useHistory();
   const [showCSVInput, setShowCSVInput] = useState(true);
   const [data, setData] = useState<Omit<Question, "id">[]>();
@@ -59,6 +66,7 @@ function UploadModal({ open, handleClose, fetchSets, setSelectedSets }: Props) {
         fetchSets();
       }
       setSelectedSets([setName]);
+      setShownLanguage(language || "GB");
       handleClose();
       setSetName("");
       setData(undefined);

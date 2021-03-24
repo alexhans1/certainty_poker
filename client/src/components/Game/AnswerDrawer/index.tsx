@@ -1,5 +1,5 @@
 import React from "react";
-import Drawer from "../../Drawer";
+import Drawer from "../../shared/Drawer";
 import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
 import MapInput from "./MapInput";

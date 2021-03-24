@@ -1,7 +1,7 @@
 const countryListAlpha2 = {
   GB: "English",
   FR: "French",
-  ES: "Spainish",
+  ES: "Spanish",
   CN: "Chinese",
   DE: "German",
   ZA: "Africaans",
