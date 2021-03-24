@@ -9,7 +9,7 @@ function PageNotFound() {
 
 function App() {
   return (
-    <div className="mx-auto flex flex-col h-full max-w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl px-3">
+    <div className="mx-auto flex flex-col max-w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl px-3">
       <Link to="/" className="mt-4 text-3xl font-bold">
         Certainty Poker
       </Link>
