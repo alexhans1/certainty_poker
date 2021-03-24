@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { QueryLazyOptions } from "@apollo/react-hooks";
 import { Set } from "../../../interfaces";
 import StartGameModal from "../StartGameModal";
@@ -16,7 +17,16 @@ export default function ActionableHalf({
   setName,
   fetchSets,
 }: Props) {
+  const history = useHistory();
   const [isCreateGameModalOpen, setIsCreateGameModalOpen] = useState(false);
+
+  useEffect(() => {
+    const { pathname } = history.location;
+    const isPrivateSetRoute = pathname !== "/";
+    if (isPrivateSetRoute) {
+      setIsCreateGameModalOpen(true);
+    }
+  }, [history]);
 
   return (
     <>
@@ -40,7 +50,11 @@ export default function ActionableHalf({
       </div>
       <StartGameModal
         sets={sets}
+        fetchSets={fetchSets}
         open={isCreateGameModalOpen}
+        handleOpen={() => {
+          setIsCreateGameModalOpen(true);
+        }}
         handleClose={() => {
           setIsCreateGameModalOpen(false);
         }}

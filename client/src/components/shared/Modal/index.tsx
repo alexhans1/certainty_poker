@@ -24,7 +24,7 @@ function UploadModal({ open, handleClose, children }: Props) {
         timeout: 500,
       }}
     >
-      <div className="bg-white flex flex-col h-full relative rounded-md border border-gray-500 lg:w-2/3 md:w-3/4 overflow-y-auto py-5 px-8 focus:outline-none w-full">
+      <div className="bg-white flex flex-col h-full relative rounded-md border border-gray-500 lg:w-2/3 md:w-3/4 overflow-y-auto py-5 px-8 focus:outline-none max-w-2xl">
         <button onClick={handleClose} className="absolute top-4 right-4">
           <FaTimes />
         </button>
