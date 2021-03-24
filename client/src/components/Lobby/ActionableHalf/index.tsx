@@ -30,7 +30,7 @@ export default function ActionableHalf({
 
   return (
     <>
-      <div className="flex flex-col justify-end h-full py-8 lg:pb-40 lg:pt-0">
+      <div className="flex flex-col justify-end h-full py-8 lg:pb-32 lg:pt-0">
         <h1 className="text-5xl">
           <span className="font-light italic">You think you know things?</span>
           <br />
@@ -47,6 +47,18 @@ export default function ActionableHalf({
         >
           Create Game
         </button>
+        <p className="mt-10">
+          Check out the rules{" "}
+          <a
+            className="text-blue-700 hover:text-blue-900 p-0"
+            href="https://docs.google.com/document/d/13pwz8yzrPdY1DcQqXvhejJAxXdWdPrvxR6GUxg5PJPs/edit?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            here
+          </a>
+          .
+        </p>
       </div>
       <StartGameModal
         sets={sets}
