@@ -8,7 +8,6 @@ import { UPLOAD_QUESTION_SET } from "../../../api/queries";
 import { QueryLazyOptions } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 import { Question, QuestionTypes } from "../../../interfaces";
-import errorLogger from "../../../api/errorHandler";
 import countryCodes from "../../../assets/countryCodes";
 import processCsvData from "./processCsvData";
 import Guess from "../../Game/Guess";
@@ -51,6 +50,7 @@ function UploadModal({
   const [setName, setSetName] = useState("");
   const [isPrivate, setIsPrivate] = useState<0 | 1>(0);
   const [language, setLanguage] = useState<string>();
+  const [_, setError] = useState();
 
   const [uploadQuestions, { error }] = useMutation(UPLOAD_QUESTION_SET, {
     variables: {
@@ -72,7 +72,11 @@ function UploadModal({
       setData(undefined);
       setShowCSVInput(true);
     },
-    onError: errorLogger,
+    onError: (err) => {
+      setError(() => {
+        throw err;
+      });
+    },
   });
 
   const handleOnDrop = (rows: { data: CSVDataRow }[]) => {

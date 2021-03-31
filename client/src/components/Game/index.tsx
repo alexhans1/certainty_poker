@@ -5,6 +5,7 @@ import {
   useMutation,
   useSubscription,
 } from "@apollo/react-hooks";
+import { AiFillFileUnknown } from "react-icons/ai";
 import {
   GET_GAME_BY_ID,
   CREATE_PLAYER,
@@ -25,13 +26,13 @@ import PokerTable from "./PokerTable";
 import AnswerDrawer from "./AnswerDrawer";
 import Footer from "./Footer";
 import LeaveGameButton from "./LeaveGameButton";
+import ErrorBoundary from "../ErrorBoundary";
 import {
   getCurrentQuestionRound,
   getCurrentBettingRound,
   getPreviousQuestionRound,
   haveAllPlayersPlacedTheirGuess,
 } from "./helpers";
-import errorLogger from "../../api/errorHandler";
 // @ts-ignore
 import notificationSound from "../../assets/turn-notification.mp3";
 // @ts-ignore
@@ -55,23 +56,27 @@ function GameComponent() {
     setShowNewQuestionRoundForSpectator,
   ] = useState(false);
   const { gameId } = useParams<{ gameId: string }>();
-  const [gqlErr, setGqlErr] = useState<Error>();
+  const [_, setError] = useState();
 
   const [playNotification] = useState(new Audio(notificationSound));
   const [playAlert] = useState(new Audio(alertSound));
 
   const errorHandler = (err: Error) => {
-    errorLogger(err);
-    setGqlErr(err);
+    setError(() => {
+      throw err;
+    });
   };
 
-  const [fetchGame] = useLazyQuery<{ game: Game }>(GET_GAME_BY_ID, {
-    fetchPolicy: "cache-and-network",
-    onError: errorHandler,
-    onCompleted: ({ game }) => {
-      setGame(game);
-    },
-  });
+  const [fetchGame, { loading }] = useLazyQuery<{ game: Game }>(
+    GET_GAME_BY_ID,
+    {
+      fetchPolicy: "cache-and-network",
+      onError: errorHandler,
+      onCompleted: ({ game }) => {
+        setGame(game);
+      },
+    }
+  );
 
   const [createPlayer, { data: newPlayerData }] = useMutation<{
     addPlayer: Player;
@@ -154,12 +159,16 @@ function GameComponent() {
     }
   }, [gameId, newPlayerData]);
 
-  if (!game) {
-    return <h3>Loading...</h3>;
+  if (loading) {
+    return <h3 className="text-lg mt-6 font-semibold">Loading...</h3>;
   }
 
-  if (gqlErr) {
-    return <p>A technical error occurred. Try to refresh the page</p>;
+  if (!game) {
+    return (
+      <p className="text-lg mt-6 flex items-center font-semibold">
+        <AiFillFileUnknown className="text-4xl mr-2" /> Game not found.
+      </p>
+    );
   }
 
   const player = game.players.find((p) => p.id === playerId);
@@ -257,4 +266,12 @@ function GameComponent() {
   );
 }
 
-export default GameComponent;
+function GameWithErrorBoundary() {
+  return (
+    <ErrorBoundary>
+      <GameComponent />
+    </ErrorBoundary>
+  );
+}
+
+export default GameWithErrorBoundary;

@@ -14,7 +14,7 @@ interface Props {
   isDisabled: boolean;
 }
 
-export default ({ startGame, gameId, isDisabled }: Props) => {
+function StartGameButton({ startGame, gameId, isDisabled }: Props) {
   const onConfirm = () => {
     startGame({ variables: { gameId } });
   };
@@ -27,4 +27,6 @@ export default ({ startGame, gameId, isDisabled }: Props) => {
       isDisabled={isDisabled}
     />
   );
-};
+}
+
+export default StartGameButton;

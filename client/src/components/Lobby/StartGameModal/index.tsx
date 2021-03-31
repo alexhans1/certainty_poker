@@ -6,7 +6,6 @@ import { FiCopy } from "react-icons/fi";
 import UploadModal from "../UploadModal";
 import { Game, Set } from "../../../interfaces";
 import { CREATE_GAME_QUERY } from "../../../api/queries";
-import errorHandler from "../../../api/errorHandler";
 import Modal from "../../shared/Modal";
 import countryCodes from "../../../assets/countryCodes";
 
@@ -34,6 +33,7 @@ function StartGameModal({
   const [selectedSets, setSelectedSets] = useState<string[]>([]);
   const [shownLanguage, setShownLanguage] = useState("GB");
   const [languages, setLanguages] = useState<string[]>([]);
+  const [_, setError] = useState();
 
   useEffect(() => {
     const languages =
@@ -66,7 +66,11 @@ function StartGameModal({
     onCompleted: ({ createGame }) => {
       history.push(`/${createGame.id}`);
     },
-    onError: errorHandler,
+    onError: (err) => {
+      setError(() => {
+        throw err;
+      });
+    },
   });
 
   const { pathname } = history.location;

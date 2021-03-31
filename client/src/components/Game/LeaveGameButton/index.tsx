@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
 import { useMutation } from "@apollo/react-hooks";
 import { Game, Player } from "../../../interfaces";
 import { REMOVE_PLAYER, RemovePlayerVariables } from "../../../api/queries";
-import errorLogger from "../../../api/errorHandler";
 import { deletePlayerIdFromStorage } from "../../../storage";
 import ConfirmDialogButton from "../../shared/ConfirmDialogButton";
 
@@ -14,11 +13,21 @@ interface Props {
   setPlayerId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-export default ({ gameId, playerId, gameHasStarted, setPlayerId }: Props) => {
+function LeaveGameButton({
+  gameId,
+  playerId,
+  gameHasStarted,
+  setPlayerId,
+}: Props) {
+  const [_, setError] = useState();
   const [removePlayer] = useMutation<any, RemovePlayerVariables>(
     REMOVE_PLAYER,
     {
-      onError: errorLogger,
+      onError: (err) => {
+        setError(() => {
+          throw err;
+        });
+      },
       onCompleted: () => {
         if (gameId) {
           deletePlayerIdFromStorage(gameId);
@@ -52,4 +61,6 @@ export default ({ gameId, playerId, gameHasStarted, setPlayerId }: Props) => {
       btnClassName="leave-game btn btn-link btn-lg"
     />
   );
-};
+}
+
+export default LeaveGameButton;
