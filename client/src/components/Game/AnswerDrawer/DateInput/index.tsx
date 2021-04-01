@@ -5,7 +5,14 @@ interface Props {
 }
 
 function formatDateToString(date: Date) {
-  return date.toISOString().slice(0, 10).replaceAll("-", "");
+  var mm = date.getMonth() + 1; // getMonth() is zero-based
+  var dd = date.getDate();
+
+  return [
+    date.getFullYear(),
+    (mm > 9 ? "" : "0") + mm,
+    (dd > 9 ? "" : "0") + dd,
+  ].join("");
 }
 
 function DateInput({ handleSubmit }: Props) {
