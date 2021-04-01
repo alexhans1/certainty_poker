@@ -33,6 +33,7 @@
     "react": "^16.13.1",
     "react-apollo": "^3.1.5",
     "react-countdown-circle-timer": "^2.5.0",
+    "react-date-picker": "^8.1.1",
     "react-dom": "^16.13.1",
     "react-icons": "^4.1.0",
     "react-leaflet": "^3.0.2",
