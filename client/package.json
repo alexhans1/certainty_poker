@@ -37,6 +37,7 @@
     "react-dom": "^16.13.1",
     "react-icons": "^4.1.0",
     "react-leaflet": "^3.0.2",
+    "react-movable": "^2.5.3",
     "react-papaparse": "^3.11.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^4.0.1",

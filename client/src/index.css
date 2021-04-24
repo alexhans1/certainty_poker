@@ -47,3 +47,7 @@ li,
 p {
   transition: font-size 200ms;
 }
+
+.blattt {
+  visibility: visible !important;
+}

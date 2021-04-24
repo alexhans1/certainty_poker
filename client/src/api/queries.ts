@@ -51,6 +51,7 @@ export const GET_GAME_BY_ID = gql`
               longitude
               toleranceRadius
             }
+            order
           }
           alternatives
           hiddenAlternatives
@@ -118,6 +119,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
               longitude
               toleranceRadius
             }
+            order
           }
           alternatives
           hiddenAlternatives

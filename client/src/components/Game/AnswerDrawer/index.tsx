@@ -3,6 +3,7 @@ import Drawer from "../../shared/Drawer";
 import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
 import MapInput from "./MapInput";
+import OrderInput from "./OrderInput";
 import MultipleChoiceInput from "./MultipleChoiceInput";
 import {
   Answer,
@@ -51,6 +52,18 @@ export default function AnswerDrawer({
     }
   };
 
+  const handleOrderInputSubmit = (guess: string[]) => {
+    addGuess(
+      addGuessMutation,
+      game,
+      {
+        order: guess,
+      },
+      player.id
+    );
+    setShowAnswerDrawer(false);
+  };
+
   const handleMapInputSubmit = (geoCoordinate: GeoCoordinate) => {
     const guess: Answer = {
       geo: geoCoordinate,
@@ -60,6 +73,7 @@ export default function AnswerDrawer({
   };
 
   const getInput = () => {
+    console.log("currentQuestionRound", currentQuestionRound);
     switch (currentQuestionRound.question.type) {
       case QuestionTypes.NUMERICAL:
         return <NumberInput handleSubmit={handleNumberInputSubmit} />;
@@ -67,6 +81,13 @@ export default function AnswerDrawer({
         return <DateInput handleSubmit={handleNumberInputSubmit} />;
       case QuestionTypes.GEO:
         return <MapInput handleSubmit={handleMapInputSubmit} />;
+      case QuestionTypes.ORDER:
+        return (
+          <OrderInput
+            handleSubmit={handleOrderInputSubmit}
+            options={currentQuestionRound.question.answer.order as string[]}
+          />
+        );
       case QuestionTypes.MULTIPLE_CHOICE:
         const alternatives = currentQuestionRound.question.alternatives?.map(
           (alt) => ({ value: alt, active: true })
