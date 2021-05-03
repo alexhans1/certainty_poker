@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.2351755f.chunk.css",
-    "main.js": "/static/js/main.215a2991.chunk.js",
-    "main.js.map": "/static/js/main.215a2991.chunk.js.map",
+    "main.js": "/static/js/main.5c9001d5.chunk.js",
+    "main.js.map": "/static/js/main.5c9001d5.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.c012fedc.js",
     "runtime-main.js.map": "/static/js/runtime-main.c012fedc.js.map",
     "static/css/2.9283ff3f.chunk.css": "/static/css/2.9283ff3f.chunk.css",
@@ -12,11 +12,11 @@
     "static/css/2.9283ff3f.chunk.css.map": "/static/css/2.9283ff3f.chunk.css.map",
     "static/css/main.2351755f.chunk.css.map": "/static/css/main.2351755f.chunk.css.map",
     "static/js/2.7854e6b6.chunk.js.LICENSE.txt": "/static/js/2.7854e6b6.chunk.js.LICENSE.txt",
-    "static/media/landing-page-image-1.02af88eb.png": "/static/media/landing-page-image-1.02af88eb.png",
-    "static/media/landing-page-image-2.3b5d2efa.png": "/static/media/landing-page-image-2.3b5d2efa.png",
-    "static/media/landing-page-image-3.c7951858.png": "/static/media/landing-page-image-3.c7951858.png",
-    "static/media/landing-page-image-4.428c6f8f.png": "/static/media/landing-page-image-4.428c6f8f.png",
-    "static/media/landing-page-image-phone.9eb55053.png": "/static/media/landing-page-image-phone.9eb55053.png",
+    "static/media/landing-page-image-1.6f6715eb.webp": "/static/media/landing-page-image-1.6f6715eb.webp",
+    "static/media/landing-page-image-2.b9e7983b.webp": "/static/media/landing-page-image-2.b9e7983b.webp",
+    "static/media/landing-page-image-3.e88c71cd.webp": "/static/media/landing-page-image-3.e88c71cd.webp",
+    "static/media/landing-page-image-4.4442528d.webp": "/static/media/landing-page-image-4.4442528d.webp",
+    "static/media/landing-page-image-phone.bec793b4.webp": "/static/media/landing-page-image-phone.bec793b4.webp",
     "static/media/turn-alert.11acdad1.wav": "/static/media/turn-alert.11acdad1.wav",
     "static/media/turn-notification.e2e956ce.mp3": "/static/media/turn-notification.e2e956ce.mp3"
   },
@@ -25,6 +25,6 @@
     "static/css/2.9283ff3f.chunk.css",
     "static/js/2.7854e6b6.chunk.js",
     "static/css/main.2351755f.chunk.css",
-    "static/js/main.215a2991.chunk.js"
+    "static/js/main.5c9001d5.chunk.js"
   ]
 }
