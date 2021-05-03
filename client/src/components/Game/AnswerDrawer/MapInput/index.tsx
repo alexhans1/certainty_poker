@@ -6,7 +6,7 @@ interface Props {
   handleSubmit: (guess: GeoCoordinate) => void;
 }
 
-export default ({ handleSubmit }: Props) => {
+export default function MapInput({ handleSubmit }: Props) {
   const [guess, setGuess] = useState<GeoCoordinate>();
 
   return (
@@ -30,4 +30,4 @@ export default ({ handleSubmit }: Props) => {
       </button>
     </>
   );
-};
+}

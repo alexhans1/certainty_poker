@@ -12,14 +12,14 @@ interface Props {
   btnClassName?: string;
 }
 
-export default ({
+export default function ConfirmDialogButton({
   buttonLabel,
   dialogTitle,
   confirmLabel,
   onConfirm,
   isDisabled,
   btnClassName,
-}: Props) => {
+}: Props) {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,4 +64,4 @@ export default ({
       </Dialog>
     </>
   );
-};
+}
