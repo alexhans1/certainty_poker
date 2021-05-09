@@ -221,6 +221,20 @@ func (r *mutationResolver) PlaceBet(ctx context.Context, input model.BetInput) (
 	return true, nil
 }
 
+func (r *mutationResolver) RevealGuess(ctx context.Context, gameID string, playerID string) (bool, error) {
+	game, err := model.FindGame(r.games, gameID)
+	if err != nil {
+		return false, err
+	}
+
+	if !funk.ContainsString(game.RecentQuestionRound().RevealedGuesses, playerID) {
+		game.RecentQuestionRound().RevealedGuesses = append(game.RecentQuestionRound().RevealedGuesses, playerID)
+	}
+
+	go updateGameChannel(r, game)
+	return true, nil
+}
+
 func (r *mutationResolver) UploadQuestions(ctx context.Context, questions []*model.QuestionInput, setName string, isPrivate bool, language string) (bool, error) {
 	err := model.UploadQuestions(r.redisClient, setName, questions, isPrivate, language)
 	if err != nil {

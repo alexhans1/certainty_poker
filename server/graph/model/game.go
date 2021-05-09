@@ -14,6 +14,15 @@ func (g *Game) CurrentQuestionRound() *QuestionRound {
 	return g.QuestionRounds[len(g.QuestionRounds)-1]
 }
 
+// RecentQuestionRound returns the last played question round
+// If the game is over then this is the same as the current question round
+func (g *Game) RecentQuestionRound() *QuestionRound {
+	if g.IsOver {
+		return g.QuestionRounds[len(g.QuestionRounds)-1]
+	}
+	return g.QuestionRounds[len(g.QuestionRounds)-2]
+}
+
 // IsFinished returns true if there is only one player left in the game
 func (g *Game) IsFinished() bool {
 	isOver := len(g.Questions) < 1 || len(g.InPlayers()) <= 1
@@ -48,6 +57,7 @@ func (g *Game) AddNewQuestionRound() {
 		Game:            g,
 		IsOver:          false,
 		IsShowdown:      false,
+		RevealedGuesses: make([]string, 0),
 	}
 	newQuestionRound.IsOver = false
 	g.QuestionRounds = append(g.QuestionRounds, newQuestionRound)

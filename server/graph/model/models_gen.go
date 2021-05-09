@@ -112,6 +112,7 @@ type QuestionRound struct {
 	IsOver          bool                   `json:"isOver"`
 	IsShowdown      bool                   `json:"isShowdown"`
 	Results         []*QuestionRoundResult `json:"results"`
+	RevealedGuesses []string               `json:"revealedGuesses"`
 }
 
 type QuestionRoundResult struct {

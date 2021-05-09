@@ -43,17 +43,17 @@ export default function GuessMap({
       ]
     : [];
 
-  if (
-    isSpectator ||
-    (usedQuestionRound.isOver && usedQuestionRound.isShowdown)
-  ) {
+  if (isSpectator || usedQuestionRound.isOver) {
     mapMarkers.push(
       ...usedQuestionRound.guesses.reduce<MarkerType[]>(
         (acc, { guess, playerId: pId, difference }) => {
           if (
             guess.geo &&
             playerId !== pId &&
-            (isSpectator || !hasPlayerFolded(usedQuestionRound, pId))
+            (isSpectator ||
+              (!hasPlayerFolded(usedQuestionRound, pId) &&
+                usedQuestionRound.isShowdown) ||
+              usedQuestionRound.revealedGuesses.includes(pId))
           ) {
             const label = players.find((p) => p.id === pId)?.name || "";
             acc.push({

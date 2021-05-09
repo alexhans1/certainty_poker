@@ -85,6 +85,7 @@ export const GET_GAME_BY_ID = gql`
         }
         isOver
         isShowdown
+        revealedGuesses
       }
       players {
         id
@@ -152,6 +153,7 @@ export const SUBSCRIBE_TO_GAME_BY_ID = gql`
         }
         isOver
         isShowdown
+        revealedGuesses
       }
       players {
         id
@@ -197,12 +199,18 @@ export const ADD_GUESS = gql`
   }
 `;
 
-export interface RemovePlayerVariables {
+export interface GameAndPlayerIds {
   gameId: Game["id"];
   playerId: Player["id"];
 }
 export const REMOVE_PLAYER = gql`
   mutation removePlayer($gameId: ID!, $playerId: ID!) {
     removePlayer(gameId: $gameId, playerId: $playerId)
+  }
+`;
+
+export const REVEAL_GUESS = gql`
+  mutation revealGuess($gameId: ID!, $playerId: ID!) {
+    revealGuess(gameId: $gameId, playerId: $playerId)
   }
 `;

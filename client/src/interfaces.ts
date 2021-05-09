@@ -70,6 +70,7 @@ export interface QuestionRound {
   results?: QuestionRoundResult[];
   isOver: boolean;
   isShowdown: boolean;
+  revealedGuesses: string[];
 }
 
 export interface Game {

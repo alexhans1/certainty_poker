@@ -4,6 +4,7 @@ import { GrMoney } from "react-icons/gr";
 import Status from "./Status";
 import {
   BettingRound,
+  Game,
   Guess,
   Player,
   Question,
@@ -11,12 +12,14 @@ import {
 } from "../../../../interfaces";
 import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
 import FormattedGuess from "../../Guess";
+import RevealGuessButton from "./RevealGuessButton";
 
 import "./styles.css";
 
 const playerSeatingOrder = [1, 9, 5, 2, 11, 4, 8, 10, 6, 3, 12, 7];
 
 interface Props {
+  gameId: Game["id"];
   player: Player;
   numberOfPlayers: number;
   currentBettingRound?: BettingRound;
@@ -30,12 +33,14 @@ interface Props {
   isShowdown: boolean;
   hasFolded: boolean;
   isSpectator: boolean;
+  isRevealingGuess: boolean;
   allPlayersPlacedTheirGuess?: boolean;
   guess?: Guess;
   question?: Question;
 }
 
 const PlayerComp = ({
+  gameId,
   player,
   index,
   numberOfPlayers,
@@ -52,6 +57,7 @@ const PlayerComp = ({
   guess,
   question,
   isGameOver,
+  isRevealingGuess,
 }: Props) => {
   const isTurnPlayerClass =
     isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : "";
@@ -61,9 +67,14 @@ const PlayerComp = ({
   const bettingRoundSpending = currentBettingRound
     ? calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id)
     : 0;
-  const revealGuess =
-    question?.type !== QuestionTypes.GEO &&
-    (isSpectator || (!!isQuestionRoundOver && isShowdown && !hasFolded));
+
+  const isGeoQuestion = question?.type === QuestionTypes.GEO;
+  const showGuess =
+    isSpectator ||
+    isRevealingGuess ||
+    (isQuestionRoundOver && isShowdown && !hasFolded);
+  const shouldRevealGuess = !isGeoQuestion && showGuess;
+  const canRevealGuess = !showGuess && isQuestionRoundOver && isAppPlayer;
 
   const positionIndex = playerSeatingOrder.filter((i) => i <= numberOfPlayers)[
     index
@@ -125,7 +136,7 @@ const PlayerComp = ({
               <span>{bettingRoundSpending}</span>
             </div>
           )}
-          {revealGuess && question?.type && guess?.guess && (
+          {shouldRevealGuess && question?.type && guess?.guess && (
             <div className="flex items-center">
               <span className="mx-1">
                 <FaRegLightbulb />
@@ -137,6 +148,11 @@ const PlayerComp = ({
                   alternatives: question.alternatives,
                 }}
               />
+            </div>
+          )}
+          {canRevealGuess && (
+            <div>
+              <RevealGuessButton gameId={gameId} playerId={player.id} />
             </div>
           )}
         </div>

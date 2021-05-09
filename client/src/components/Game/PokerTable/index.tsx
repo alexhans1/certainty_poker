@@ -73,6 +73,7 @@ const PokerTable = ({
                 <PlayerComp
                   key={player.id}
                   {...{
+                    gameId: game.id,
                     player,
                     index,
                     numberOfPlayers: game.players.length,
@@ -90,6 +91,9 @@ const PokerTable = ({
                     question: usedQuestionRound.question,
                     isWinningPlayer: winningPlayerIds.includes(player.id),
                     isGameOver: game.isOver,
+                    isRevealingGuess: usedQuestionRound.revealedGuesses.includes(
+                      player.id
+                    ),
                   }}
                 />
               );

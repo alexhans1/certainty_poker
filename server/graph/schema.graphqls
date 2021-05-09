@@ -57,6 +57,7 @@ type QuestionRound {
   isOver: Boolean!
   isShowdown: Boolean!
   results: [QuestionRoundResult!]
+  revealedGuesses: [String!]!
 }
 
 type Question {
@@ -145,6 +146,7 @@ type Mutation {
   removePlayer(gameId: ID!, playerId: ID!): Boolean!
   addGuess(input: GuessInput!): Boolean!
   placeBet(input: BetInput!): Boolean!
+  revealGuess(gameId: ID!, playerId: ID!): Boolean!
   uploadQuestions(
     questions: [QuestionInput!]!
     setName: String!
