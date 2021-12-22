@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { QueryLazyOptions } from "@apollo/react-hooks";
 import { Set } from "../../../interfaces";
 import StartGameModal from "../StartGameModal";
+import NewSetBanner from "../NewSetBanner";
 
 interface Props {
   sets?: Set[];
@@ -31,6 +32,7 @@ export default function ActionableHalf({
   return (
     <>
       <div className="flex flex-col justify-end h-full py-8 lg:pb-32 lg:pt-0">
+        <NewSetBanner setName="2021 Quiz" className="mb-8 lg:mb-auto lg:mt-5" />
         <h1 className="text-5xl">
           <span className="font-light italic">You think you know things?</span>
           <br />
