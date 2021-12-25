@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/alexhans1/certainty_poker/graph/generated"
 	"github.com/alexhans1/certainty_poker/graph/model"
@@ -68,6 +69,7 @@ func (r *mutationResolver) StartGame(ctx context.Context, gameID string) (bool, 
 	r.logger.WithFields(logrus.Fields{
 		"game":            game.ID,
 		"numberOfPlayers": len(game.Players),
+		"participants":    strings.Join(game.Participants()[:], ", "),
 	}).Info("game started")
 	return true, nil
 }

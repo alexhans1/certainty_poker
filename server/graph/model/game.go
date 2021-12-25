@@ -193,6 +193,16 @@ func (g *Game) PlayerIds() []string {
 	return playerIds
 }
 
+// Participants returns a slice of all player names
+func (g *Game) Participants() []string {
+	participants := make([]string, 0)
+	for _, player := range g.Players {
+		participants = append(participants, player.Name)
+	}
+
+	return participants
+}
+
 // HasStarted returns true if there are 1 or more question rounds already
 func (g *Game) HasStarted() bool {
 	return len(g.QuestionRounds) > 0
