@@ -27,7 +27,7 @@
     "graphql": "^15.0.0",
     "leaflet": "^1.7.1",
     "moment": "^2.29.1",
-    "node-sass": "^5.0.0",
+    "node-sass": "^7.0.0",
     "postcss": "^7.0.35",
     "ramda": "^0.27.1",
     "react": "^16.13.1",
