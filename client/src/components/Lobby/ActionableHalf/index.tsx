@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { QueryLazyOptions } from "@apollo/react-hooks";
+// import { useHistory } from "react-router";
+import { QueryLazyOptions } from "@apollo/client";
 import { Set } from "../../../interfaces";
 import StartGameModal from "../StartGameModal";
 import NewSetBanner from "../NewSetBanner";
@@ -8,31 +8,25 @@ import NewSetBanner from "../NewSetBanner";
 interface Props {
   sets?: Set[];
   setName?: string;
-  fetchSets: (
-    options?: QueryLazyOptions<Record<string, any>> | undefined
-  ) => void;
 }
 
-export default function ActionableHalf({
-  sets = [],
-  setName,
-  fetchSets,
-}: Props) {
-  const history = useHistory();
+export default function ActionableHalf({ sets = [], setName }: Props) {
+  console.log("sets", sets);
+  // const history = useHistory();
   const [isCreateGameModalOpen, setIsCreateGameModalOpen] = useState(false);
 
-  useEffect(() => {
-    const { pathname } = history.location;
-    const isPrivateSetRoute = pathname !== "/";
-    if (isPrivateSetRoute) {
-      setIsCreateGameModalOpen(true);
-    }
-  }, [history]);
+  // useEffect(() => {
+  //   const { pathname } = history.location;
+  //   const isPrivateSetRoute = pathname !== "/";
+  //   if (isPrivateSetRoute) {
+  //     setIsCreateGameModalOpen(true);
+  //   }
+  // }, [history]);
 
   return (
     <>
       <div className="flex flex-col justify-end h-full py-8 lg:pb-32 lg:pt-0">
-        <NewSetBanner setName="2021 Quiz" className="mb-8 lg:mb-auto lg:mt-5" />
+        {/* <NewSetBanner setName="2021 Quiz" className="mb-8 lg:mb-auto lg:mt-5" /> */}
         <h1 className="text-5xl">
           <span className="font-light italic">You think you know things?</span>
           <br />
@@ -64,7 +58,6 @@ export default function ActionableHalf({
       </div>
       <StartGameModal
         sets={sets}
-        fetchSets={fetchSets}
         open={isCreateGameModalOpen}
         handleOpen={() => {
           setIsCreateGameModalOpen(true);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation } from "react-apollo";
-import { useHistory } from "react-router";
+// import { useHistory } from "react-router";
 import { CREATE_GAME_QUERY } from "../../../api/queries";
 import { Game } from "../../../interfaces";
 import image from "../../../assets/2021.png";
@@ -10,7 +10,7 @@ interface Props {
   setName: string;
 }
 function NewSetBanner({ className = "", setName }: Props) {
-  const history = useHistory();
+  // const history = useHistory();
   const [_, setError] = useState();
   const [createGame, { loading }] = useMutation<{
     createGame: Game;
@@ -18,9 +18,9 @@ function NewSetBanner({ className = "", setName }: Props) {
     variables: {
       setNames: [setName],
     },
-    onCompleted: ({ createGame }) => {
-      history.push(`/${createGame.id}`);
-    },
+    // onCompleted: ({ createGame }) => {
+    //   history.push(`/${createGame.id}`);
+    // },
     onError: (err) => {
       setError(() => {
         throw err;

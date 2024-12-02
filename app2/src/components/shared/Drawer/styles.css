@@ -1,0 +1,35 @@
+.drawer > div {
+  background: #ebebeb !important;
+  border-radius: 14px 14px 0 0;
+  transition: transform 300ms;
+}
+.drawer.collapsed > div {
+  visibility: unset !important;
+  transform: translateY(736px) translateY(-536px) !important;
+}
+.drawer .MuiBackdrop-root {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+.container {
+  max-width: 700px;
+}
+#drawer-title {
+  width: 100%;
+  text-align: center;
+  font-size: 0.7em;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+  border-bottom: 1px solid #393d4e;
+}
+#drawer-title > button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+#drawer-close {
+  cursor: pointer;
+}
