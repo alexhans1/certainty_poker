@@ -1,14 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Drawer from "../../shared/Drawer";
 import { Game, Player } from "../../../interfaces";
 
-export type CreatePlayer = ({
-  variables: {
-    input: { gameId, playerName },
-  },
-}: {
-  variables: { input: { gameId: Game["id"]; playerName: Player["name"] } };
-}) => void;
+export type CreatePlayer = (gameId: string, playerName: string) => void;
 
 interface Props {
   createPlayer: CreatePlayer;
@@ -25,7 +19,7 @@ export default function NameInputDrawer({
 
   const handleSubmit = () => {
     if (!playerId) {
-      createPlayer({ variables: { input: { gameId, playerName: name } } });
+      createPlayer(gameId, name);
     }
   };
 

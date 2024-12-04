@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-// import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
 import { FiCopy } from "react-icons/fi";
 import UploadModal from "../UploadModal";
-import { Game, Set } from "../../../interfaces";
+import { Game, Question, Set } from "../../../interfaces";
 import { CREATE_GAME_QUERY } from "../../../api/queries";
 import Modal from "../../shared/Modal";
 import countryCodes from "../../../assets/countryCodes";
 
 import "./styles.css";
+import { addDoc, collection } from "firebase/firestore";
+import db from "../../../db/firestore-config";
 
 interface Props {
   sets: Set[];
@@ -20,10 +22,11 @@ interface Props {
 function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
   // const history = useHistory();
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [selectedSets, setSelectedSets] = useState<string[]>([]);
+  const [selectedSets, setSelectedSets] = useState<Set[]>([]);
   const [shownLanguage, setShownLanguage] = useState("GB");
   const [languages, setLanguages] = useState<string[]>([]);
   const [_, setError] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const languages =
@@ -43,7 +46,7 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
     setLanguages(languages);
     setShownLanguage(languages.includes("GB") ? "GB" : languages[0]);
     if (sets.length === 1) {
-      setSelectedSets([sets[0].setName]);
+      setSelectedSets([sets[0]]);
     }
   }, [sets]);
 
@@ -63,7 +66,27 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
   //   },
   // });
 
-  const createGame = () => {};
+  async function createGame() {
+    // todo: add TTL
+    const newGame: Omit<Game, "id"> = {
+      questionRounds: [],
+      questions: selectedSets.reduce<Question[]>((acc, set) => {
+        return [...acc, ...set.questions];
+      }, []),
+      isOver: false,
+      players: [],
+      dealerId: "unassigned",
+      setNames: selectedSets.map(({ setName }) => setName),
+    };
+    try {
+      const docRef = await addDoc(collection(db, "games"), newGame);
+      navigate(`/${docRef.id}`);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      throw e;
+    }
+  }
+
   const loading = false;
 
   // const { pathname } = history.location;
@@ -130,7 +153,9 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
               <span
                 key={set.setName}
                 className={`flex justify-center items-center rounded-md text-center px-4 py-3 border border-gray-800 hover:bg-gray-800 hover:text-white cursor-pointer ${
-                  selectedSets?.includes(set.setName)
+                  selectedSets
+                    .map(({ setName }) => setName)
+                    .includes(set.setName)
                     ? "bg-gray-800 text-white"
                     : ""
                 }`}
@@ -141,17 +166,21 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
                 }}
                 onClick={(e) => {
                   if (e.metaKey) {
-                    if (selectedSets?.includes(set.setName)) {
+                    if (
+                      selectedSets
+                        .map(({ setName }) => setName)
+                        .includes(set.setName)
+                    ) {
                       setSelectedSets(
                         selectedSets.filter(
-                          (setName) => set.setName !== setName
+                          ({ setName }) => set.setName !== setName
                         )
                       );
                     } else {
-                      setSelectedSets([set.setName, ...selectedSets]);
+                      setSelectedSets([set, ...selectedSets]);
                     }
                   } else {
-                    setSelectedSets([set.setName]);
+                    setSelectedSets([set]);
                   }
                 }}
               >

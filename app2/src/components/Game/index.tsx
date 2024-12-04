@@ -1,22 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import { AiFillFileUnknown } from "react-icons/ai";
-import {
-  GET_GAME_BY_ID,
-  CREATE_PLAYER,
-  START_GAME,
-  PLACE_BET,
-  ADD_GUESS,
-  SUBSCRIBE_TO_GAME_BY_ID,
-} from "../../api/queries";
-import { Game, Player } from "../../interfaces";
-import {
-  getFingerprintFromStorage,
-  getPlayerIdFromStorage,
-  setFingerprintToStorage,
-  setPlayerIdToStorage,
-} from "../../storage";
+import { Game, Guess, Player } from "../../interfaces";
+import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage.ts";
 import PreGameLobby from "./PreGameLobby";
 import PokerTable from "./PokerTable";
 import AnswerDrawer from "./AnswerDrawer";
@@ -28,6 +14,8 @@ import {
   getCurrentBettingRound,
   getPreviousQuestionRound,
   haveAllPlayersPlacedTheirGuess,
+  shufflePlayersInGame,
+  addQuestionRound,
 } from "./helpers";
 // @ts-ignore
 import notificationSound from "../../assets/turn-notification.mp3";
@@ -36,6 +24,9 @@ import alertSound from "../../assets/turn-alert.wav";
 
 import "./styles.css";
 import { withErrorBoundary } from "react-error-boundary";
+import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import db from "../../db/firestore-config";
+import { v4 } from "uuid";
 
 const vibrate = (t: number) => {
   window.navigator.vibrate && window.navigator.vibrate(t);
@@ -56,10 +47,31 @@ function GameComponent() {
   if (!gameId) {
     throw new Error("gameId is required");
   }
-  const [_, setError] = useState();
+  const [_, setError] = useState<Error>();
 
   const [playNotification] = useState(new Audio(notificationSound));
   const [playAlert] = useState(new Audio(alertSound));
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      doc(db, "games", gameId),
+      (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          setGame({ ...docSnapshot.data(), id: gameId } as Game);
+        } else {
+          console.log("Game does not exist.");
+        }
+      },
+      (error) => {
+        errorHandler(error);
+      }
+    );
+
+    // Cleanup subscription on component unmount
+    return () => {
+      unsubscribe();
+    };
+  }, [gameId]);
 
   const errorHandler = (err: Error) => {
     setError(() => {
@@ -67,97 +79,72 @@ function GameComponent() {
     });
   };
 
-  const [fetchGame, { loading }] = useLazyQuery<{ game: Game }>(
-    GET_GAME_BY_ID,
-    {
-      fetchPolicy: "cache-and-network",
-      onError: errorHandler,
-      onCompleted: ({ game }) => {
-        setGame(game);
-      },
-    }
-  );
-
-  const [createPlayer, { data: newPlayerData }] = useMutation<{
-    addPlayer: Player;
-  }>(CREATE_PLAYER, {
-    onError: errorHandler,
-  });
-
-  const [startGame] = useMutation<{
-    startGame: Game;
-  }>(START_GAME, { onError: errorHandler });
-
-  const [placeBet] = useMutation<{
-    placeBet: Game;
-  }>(PLACE_BET, { onError: errorHandler });
-
-  const [addGuess] = useMutation<{
-    addGuess: Game;
-  }>(ADD_GUESS, { onError: errorHandler });
-
-  const { error: subscriptionError } = useSubscription<{
-    gameUpdated: Game;
-  }>(SUBSCRIBE_TO_GAME_BY_ID, {
-    variables: {
-      gameId,
-      hash:
-        getFingerprintFromStorage(gameId) || setFingerprintToStorage(gameId),
-    },
-    onSubscriptionData: ({ subscriptionData }) => {
-      clearInterval(soundInterval);
-      const game = subscriptionData.data?.gameUpdated;
-      setGame(game);
-      const cqr = getCurrentQuestionRound(game);
-      const cbr = getCurrentBettingRound(cqr);
-      const players = subscriptionData.data?.gameUpdated.players;
-      const allPlayersPlacedTheirBet =
-        cqr && players && haveAllPlayersPlacedTheirGuess(cqr, players);
-      if (allPlayersPlacedTheirBet) {
-        setShowNewQuestionRoundForSpectator(false);
-      }
-      if (
-        !game?.isOver &&
-        cbr?.currentPlayer.id === playerId &&
-        allPlayersPlacedTheirBet
-      ) {
-        playNotification.play();
-        vibrate(200);
-        soundInterval = setInterval(() => {
-          playAlert.play();
-          vibrate(200);
-        }, 15000);
-      }
-    },
-  });
-
-  useEffect(() => {
-    if (subscriptionError) {
-      errorHandler(subscriptionError);
-    }
-  }, [subscriptionError]);
-
-  useEffect(() => {
-    fetchGame({
-      variables: { gameId },
-    });
-  }, [fetchGame, gameId]);
-
   useEffect(() => {
     if (gameId) {
       const storedPlayerId = getPlayerIdFromStorage(gameId);
-      const newPlayerId = newPlayerData?.addPlayer?.id;
 
       if (storedPlayerId) {
         setPlayerId(storedPlayerId);
       }
-
-      if (newPlayerId) {
-        setPlayerIdToStorage(gameId, newPlayerId);
-        setPlayerId(newPlayerId);
-      }
     }
-  }, [gameId, newPlayerData]);
+  }, [gameId]);
+
+  // todo: add loading state
+  const loading = false;
+
+  const createPlayer = async (gameId: string, playerName: string) => {
+    const player: Player = {
+      id: v4(),
+      name: playerName,
+      money: 100,
+      isDead: false,
+    };
+
+    try {
+      // Add the player to the players array
+      await updateDoc(doc(db, "games", gameId), {
+        players: arrayUnion(player),
+      });
+      setPlayerIdToStorage(gameId, player.id);
+      setPlayerId(player.id);
+    } catch (error) {
+      console.error("error", error);
+      errorHandler(error as unknown as Error);
+    }
+  };
+  const startGame = async () => {
+    if (!game) throw new Error("Game not found");
+    if (game.questionRounds.length) throw new Error("Game already started");
+    if (game.players.length < 2) throw new Error("Not enough players");
+
+    await shufflePlayersInGame(game.id, game.players);
+    await addQuestionRound(game);
+  };
+
+  const placeBet = () => {};
+
+  const addGuess = async (gameId: string, guess: Guess) => {
+    if (!game) throw new Error("Game not found");
+    if (!currentQuestionRound) throw new Error("No current question round");
+
+    const updatedQuestionRound = {
+      ...currentQuestionRound,
+      guesses: [...currentQuestionRound.guesses, guess],
+    };
+
+    const updatedQuestionRounds = [...game.questionRounds];
+    updatedQuestionRounds[updatedQuestionRounds.length - 1] =
+      updatedQuestionRound;
+
+    try {
+      await updateDoc(doc(db, "games", gameId), {
+        questionRounds: updatedQuestionRounds,
+      });
+    } catch (error) {
+      console.error("error", error);
+      errorHandler(error as unknown as Error);
+    }
+  };
 
   if (loading) {
     return <h3 className="text-lg mt-6 font-semibold">Loading...</h3>;
@@ -238,7 +225,7 @@ function GameComponent() {
         <AnswerDrawer
           {...{
             game,
-            addGuessMutation: addGuess,
+            addGuess,
             currentQuestionRound,
             player,
             showAnswerDrawer,

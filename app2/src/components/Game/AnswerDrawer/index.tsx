@@ -8,17 +8,17 @@ import {
   Answer,
   Game,
   GeoCoordinate,
+  Guess,
   Player,
   QuestionRound,
   QuestionTypes,
 } from "../../../interfaces";
-import { AddGuess, addGuess } from "../helpers";
 
 interface QuestionProps {
   game: Game;
   currentQuestionRound: QuestionRound;
   player?: Player;
-  addGuessMutation: AddGuess;
+  addGuess: (gameId: string, guess: Guess) => Promise<void>;
   showAnswerDrawer: boolean;
   setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
@@ -27,7 +27,7 @@ interface QuestionProps {
 export default function AnswerDrawer({
   currentQuestionRound,
   player,
-  addGuessMutation,
+  addGuess,
   game,
   showAnswerDrawer,
   setShowAnswerDrawer,
@@ -39,14 +39,12 @@ export default function AnswerDrawer({
 
   const handleNumberInputSubmit = (guess: number | string) => {
     if ((guess || guess === 0) && typeof guess === "number") {
-      addGuess(
-        addGuessMutation,
-        game,
-        {
+      addGuess(game.id, {
+        playerId: player.id,
+        guess: {
           numerical: guess,
         },
-        player.id
-      );
+      });
       setShowAnswerDrawer(false);
     }
   };
@@ -55,7 +53,10 @@ export default function AnswerDrawer({
     const guess: Answer = {
       geo: geoCoordinate,
     };
-    addGuess(addGuessMutation, game, guess, player.id);
+    addGuess(game.id, {
+      playerId: player.id,
+      guess,
+    });
     setShowAnswerDrawer(false);
   };
 
@@ -67,7 +68,7 @@ export default function AnswerDrawer({
         return <DateInput handleSubmit={handleNumberInputSubmit} />;
       case QuestionTypes.GEO:
         return <MapInput handleSubmit={handleMapInputSubmit} />;
-      case QuestionTypes.MULTIPLE_CHOICE:
+      case QuestionTypes.MULTIPLE_CHOICE: {
         const alternatives = currentQuestionRound.question.alternatives?.map(
           (alt) => ({ value: alt, active: true })
         );
@@ -78,6 +79,7 @@ export default function AnswerDrawer({
             handleSubmit={handleNumberInputSubmit}
           />
         );
+      }
       default:
         throw new Error("Unknow Question Type");
     }

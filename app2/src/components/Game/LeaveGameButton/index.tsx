@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { Game, Player } from "../../../interfaces";
-import { REMOVE_PLAYER, GameAndPlayerIds } from "../../../api/queries";
 import { deletePlayerIdFromStorage } from "../../../storage";
 import ConfirmDialogButton from "../../shared/ConfirmDialogButton";
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { IoExit } from "react-icons/io5";
 
 interface Props {
   gameId?: Game["id"];
   playerId?: Player["id"];
-  gameHasStarted: Boolean;
+  gameHasStarted: boolean;
   setPlayerId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
@@ -19,27 +18,14 @@ function LeaveGameButton({
   gameHasStarted,
   setPlayerId,
 }: Props) {
-  const [_, setError] = useState();
-  const [removePlayer] = useMutation<any, GameAndPlayerIds>(REMOVE_PLAYER, {
-    onError: (err) => {
-      setError(() => {
-        throw err;
-      });
-    },
-    onCompleted: () => {
-      if (gameId) {
-        deletePlayerIdFromStorage(gameId);
-        setPlayerId(undefined);
-      }
-    },
-  });
+  const removePlayer = (playerId: string, gameId: string) => {};
 
   if (!gameId || !playerId) {
     return null;
   }
 
   const handleConfirm = () => {
-    removePlayer({ variables: { playerId, gameId } });
+    removePlayer(playerId, gameId);
   };
 
   return (
@@ -54,7 +40,7 @@ function LeaveGameButton({
         </>
       }
       confirmLabel="Leave Game"
-      buttonLabel={<ExitToAppIcon />}
+      buttonLabel={<IoExit />}
       btnClassName="leave-game btn btn-link btn-lg"
     />
   );

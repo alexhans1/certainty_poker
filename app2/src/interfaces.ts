@@ -79,7 +79,7 @@ export interface Game {
   players: Player[];
   questionRounds: QuestionRound[];
   dealerId: Player["id"];
-  questions: Omit<Question, "question" | "answer" | "hints">[];
+  questions: Question[];
   isOver: boolean;
 }
 
@@ -97,6 +97,7 @@ export interface GuessInput {
 
 export interface Set {
   setName: string;
-  numberOfQuestions: number;
+  questions: Question[];
   language: string;
+  numberOfQuestions: number;
 }

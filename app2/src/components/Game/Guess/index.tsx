@@ -1,5 +1,3 @@
-import React from "react";
-import moment from "moment";
 import { Answer, Question, QuestionTypes } from "../../../interfaces";
 
 interface Props {
@@ -8,10 +6,23 @@ interface Props {
   alternatives?: Question["alternatives"];
 }
 
+function formatDateString(dateStr: string): string {
+  const [year, month, day] = [
+    dateStr.slice(0, 4),
+    dateStr.slice(4, 6),
+    dateStr.slice(6, 8),
+  ];
+  return new Date(+year, +month - 1, +day).toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
+}
+
 export default function Guess({ guess, questionType, alternatives }: Props) {
   if (!guess) return null;
   switch (questionType) {
-    case QuestionTypes.NUMERICAL:
+    case QuestionTypes.NUMERICAL: {
       const number =
         typeof guess.numerical === "number"
           ? guess.numerical
@@ -20,17 +31,12 @@ export default function Guess({ guess, questionType, alternatives }: Props) {
         return null;
       }
       return <span>{new Intl.NumberFormat().format(number)}</span>;
+    }
     case QuestionTypes.DATE:
       if (!guess.numerical) {
         return null;
       }
-      return (
-        <span>
-          {moment(guess.numerical.toString(), "YYYYMMDD").format(
-            "MMM DD, YYYY"
-          )}
-        </span>
-      );
+      return <span>{formatDateString(guess.numerical.toString())}</span>;
     case QuestionTypes.GEO:
       return <span>{`[${guess.geo?.latitude}, ${guess.geo?.longitude}]`}</span>;
     case QuestionTypes.MULTIPLE_CHOICE:
