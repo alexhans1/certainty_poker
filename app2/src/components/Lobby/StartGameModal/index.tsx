@@ -50,22 +50,6 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
     }
   }, [sets]);
 
-  // const [createGame, { loading }] = useMutation<{
-  //   createGame: Game;
-  // }>(CREATE_GAME_QUERY, {
-  //   variables: {
-  //     setNames: selectedSets,
-  //   },
-  //   // onCompleted: ({ createGame }) => {
-  //   //   history.push(`/${createGame.id}`);
-  //   // },
-  //   onError: (err) => {
-  //     setError(() => {
-  //       throw err;
-  //     });
-  //   },
-  // });
-
   async function createGame() {
     // todo: add TTL
     const newGame: Omit<Game, "id"> = {
