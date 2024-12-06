@@ -1,4 +1,4 @@
-module github.com/alexhans1/certainty_poker/shared
+module github.com/alexhans1/certainty_poker
 
 go 1.23
 
