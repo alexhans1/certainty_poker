@@ -9,9 +9,11 @@ import (
 )
 
 type RequestBody struct {
-	GameID   string `json:"gameId"`
-	PlayerID string `json:"playerId"`
-	Amount   int    `json:"amount"`
+	Data struct {
+		GameID   string `json:"gameId"`
+		PlayerID string `json:"playerId"`
+		Amount   int    `json:"amount"`
+	} `json:"data"`
 }
 
 func init() {
@@ -27,7 +29,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	success, err := handler.PlaceBet(body.GameID, body.PlayerID, body.Amount)
+	success, err := handler.PlaceBet(body.Data.GameID, body.Data.PlayerID, body.Data.Amount)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

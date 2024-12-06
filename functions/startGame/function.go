@@ -9,7 +9,9 @@ import (
 )
 
 type RequestBody struct {
-	GameID string `json:"gameId"`
+	Data struct {
+		GameID string `json:"gameId"`
+	} `json:"data"`
 }
 
 func init() {
@@ -25,7 +27,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	success, err := handler.StartGame(body.GameID)
+	success, err := handler.StartGame(body.Data.GameID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
