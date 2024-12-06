@@ -36,6 +36,7 @@ const vibrate = (t: number) => {
 let soundInterval: NodeJS.Timeout;
 
 function GameComponent() {
+  const [loading, setLoading] = useState(true);
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
   const [game, setGame] = useState<Game | undefined>(undefined);
   const currentQuestionRound = getCurrentQuestionRound(game);
@@ -63,9 +64,11 @@ function GameComponent() {
         } else {
           console.log("Game does not exist.");
         }
+        setLoading(false);
       },
       (error) => {
         errorHandler(error);
+        setLoading(false);
       }
     );
 
@@ -90,9 +93,6 @@ function GameComponent() {
       }
     }
   }, [gameId]);
-
-  // todo: add loading state
-  const loading = false;
 
   const createPlayer = async (gameId: string, playerName: string) => {
     const player: Player = {
