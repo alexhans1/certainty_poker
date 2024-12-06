@@ -1,12 +1,8 @@
-import { Player, Game, BetInput } from "../../../interfaces";
+import { Player, Game } from "../../../interfaces";
 import { getCurrentQuestionRound, getCurrentBettingRound } from ".";
 import { calculateAmountToCall } from "./helpers";
 
-export type PlaceBet = ({
-  variables: { input },
-}: {
-  variables: { input: BetInput };
-}) => void;
+export type PlaceBet = (amount: number) => Promise<void>;
 
 export const check = (
   placeBet: PlaceBet,
@@ -28,15 +24,7 @@ export const check = (
     return;
   }
 
-  placeBet({
-    variables: {
-      input: {
-        gameId: game.id,
-        playerId: playerId,
-        amount: 0,
-      },
-    },
-  });
+  placeBet(0);
 };
 
 export const call = (
@@ -57,15 +45,7 @@ export const call = (
   const moneyOfPlayer =
     game.players.find(({ id }) => id === playerId)?.money ?? 0;
 
-  placeBet({
-    variables: {
-      input: {
-        gameId: game.id,
-        playerId: playerId,
-        amount: Math.min(amountToCall, moneyOfPlayer),
-      },
-    },
-  });
+  placeBet(Math.min(amountToCall, moneyOfPlayer));
 };
 
 export const raise = (
@@ -91,15 +71,7 @@ export const raise = (
   const moneyOfPlayer =
     game.players.find(({ id }) => id === playerId)?.money ?? 0;
 
-  placeBet({
-    variables: {
-      input: {
-        gameId: game.id,
-        playerId: playerId,
-        amount: Math.min(amount, moneyOfPlayer),
-      },
-    },
-  });
+  placeBet(Math.min(amount, moneyOfPlayer));
 };
 
 export const fold = (
@@ -116,13 +88,5 @@ export const fold = (
     return;
   }
 
-  placeBet({
-    variables: {
-      input: {
-        gameId: game.id,
-        playerId: playerId,
-        amount: -1,
-      },
-    },
-  });
+  placeBet(-1);
 };

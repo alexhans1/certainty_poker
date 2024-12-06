@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
 import { FiCopy } from "react-icons/fi";
 import UploadModal from "../UploadModal";
 import { Game, Question, Set } from "../../../interfaces";
-import { CREATE_GAME_QUERY } from "../../../api/queries";
 import Modal from "../../shared/Modal";
 import countryCodes from "../../../assets/countryCodes";
 
 import "./styles.css";
 import { addDoc, collection } from "firebase/firestore";
-import db from "../../../db/firestore-config";
+import db from "../../../db";
 
 interface Props {
   sets: Set[];

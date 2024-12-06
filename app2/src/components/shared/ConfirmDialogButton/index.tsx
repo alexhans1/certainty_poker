@@ -5,7 +5,7 @@ interface Props {
   buttonLabel: string | React.ReactNode;
   dialogTitle: string | React.ReactNode;
   confirmLabel: string;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
   isDisabled?: boolean;
   btnClassName?: string;
 }

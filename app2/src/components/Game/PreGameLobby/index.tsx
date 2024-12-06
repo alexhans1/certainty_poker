@@ -59,7 +59,6 @@ function PreGameLobby({
           <div className="mt-16 self-start">
             <StartGameButton
               startGame={startGame}
-              gameId={gameId}
               isDisabled={players.length <= 1}
             />
           </div>

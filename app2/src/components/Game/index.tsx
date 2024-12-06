@@ -14,8 +14,6 @@ import {
   getCurrentBettingRound,
   getPreviousQuestionRound,
   haveAllPlayersPlacedTheirGuess,
-  shufflePlayersInGame,
-  addQuestionRound,
 } from "./helpers";
 // @ts-ignore
 import notificationSound from "../../assets/turn-notification.mp3";
@@ -25,8 +23,12 @@ import alertSound from "../../assets/turn-alert.wav";
 import "./styles.css";
 import { withErrorBoundary } from "react-error-boundary";
 import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import db from "../../db/firestore-config";
+import db from "../../db/index.ts";
 import { v4 } from "uuid";
+import {
+  startGame as startGameRequest,
+  placeBet as placeBetRequest,
+} from "../../api/index.ts";
 
 const vibrate = (t: number) => {
   window.navigator.vibrate && window.navigator.vibrate(t);
@@ -117,11 +119,15 @@ function GameComponent() {
     if (game.questionRounds.length) throw new Error("Game already started");
     if (game.players.length < 2) throw new Error("Not enough players");
 
-    await shufflePlayersInGame(game.id, game.players);
-    await addQuestionRound(game);
+    await startGameRequest({ gameId: game.id });
   };
 
-  const placeBet = () => {};
+  const placeBet = async (amount: number) => {
+    if (!game) throw new Error("Game not found");
+    if (!player) throw new Error("Player not found");
+
+    await placeBetRequest({ gameId: game.id, playerId: player.id, amount });
+  };
 
   const addGuess = async (gameId: string, guess: Guess) => {
     if (!game) throw new Error("Game not found");

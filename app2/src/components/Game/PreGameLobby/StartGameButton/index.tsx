@@ -1,22 +1,15 @@
-import React from "react";
-import { Game } from "../../../../interfaces";
 import ConformDialogButton from "../../../shared/ConfirmDialogButton";
 
-export type StartGame = ({
-  variables: { gameId },
-}: {
-  variables: { gameId: Game["id"] };
-}) => void;
+export type StartGame = () => Promise<void>;
 
 interface Props {
-  gameId: Game["id"];
   startGame: StartGame;
   isDisabled: boolean;
 }
 
-function StartGameButton({ startGame, gameId, isDisabled }: Props) {
-  const onConfirm = () => {
-    startGame({ variables: { gameId } });
+function StartGameButton({ startGame, isDisabled }: Props) {
+  const onConfirm = async () => {
+    await startGame();
   };
   return (
     <ConformDialogButton

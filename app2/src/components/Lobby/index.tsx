@@ -3,8 +3,8 @@ import { useParams } from "react-router";
 import { Set } from "../../interfaces.ts";
 import PictureHalf from "./PictureHalf";
 import ActionableHalf from "./ActionableHalf";
-import { collection, onSnapshot } from "firebase/firestore";
-import db from "../../db/firestore-config";
+import { collection, getDocs } from "firebase/firestore";
+import db from "../../db";
 
 import "./styles.css";
 
@@ -13,17 +13,23 @@ function Lobby() {
   const [questionSets, setQuestionSets] = useState<Set[]>([]);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "question-sets"),
-      (querySnapshot) => {
-        const newData = querySnapshot.docs.map<Set>((doc) => doc.data() as Set);
+    let isMounted = true;
+    const fetchData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "question-sets"));
+        const newData = querySnapshot.docs.map((doc) => doc.data() as Set);
         setQuestionSets(newData);
+      } catch (error) {
+        console.error("Error fetching question sets:", error);
       }
-    );
+    };
 
-    // Cleanup subscription on component unmount
+    if (isMounted) {
+      fetchData();
+    }
+
     return () => {
-      unsubscribe();
+      isMounted = false;
     };
   }, []);
 

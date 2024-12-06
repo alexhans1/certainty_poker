@@ -1,13 +1,10 @@
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import {
   QuestionRound,
   Player,
   Game,
   BettingRound,
   QuestionTypes,
-  Question,
 } from "../../../interfaces";
-import db from "../../../db/firestore-config";
 
 export const calculateBettingRoundSpendingForPlayer = (
   bettingRound: BettingRound,
@@ -76,86 +73,3 @@ export const getRevealAnswer = (questionRound: QuestionRound) => {
     questionRound.question.hints.length + 1 < questionRound.bettingRounds.length
   );
 };
-
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
-export async function shufflePlayersInGame(gameId: string, players: Player[]) {
-  try {
-    const shuffledPlayers = shuffleArray(players);
-
-    // Update Firestore with the shuffled players array
-    await updateDoc(doc(db, "games", gameId), {
-      players: shuffledPlayers,
-    });
-  } catch (error) {
-    console.error("Error shuffling players:", error);
-    throw error;
-  }
-}
-
-function findNextDealer(
-  players: Player[],
-  dealerId: Player["id"]
-): Player["id"] {
-  const currentIndex = players.findIndex((player) => player.id === dealerId);
-  const nextIndex = (currentIndex + 1) % players.length;
-  return players[nextIndex].id;
-}
-
-// find next player that is not yet dead
-function findNextActionablePlayer(
-  players: Player[],
-  dealerId: Player["id"]
-): Player {
-  const dealerIndex = players.findIndex((player) => player.id === dealerId);
-  const nextActionablePlayer =
-    players.slice(dealerIndex + 1).find((player) => !player.isDead) ||
-    players.find((player) => !player.isDead) ||
-    players[0];
-  return nextActionablePlayer;
-}
-
-function addNewBettingRound(game: Game): BettingRound {
-  return {
-    bets: [],
-    currentPlayer: findNextActionablePlayer(game.players, game.dealerId),
-  };
-}
-
-export async function addQuestionRound(game: Game) {
-  const newQuestionRound: QuestionRound = {
-    question: game.questions[game.questionRounds.length],
-    guesses: [],
-    bettingRounds: [addNewBettingRound(game)],
-    foldedPlayerIds: [],
-    isOver: false,
-    isShowdown: false,
-    revealedGuesses: [],
-  };
-
-  const updatedPlayers = game.players.map((player) => ({
-    ...player,
-    bettingState: null,
-  }));
-
-  try {
-    await updateDoc(doc(db, "games", game.id), {
-      questionRounds: arrayUnion(newQuestionRound),
-      players: updatedPlayers,
-      dealerId:
-        game.dealerId === "unassigned"
-          ? game.players[0].id
-          : findNextDealer(game.players, game.dealerId),
-    });
-  } catch (error) {
-    console.error("Error while adding new question round:", error);
-    throw error;
-  }
-}
