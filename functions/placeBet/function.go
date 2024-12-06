@@ -18,7 +18,6 @@ func init() {
 	functions.HTTP("placeBet", httpHandler)
 }
 
-// helloWorld writes "Hello, World!" to the HTTP response.
 func httpHandler(w http.ResponseWriter, r *http.Request) {
 	// extract gameId, playerId and amount from request body
 	var body RequestBody

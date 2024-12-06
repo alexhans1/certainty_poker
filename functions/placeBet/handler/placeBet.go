@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"os"
 
 	"cloud.google.com/go/firestore"
 	"github.com/alexhans1/certainty_poker/shared/helpers"
@@ -14,10 +15,13 @@ import (
 func PlaceBet(gameID string, playerID string, amount int) (bool, error) {
 	var logger = logrus.New()
 
-	ctx := context.Background()
-
 	// Initialize Firestore client from the Firebase app
-	client, err := firestore.NewClient(ctx, "certainty-poker-ac89b")
+	ctx := context.Background()
+	projectID := os.Getenv("GOOGLE_PROJECT_ID")
+	if projectID == "" {
+		log.Fatal("GOOGLE_PROJECT_ID environment variable is not set")
+	}
+	client, err := firestore.NewClientWithDatabase(ctx, projectID, "certainty-poker")
 	if err != nil {
 		log.Fatalf("Error initializing Firestore client: %v", err)
 	}
