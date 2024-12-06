@@ -1,9 +1,0 @@
-@media screen and (min-width: 768px) {
-  .poker-table {
-    min-height: 500px;
-  }
-}
-.poker-table .map {
-  width: 100%;
-  min-height: 500px;
-}
