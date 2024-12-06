@@ -8,7 +8,7 @@ import Modal from "../../shared/Modal";
 import countryCodes from "../../../assets/countryCodes";
 
 import "./styles.css";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import db from "../../../db";
 
 interface Props {
@@ -50,8 +50,7 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
   }, [sets]);
 
   async function createGame() {
-    // todo: add TTL
-    const newGame: Omit<Game, "id"> = {
+    const newGame: Omit<Game, "id"> & { ttl: Timestamp } = {
       questionRounds: [],
       questions: selectedSets.reduce<Question[]>((acc, set) => {
         return [...acc, ...set.questions];
@@ -60,6 +59,7 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
       players: [],
       dealerId: "unassigned",
       setNames: selectedSets.map(({ setName }) => setName),
+      ttl: Timestamp.fromMillis(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
     };
     try {
       const docRef = await addDoc(collection(db, "games"), newGame);
