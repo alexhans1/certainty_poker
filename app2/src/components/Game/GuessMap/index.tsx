@@ -1,4 +1,3 @@
-import React from "react";
 import { AiFillCheckCircle } from "react-icons/ai";
 import {
   Game,

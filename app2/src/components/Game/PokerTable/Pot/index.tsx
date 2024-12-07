@@ -1,4 +1,3 @@
-import React from "react";
 import { GrMoney } from "react-icons/gr";
 import { QuestionRound } from "../../../../interfaces";
 

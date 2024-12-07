@@ -2,7 +2,8 @@ import { AiOutlineEye } from "react-icons/ai";
 import { Tooltip } from "@mui/material";
 
 function RevealGuessButton({ playerId, gameId }: any) {
-  const revealGuess = (playerId: string, gameId: string) => {};
+  // todo fix this
+  const revealGuess = (_playerId: string, _gameId: string) => {};
 
   return (
     <Tooltip title="Reveal Your Answer">

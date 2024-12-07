@@ -88,10 +88,7 @@ const Footer = ({
                   size={80}
                   strokeWidth={5}
                   duration={15}
-                  colors={[
-                    ["#004777", 0.5],
-                    ["#A30000", 1],
-                  ]}
+                  colors={"#00477780"}
                   trailColor="#9ca3af"
                 />
               </span>

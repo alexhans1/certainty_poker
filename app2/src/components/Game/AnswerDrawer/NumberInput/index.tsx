@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { QuestionTypes } from "../../../../interfaces";
 import FormattedGuess from "../../Guess";
 

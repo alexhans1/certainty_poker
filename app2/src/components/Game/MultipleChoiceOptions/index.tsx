@@ -1,4 +1,3 @@
-import React from "react";
 import { QuestionRound, QuestionTypes } from "../../../interfaces";
 import { getRevealAnswer } from "../helpers";
 

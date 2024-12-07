@@ -2,14 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
 import { FiCopy } from "react-icons/fi";
-import UploadModal from "../UploadModal";
-import { Game, Question, Set } from "../../../interfaces";
+import { Set } from "../../../interfaces";
 import Modal from "../../shared/Modal";
 import countryCodes from "../../../assets/countryCodes";
 
 import "./styles.css";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
-import db from "../../../db";
+import { createGame } from "../../../db";
 
 interface Props {
   sets: Set[];
@@ -18,13 +16,11 @@ interface Props {
   handleClose: () => void;
 }
 
-function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
-  // const history = useHistory();
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+function StartGameModal({ sets, open, handleClose }: Props) {
+  const [loading, setLoading] = useState(false);
   const [selectedSets, setSelectedSets] = useState<Set[]>([]);
   const [shownLanguage, setShownLanguage] = useState("GB");
   const [languages, setLanguages] = useState<string[]>([]);
-  const [_, setError] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,35 +45,16 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
     }
   }, [sets]);
 
-  async function createGame() {
-    const newGame: Omit<Game, "id"> & { ttl: Timestamp } = {
-      questionRounds: [],
-      questions: selectedSets.reduce<Question[]>((acc, set) => {
-        return [...acc, ...set.questions];
-      }, []),
-      isOver: false,
-      players: [],
-      dealerId: "unassigned",
-      setNames: selectedSets.map(({ setName }) => setName),
-      ttl: Timestamp.fromMillis(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
-    };
-    try {
-      const docRef = await addDoc(collection(db, "games"), newGame);
-      navigate(`/${docRef.id}`);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-      throw e;
-    }
-  }
-
-  const loading = false;
-
   // const { pathname } = history.location;
   const isPrivateSetRoute = false; // pathname !== "/";
 
   const handleCreateGame = async () => {
     if (selectedSets.length) {
-      createGame();
+      setLoading(true);
+      await createGame(selectedSets, (gameId: string) => {
+        navigate(`/${gameId}`);
+      });
+      setLoading(false);
     }
   };
 
@@ -176,7 +153,6 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
           You can also upload your own set of questions{" "}
           <button
             onClick={() => {
-              setIsUploadModalOpen(true);
               handleClose();
             }}
             className="text-blue-600 hover:text-blue-800 focus:outline-none font-bold"
@@ -194,15 +170,6 @@ function StartGameModal({ sets, open, handleClose, handleOpen }: Props) {
           {loading ? "Loading..." : "Play for Free"}
         </button>
       </Modal>
-      {/* <UploadModal
-        open={isUploadModalOpen}
-        handleClose={() => {
-          handleOpen();
-          setIsUploadModalOpen(false);
-        }}
-        setShownLanguage={setShownLanguage}
-        setSelectedSets={setSelectedSets}
-      /> */}
     </>
   );
 }

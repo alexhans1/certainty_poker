@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
+import React from "react";
 import { Game, Player } from "../../../interfaces";
 import { deletePlayerIdFromStorage } from "../../../storage";
 import ConfirmDialogButton from "../../shared/ConfirmDialogButton";
@@ -18,7 +17,11 @@ function LeaveGameButton({
   gameHasStarted,
   setPlayerId,
 }: Props) {
-  const removePlayer = (playerId: string, gameId: string) => {};
+  const removePlayer = (_playerId: string, gameId: string) => {
+    // todo handle remove player
+    deletePlayerIdFromStorage(gameId);
+    setPlayerId(undefined);
+  };
 
   if (!gameId || !playerId) {
     return null;

@@ -100,4 +100,5 @@ export interface Set {
   questions: Question[];
   language: string;
   numberOfQuestions: number;
+  isPromotedUntil?: number;
 }

@@ -8,7 +8,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-function UploadModal({ open, handleClose, children }: Props) {
+function ModalComponent({ open, handleClose, children }: Props) {
   return (
     <Modal
       disablePortal
@@ -33,4 +33,4 @@ function UploadModal({ open, handleClose, children }: Props) {
   );
 }
 
-export default UploadModal;
+export default ModalComponent;

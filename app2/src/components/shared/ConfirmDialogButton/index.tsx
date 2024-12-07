@@ -1,11 +1,11 @@
-import { Dialog, DialogActions, DialogTitle } from "@mui/material";
 import React from "react";
+import { Dialog, DialogActions, DialogTitle } from "@mui/material";
 
 interface Props {
   buttonLabel: string | React.ReactNode;
   dialogTitle: string | React.ReactNode;
   confirmLabel: string;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => void;
   isDisabled?: boolean;
   btnClassName?: string;
 }

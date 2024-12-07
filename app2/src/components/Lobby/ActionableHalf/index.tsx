@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-// import { useHistory } from "react-router";
-import { QueryLazyOptions } from "@apollo/client";
+import { useState } from "react";
 import { Set } from "../../../interfaces";
 import StartGameModal from "../StartGameModal";
 import NewSetBanner from "../NewSetBanner";
@@ -10,29 +8,23 @@ interface Props {
   setName?: string;
 }
 
-export default function ActionableHalf({ sets = [], setName }: Props) {
-  // const history = useHistory();
+export default function ActionableHalf({ sets = [] }: Props) {
   const [isCreateGameModalOpen, setIsCreateGameModalOpen] = useState(false);
-
-  // useEffect(() => {
-  //   const { pathname } = history.location;
-  //   const isPrivateSetRoute = pathname !== "/";
-  //   if (isPrivateSetRoute) {
-  //     setIsCreateGameModalOpen(true);
-  //   }
-  // }, [history]);
+  const promotedSet = sets.find((set) => set.isPromotedUntil || 0 > Date.now());
 
   return (
     <>
       <div className="flex flex-col justify-end h-full py-8 lg:pb-32 lg:pt-0">
-        <NewSetBanner setName="2021 Quiz" className="mb-8 lg:mb-auto lg:mt-5" />
+        {promotedSet && (
+          <NewSetBanner set={promotedSet} className="mb-8 lg:mb-auto lg:mt-5" />
+        )}
         <h1 className="text-5xl">
-          <span className="font-light italic">You think you know things?</span>
+          <span className="font-light italic">Think you know it all?</span>
           <br />
-          Let's make it interesting then!
+          Let’s raise the stakes!
         </h1>
         <p className="text-xl mt-3">
-          <b>Free</b> poker-like trivia game.
+          A <b>free</b> poker-style trivia game.
         </p>
         <button
           onClick={() => {

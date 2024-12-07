@@ -1,4 +1,3 @@
-import React from "react";
 import { FaRegLightbulb } from "react-icons/fa";
 import { GrMoney } from "react-icons/gr";
 import Status from "./Status";

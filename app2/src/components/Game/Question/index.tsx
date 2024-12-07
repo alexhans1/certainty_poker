@@ -1,4 +1,3 @@
-import React from "react";
 import { Game, QuestionRound, QuestionTypes } from "../../../interfaces";
 import Guess from "../Guess";
 import { getRevealAnswer } from "../helpers";

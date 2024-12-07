@@ -1,4 +1,3 @@
-import React from "react";
 import PlayerComp from "./Player";
 import Pot from "./Pot";
 import Question from "../Question";
@@ -91,9 +90,8 @@ const PokerTable = ({
                     question: usedQuestionRound.question,
                     isWinningPlayer: winningPlayerIds.includes(player.id),
                     isGameOver: game.isOver,
-                    isRevealingGuess: usedQuestionRound.revealedGuesses.includes(
-                      player.id
-                    ),
+                    isRevealingGuess:
+                      usedQuestionRound.revealedGuesses.includes(player.id),
                   }}
                 />
               );
@@ -138,9 +136,10 @@ const PokerTable = ({
                   alternatives:
                     usedQuestionRound?.question.alternatives?.map((alt) => ({
                       value: alt,
-                      active: !usedQuestionRound.question.hiddenAlternatives?.includes(
-                        alt
-                      ),
+                      active:
+                        !usedQuestionRound.question.hiddenAlternatives?.includes(
+                          alt
+                        ),
                     })) || [],
                   guess: usedQuestionRound?.guesses.find(
                     (g) => g.playerId === playerId

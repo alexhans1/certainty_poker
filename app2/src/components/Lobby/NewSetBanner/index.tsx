@@ -1,30 +1,24 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
+
+import { Set } from "../../../interfaces";
 import image from "../../../assets/2021.png";
+import { createGame } from "../../../db";
 
 interface Props {
+  set: Set;
   className?: string;
-  setName: string;
 }
-function NewSetBanner({ className = "", setName }: Props) {
-  // const history = useHistory();
-  // const [_, setError] = useState();
-  // const [createGame, { loading }] = useMutation<{
-  //   createGame: Game;
-  // }>(CREATE_GAME_QUERY, {
-  //   variables: {
-  //     setNames: [setName],
-  //   },
-  //   // onCompleted: ({ createGame }) => {
-  //   //   history.push(`/${createGame.id}`);
-  //   // },
-  //   onError: (err) => {
-  //     setError(() => {
-  //       throw err;
-  //     });
-  //   },
-  // });
-
-  const createGame = () => {};
-  const loading = false;
+function NewSetBanner({ className = "", set }: Props) {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const handleCreateGame = async () => {
+    setLoading(true);
+    await createGame([set], (gameId: string) => {
+      navigate(`/${gameId}`);
+    });
+    setLoading(false);
+  };
 
   return (
     <div
@@ -42,7 +36,7 @@ function NewSetBanner({ className = "", setName }: Props) {
       <button
         className="mt-6 bg-black rounded-full font-semi-bold text-white text-center px-6 py-3 transition duration-300 ease-in-out hover:text-black hover:bg-white border border-black focus:outline-none mr-auto"
         onClick={() => {
-          createGame();
+          handleCreateGame();
         }}
       >
         {loading ? "Loading..." : "Start 2021 Quiz"}

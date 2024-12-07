@@ -1,49 +1,29 @@
-import React, { useState } from "react";
-import DatePicker from "react-date-picker";
-import { QuestionTypes } from "../../../../interfaces";
-import FormattedGuess from "../../Guess";
+import { useState } from "react";
+import DatePicker from "react-datepicker";
 
 interface Props {
   handleSubmit: (guess: number) => void;
 }
 
-function formatDateToString(date: Date) {
-  var mm = date.getMonth() + 1; // getMonth() is zero-based
-  var dd = date.getDate();
-
-  return [
-    date.getFullYear(),
-    (mm > 9 ? "" : "0") + mm,
-    (dd > 9 ? "" : "0") + dd,
-  ].join("");
+function formatDateToNumber(date: Date): number {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return parseInt(`${year}${month}${day}`, 10);
 }
 
 function DateInput({ handleSubmit }: Props) {
-  const [guess, setGuess] = useState<Date>();
-
-  const submit = (stringValue?: string) => {
-    if (stringValue) {
-      const value = parseInt(stringValue.replaceAll("-", ""));
-      if (value) {
-        handleSubmit(value);
-        setGuess(undefined);
-      }
-    }
-  };
+  const [guess, setGuess] = useState(new Date());
 
   return (
     <div className="grid grid-cols-2 gap-4">
       <DatePicker
-        className="bg-white"
-        dayPlaceholder="DD"
-        monthPlaceholder="MM"
-        yearPlaceholder="YYYY"
-        calendarClassName="hidden"
-        showLeadingZeros={true}
-        calendarIcon={null}
-        value={guess}
-        onChange={(date: Date | Date[]) => {
-          setGuess(date as Date);
+        dateFormat="MMM dd, yyyy"
+        selected={guess}
+        onChange={(date) => {
+          if (date) {
+            setGuess(date);
+          }
         }}
       />
       <button
@@ -52,25 +32,12 @@ function DateInput({ handleSubmit }: Props) {
         disabled={!guess}
         onClick={() => {
           if (guess) {
-            submit(formatDateToString(guess));
+            handleSubmit(formatDateToNumber(guess));
           }
         }}
       >
         Submit
       </button>
-
-      {guess && (
-        <p className="-mt-2 text-sm h-2">
-          <FormattedGuess
-            {...{
-              guess: {
-                numerical: parseInt(formatDateToString(guess)),
-              },
-              questionType: QuestionTypes.DATE,
-            }}
-          />
-        </p>
-      )}
     </div>
   );
 }

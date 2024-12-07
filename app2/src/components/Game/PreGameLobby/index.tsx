@@ -1,4 +1,3 @@
-import React from "react";
 import { FiCopy } from "react-icons/fi";
 import PlayerSpot from "./PlayerSpot";
 import { Game, Player } from "../../../interfaces";

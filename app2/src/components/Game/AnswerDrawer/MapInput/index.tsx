@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GeoCoordinate } from "../../../../interfaces";
 import Map from "../../../Game/Map";
 

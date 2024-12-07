@@ -1,5 +1,3 @@
-import React from "react";
-
 import backgroundImage1 from "../../../assets/landing-page-image-1.webp";
 import backgroundImage2 from "../../../assets/landing-page-image-2.webp";
 import backgroundImage3 from "../../../assets/landing-page-image-3.webp";

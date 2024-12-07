@@ -60,7 +60,31 @@ function GameComponent() {
       doc(db, "games", gameId),
       (docSnapshot) => {
         if (docSnapshot.exists()) {
-          setGame({ ...docSnapshot.data(), id: gameId } as Game);
+          clearInterval(soundInterval);
+          const updatedGame = { ...docSnapshot.data(), id: gameId } as Game;
+          setGame(updatedGame);
+
+          const cqr = getCurrentQuestionRound(updatedGame);
+          const cbr = getCurrentBettingRound(cqr);
+          const players = updatedGame.players;
+          const allPlayersGuessed =
+            cqr && haveAllPlayersPlacedTheirGuess(cqr, players);
+          if (allPlayersGuessed) {
+            setShowNewQuestionRoundForSpectator(false);
+          }
+
+          if (
+            !updatedGame?.isOver &&
+            cbr?.currentPlayer.id === playerId &&
+            allPlayersGuessed
+          ) {
+            playNotification.play();
+            vibrate(200);
+            soundInterval = setInterval(() => {
+              playAlert.play();
+              vibrate(200);
+            }, 15000);
+          }
         } else {
           console.log("Game does not exist.");
         }
@@ -76,7 +100,7 @@ function GameComponent() {
     return () => {
       unsubscribe();
     };
-  }, [gameId]);
+  }, [gameId, playAlert, playNotification, playerId]);
 
   const errorHandler = (err: Error) => {
     setError(() => {
