@@ -254,6 +254,9 @@ func (game *Game) postProcessFromFirestore() {
 					if br.QuestionRound == nil {
 						br.QuestionRound = qr
 					}
+					if br.CurrentPlayer.Game == nil {
+						br.CurrentPlayer.Game = game
+					}
 				}
 			}
 		}
