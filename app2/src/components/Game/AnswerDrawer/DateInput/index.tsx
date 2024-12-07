@@ -1,5 +1,8 @@
 import { useState } from "react";
-import DatePicker from "react-datepicker";
+
+import FormattedGuess from "../../Guess";
+import { QuestionTypes } from "../../../../interfaces";
+import DatePicker from "./DatePicker";
 
 interface Props {
   handleSubmit: (guess: number) => void;
@@ -9,20 +12,19 @@ function formatDateToNumber(date: Date): number {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
+
   return parseInt(`${year}${month}${day}`, 10);
 }
 
 function DateInput({ handleSubmit }: Props) {
-  const [guess, setGuess] = useState(new Date());
+  const [guess, setGuess] = useState<Date>();
 
   return (
     <div className="grid grid-cols-2 gap-4">
       <DatePicker
-        dateFormat="MMM dd, yyyy"
-        selected={guess}
-        onChange={(date) => {
-          if (date) {
-            setGuess(date);
+        onChange={(dateValue) => {
+          if (dateValue) {
+            setGuess(dateValue as Date);
           }
         }}
       />
@@ -38,6 +40,19 @@ function DateInput({ handleSubmit }: Props) {
       >
         Submit
       </button>
+
+      {guess && (
+        <p className="-mt-2 text-sm h-2">
+          <FormattedGuess
+            {...{
+              guess: {
+                numerical: formatDateToNumber(guess),
+              },
+              questionType: QuestionTypes.DATE,
+            }}
+          />
+        </p>
+      )}
     </div>
   );
 }

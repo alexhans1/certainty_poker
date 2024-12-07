@@ -6,13 +6,19 @@ interface Props {
   alternatives?: Question["alternatives"];
 }
 
-function formatDateString(dateStr: string): string {
+function formatDate(dateNumber: number): string {
+  const dateStr = dateNumber.toString().padStart(8, "0");
   const [year, month, day] = [
     dateStr.slice(0, 4),
     dateStr.slice(4, 6),
     dateStr.slice(6, 8),
   ];
-  return new Date(+year, +month - 1, +day).toLocaleDateString("en-US", {
+  const date = new Date();
+  date.setFullYear(+year);
+  date.setMonth(+month - 1);
+  date.setDate(+day);
+
+  return date.toLocaleDateString("en-US", {
     month: "short",
     day: "2-digit",
     year: "numeric",
@@ -21,6 +27,7 @@ function formatDateString(dateStr: string): string {
 
 export default function Guess({ guess, questionType, alternatives }: Props) {
   if (!guess) return null;
+
   switch (questionType) {
     case QuestionTypes.NUMERICAL: {
       const number =
@@ -36,7 +43,7 @@ export default function Guess({ guess, questionType, alternatives }: Props) {
       if (!guess.numerical) {
         return null;
       }
-      return <span>{formatDateString(guess.numerical.toString())}</span>;
+      return <span>{formatDate(guess.numerical)}</span>;
     case QuestionTypes.GEO:
       return <span>{`[${guess.geo?.latitude}, ${guess.geo?.longitude}]`}</span>;
     case QuestionTypes.MULTIPLE_CHOICE:

@@ -81,7 +81,7 @@ export default function AnswerDrawer({
         );
       }
       default:
-        throw new Error("Unknow Question Type");
+        throw new Error("Unknown Question Type");
     }
   };
 
