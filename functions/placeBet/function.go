@@ -17,7 +17,25 @@ type RequestBody struct {
 }
 
 func init() {
-	functions.HTTP("placeBet", httpHandler)
+	functions.HTTP("placeBet", corsMiddleware(httpHandler))
+}
+
+func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Add CORS headers
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		// Handle preflight OPTIONS requests
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Call the next handler
+		next(w, r)
+	}
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
