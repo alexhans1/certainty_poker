@@ -32,7 +32,7 @@ func (g *Game) RecentQuestionRound() *QuestionRound {
 
 // IsFinished returns true if there is only one player left in the game
 func (g *Game) IsFinished() bool {
-	isOver := len(g.Questions) < 1 || len(g.InPlayers()) <= 1
+	isOver := len(g.Questions) == len(g.QuestionRounds) || len(g.InPlayers()) <= 1
 	g.IsOver = isOver
 	return isOver
 }
