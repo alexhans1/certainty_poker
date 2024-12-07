@@ -74,7 +74,7 @@ func PlaceBet(gameID string, playerID string, amount int) (bool, error) {
 					"game":               game.ID,
 					"remainingPlayers":   len(game.ActivePlayers()),
 					"currentQuestion":    len(game.QuestionRounds),
-					"remainingQuestions": len(game.Questions),
+					"remainingQuestions": len(game.Questions) - len(game.QuestionRounds),
 				}).Info("game is over")
 			} else {
 				game.AddNewQuestionRound()
