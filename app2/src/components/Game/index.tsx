@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { AiFillFileUnknown } from "react-icons/ai";
-import { Game, Guess, Player } from "../../interfaces";
+import { Game, Guess } from "../../interfaces";
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage.ts";
 import PreGameLobby from "./PreGameLobby";
 import PokerTable from "./PokerTable";
@@ -22,9 +22,8 @@ import alertSound from "../../assets/turn-alert.wav";
 
 import "./styles.css";
 import { withErrorBoundary } from "react-error-boundary";
-import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import db from "../../db/index.ts";
-import { v4 } from "uuid";
+import { doc, onSnapshot } from "firebase/firestore";
+import db, { addGuess, createPlayer } from "../../db/index.ts";
 import {
   startGame as startGameRequest,
   placeBet as placeBetRequest,
@@ -54,6 +53,16 @@ function GameComponent() {
 
   const [playNotification] = useState(new Audio(notificationSound));
   const [playAlert] = useState(new Audio(alertSound));
+
+  useEffect(() => {
+    if (gameId) {
+      const storedPlayerId = getPlayerIdFromStorage(gameId);
+
+      if (storedPlayerId) {
+        setPlayerId(storedPlayerId);
+      }
+    }
+  }, [gameId]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -108,70 +117,48 @@ function GameComponent() {
     });
   };
 
-  useEffect(() => {
-    if (gameId) {
-      const storedPlayerId = getPlayerIdFromStorage(gameId);
-
-      if (storedPlayerId) {
-        setPlayerId(storedPlayerId);
-      }
-    }
-  }, [gameId]);
-
-  const createPlayer = async (gameId: string, playerName: string) => {
-    const player: Player = {
-      id: v4(),
-      name: playerName,
-      money: 100,
-      isDead: false,
-    };
-
+  const handleCreatePlayer = async (gameId: string, playerName: string) => {
     try {
       // Add the player to the players array
-      await updateDoc(doc(db, "games", gameId), {
-        players: arrayUnion(player),
+      await createPlayer(gameId, playerName, (playerId: string) => {
+        setPlayerIdToStorage(gameId, playerId);
+        setPlayerId(playerId);
       });
-      setPlayerIdToStorage(gameId, player.id);
-      setPlayerId(player.id);
     } catch (error) {
-      console.error("error", error);
       errorHandler(error as unknown as Error);
     }
   };
+
   const startGame = async () => {
     if (!game) throw new Error("Game not found");
     if (game.questionRounds.length) throw new Error("Game already started");
     if (game.players.length < 2) throw new Error("Not enough players");
 
-    await startGameRequest({ gameId: game.id });
+    try {
+      await startGameRequest({ gameId: game.id });
+    } catch (error) {
+      errorHandler(error as unknown as Error);
+    }
   };
 
   const placeBet = async (amount: number) => {
     if (!game) throw new Error("Game not found");
     if (!player) throw new Error("Player not found");
 
-    await placeBetRequest({ gameId: game.id, playerId: player.id, amount });
+    try {
+      await placeBetRequest({ gameId: game.id, playerId: player.id, amount });
+    } catch (error) {
+      errorHandler(error as unknown as Error);
+    }
   };
 
-  const addGuess = async (gameId: string, guess: Guess) => {
+  const handleAddGuess = async (guess: Guess) => {
     if (!game) throw new Error("Game not found");
     if (!currentQuestionRound) throw new Error("No current question round");
 
-    const updatedQuestionRound = {
-      ...currentQuestionRound,
-      guesses: [...currentQuestionRound.guesses, guess],
-    };
-
-    const updatedQuestionRounds = [...game.questionRounds];
-    updatedQuestionRounds[updatedQuestionRounds.length - 1] =
-      updatedQuestionRound;
-
     try {
-      await updateDoc(doc(db, "games", gameId), {
-        questionRounds: updatedQuestionRounds,
-      });
+      await addGuess(game.id, game.questionRounds, currentQuestionRound, guess);
     } catch (error) {
-      console.error("error", error);
       errorHandler(error as unknown as Error);
     }
   };
@@ -224,7 +211,7 @@ function GameComponent() {
             gameLink={window.location.href}
             startGame={startGame}
             gameId={game.id}
-            createPlayer={createPlayer}
+            createPlayer={handleCreatePlayer}
             playerId={playerId}
             setNames={game.setNames}
           />
@@ -255,7 +242,7 @@ function GameComponent() {
         <AnswerDrawer
           {...{
             game,
-            addGuess,
+            addGuess: handleAddGuess,
             currentQuestionRound,
             player,
             showAnswerDrawer,

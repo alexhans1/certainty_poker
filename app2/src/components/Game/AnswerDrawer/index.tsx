@@ -18,7 +18,7 @@ interface QuestionProps {
   game: Game;
   currentQuestionRound: QuestionRound;
   player?: Player;
-  addGuess: (gameId: string, guess: Guess) => Promise<void>;
+  addGuess: (guess: Guess) => Promise<void>;
   showAnswerDrawer: boolean;
   setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
@@ -39,7 +39,7 @@ export default function AnswerDrawer({
 
   const handleNumberInputSubmit = (guess: number | string) => {
     if ((guess || guess === 0) && typeof guess === "number") {
-      addGuess(game.id, {
+      addGuess({
         playerId: player.id,
         guess: {
           numerical: guess,
@@ -53,7 +53,7 @@ export default function AnswerDrawer({
     const guess: Answer = {
       geo: geoCoordinate,
     };
-    addGuess(game.id, {
+    addGuess({
       playerId: player.id,
       guess,
     });

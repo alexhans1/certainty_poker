@@ -10,19 +10,9 @@ const startGameCallable = httpsCallable<{ gameId: string }, void>(
 const placeBetCallable = httpsCallable<BetInput, void>(functions, "placeBet");
 
 export const startGame = async (payload: { gameId: string }) => {
-  try {
-    await startGameCallable(payload);
-  } catch (error) {
-    console.error("Error calling startGame:", error);
-    throw error;
-  }
+  await startGameCallable(payload);
 };
 
 export const placeBet = async (payload: BetInput) => {
-  try {
-    await placeBetCallable(payload);
-  } catch (error) {
-    console.error("Error calling placeBet:", error);
-    throw error;
-  }
+  await placeBetCallable(payload);
 };

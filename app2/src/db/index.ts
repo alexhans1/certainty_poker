@@ -1,12 +1,24 @@
 // Import the functions you need from the SDKs you need
 import {
   addDoc,
+  arrayUnion,
   collection,
+  doc,
+  getDocs,
   getFirestore,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 import app from "../firebase";
-import { Game, Question, Set } from "../interfaces";
+import {
+  Game,
+  Guess,
+  Player,
+  Question,
+  QuestionRound,
+  Set,
+} from "../interfaces";
+import { v4 } from "uuid";
 
 const db = getFirestore(app, "certainty-poker");
 
@@ -27,11 +39,52 @@ export const createGame = async (
     setNames: selectedSets.map(({ setName }) => setName),
     ttl: Timestamp.fromMillis(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
   };
-  try {
-    const docRef = await addDoc(collection(db, "games"), newGame);
-    onComplete(docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-    throw e;
-  }
+  const docRef = await addDoc(collection(db, "games"), newGame);
+  onComplete(docRef.id);
+};
+
+export const createPlayer = async (
+  gameId: string,
+  playerName: string,
+  onComplete: (playerId: string) => void
+) => {
+  const player: Player = {
+    id: v4(),
+    name: playerName,
+    money: 100,
+    isDead: false,
+  };
+
+  // Add the player to the players array
+  await updateDoc(doc(db, "games", gameId), {
+    players: arrayUnion(player),
+  });
+  onComplete(player.id);
+};
+
+export const addGuess = async (
+  gameId: string,
+  questionRounds: QuestionRound[],
+  currentQuestionRound: QuestionRound,
+  guess: Guess
+) => {
+  const updatedQuestionRound = {
+    ...currentQuestionRound,
+    guesses: [...currentQuestionRound.guesses, guess],
+  };
+
+  const updatedQuestionRounds = [...questionRounds];
+  updatedQuestionRounds[updatedQuestionRounds.length - 1] =
+    updatedQuestionRound;
+
+  await updateDoc(doc(db, "games", gameId), {
+    questionRounds: updatedQuestionRounds,
+  });
+};
+
+export const fetchQuestionSets = async () => {
+  const querySnapshot = await getDocs(collection(db, "question-sets"));
+  const newData = querySnapshot.docs.map((doc) => doc.data() as Set);
+
+  return newData;
 };

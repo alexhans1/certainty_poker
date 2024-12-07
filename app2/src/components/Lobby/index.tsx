@@ -3,8 +3,7 @@ import { useParams } from "react-router";
 import { Set } from "../../interfaces.ts";
 import PictureHalf from "./PictureHalf";
 import ActionableHalf from "./ActionableHalf";
-import { collection, getDocs } from "firebase/firestore";
-import db from "../../db";
+import { fetchQuestionSets } from "../../db";
 
 import "./styles.css";
 
@@ -16,9 +15,8 @@ function Lobby() {
     let isMounted = true;
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "question-sets"));
-        const newData = querySnapshot.docs.map((doc) => doc.data() as Set);
-        setQuestionSets(newData);
+        const sets = await fetchQuestionSets();
+        setQuestionSets(sets);
       } catch (error) {
         console.error("Error fetching question sets:", error);
       }
