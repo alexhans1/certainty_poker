@@ -82,14 +82,13 @@ func (b *BettingRound) IsFinished() bool {
 	}
 	amountToCall := b.AmountToCall()
 	if amountToCall > 0 {
-		// todo: enable again
-		// // if it's the first betting round, the big blind player gets to bet again
-		// bigBlindPlayer := b.QuestionRound.Game.BigBlindPlayer()
-		// if len(b.QuestionRound.BettingRounds) == 1 &&
-		// 	amountToCall == b.QuestionRound.Game.BigBlind() &&
-		// 	b.CurrentPlayer.FindNextActionablePlayer().ID == bigBlindPlayer.ID {
-		// 	return false
-		// }
+		// if it's the first betting round, the big blind player gets to bet again
+		bigBlindPlayer := b.QuestionRound.Game.BigBlindPlayer()
+		if len(b.QuestionRound.BettingRounds) == 1 &&
+			amountToCall == b.QuestionRound.Game.BigBlind() &&
+			b.CurrentPlayer.FindNextActionablePlayer().ID == bigBlindPlayer.ID {
+			return false
+		}
 
 		// if the amount to call is greater than 0, then if an
 		// actionable player has less than that in the pot,
