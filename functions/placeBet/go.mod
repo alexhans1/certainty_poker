@@ -14,6 +14,7 @@ require (
 	cloud.google.com/go/auth v0.9.3 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.4 // indirect
 	cloud.google.com/go/compute/metadata v0.5.0 // indirect
+	cloud.google.com/go/functions v1.19.0 // indirect
 	cloud.google.com/go/longrunning v0.6.0 // indirect
 	github.com/alexhans1/poker-chip-allocation v0.0.0-20201019174247-e38068d87cea // indirect
 	github.com/cloudevents/sdk-go/v2 v2.15.2 // indirect
