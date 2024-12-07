@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from "react";
-import { LatLng, latLngBounds } from "leaflet";
+import { LatLng, latLngBounds, LatLngExpression } from "leaflet";
 import {
   FeatureGroup,
   MapContainer,
@@ -57,7 +57,7 @@ const getNumberOfDecimals = (val: number = 0) => {
 };
 
 function LocationMarker({ handleUpdate }: { handleUpdate: HandleOnClick }) {
-  const [position, setPosition] = useState<any>(null);
+  const [position, setPosition] = useState<LatLngExpression | null>(null);
   useMapEvents({
     click(e) {
       setPosition(e.latlng);
@@ -80,12 +80,13 @@ function MarkerContainer({
   markers?.forEach((data) => {
     bounds.extend([data.position.latitude, data.position.longitude]);
   });
-  bounds.isValid() &&
+  if (bounds.isValid()) {
     map.flyToBounds(bounds, {
       // todo: make padding dependend on zoom level
       padding: [10, 10],
       maxZoom: markers.length > 1 ? 15 : 5,
     });
+  }
 
   return <FeatureGroup>{children}</FeatureGroup>;
 }
@@ -123,8 +124,8 @@ export default React.memo(
         className={className}
       >
         <TileLayer
-          attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.svg"
+          attribution='Map tiles by <a href="https://stadiamaps.com/">Stadia Maps</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg"
         />
         {handleOnClick && <LocationMarker handleUpdate={handleOnClick} />}
         {distanceLines &&
