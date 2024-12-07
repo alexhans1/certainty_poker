@@ -22,6 +22,9 @@ interface Props {
 
 export default function Hints({ usedQuestionRound }: Props) {
   const hints = usedQuestionRound.question.hints;
+
+  if (!hints?.length) return null;
+
   const numberOfHints = usedQuestionRound.isOver
     ? hints.length
     : Math.min(usedQuestionRound.bettingRounds.length - 1, hints.length);
@@ -37,20 +40,18 @@ export default function Hints({ usedQuestionRound }: Props) {
         Hint{numberOfHints > 1 && "s"} ({numberOfHints}/{hints.length}):
       </span>
       <ol>
-        {usedQuestionRound.question.hints
-          .slice(0, numberOfHints)
-          .map((hint, i) => (
-            <li
-              key={hint}
-              style={
-                numberOfHints === i + 1 && !getRevealAnswer(usedQuestionRound)
-                  ? styles.currentHint
-                  : styles.oldHint
-              }
-            >
-              {hint}
-            </li>
-          ))}
+        {hints.slice(0, numberOfHints).map((hint, i) => (
+          <li
+            key={hint}
+            style={
+              numberOfHints === i + 1 && !getRevealAnswer(usedQuestionRound)
+                ? styles.currentHint
+                : styles.oldHint
+            }
+          >
+            {hint}
+          </li>
+        ))}
       </ol>
     </div>
   );

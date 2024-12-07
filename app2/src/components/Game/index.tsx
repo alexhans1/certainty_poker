@@ -112,6 +112,7 @@ function GameComponent() {
   }, [gameId, playAlert, playNotification, playerId]);
 
   const errorHandler = (err: Error) => {
+    console.error("error", err);
     setError(() => {
       throw err;
     });

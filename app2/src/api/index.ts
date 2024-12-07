@@ -14,5 +14,9 @@ export const startGame = async (payload: { gameId: string }) => {
 };
 
 export const placeBet = async (payload: BetInput) => {
-  await placeBetCallable(payload);
+  try {
+    await placeBetCallable(payload);
+  } catch (error) {
+    console.log("error", error);
+  }
 };

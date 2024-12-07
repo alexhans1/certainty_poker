@@ -70,6 +70,7 @@ export const getRevealAnswer = (questionRound: QuestionRound) => {
     return questionRound.bettingRounds.length >= 4;
   }
   return (
-    questionRound.question.hints.length + 1 < questionRound.bettingRounds.length
+    (questionRound.question.hints as string[]).length + 1 <
+    questionRound.bettingRounds.length
   );
 };

@@ -37,7 +37,7 @@ export interface Question {
   answer: Answer;
   alternatives?: [string, string, string, string];
   hiddenAlternatives?: string[];
-  hints: string[];
+  hints?: string[];
   explanation?: string;
 }
 
