@@ -15,6 +15,7 @@ import {
   Player,
   Question,
   QuestionRound,
+  QuestionTypes,
   Set,
 } from "../interfaces";
 import { v4 } from "uuid";
@@ -89,7 +90,12 @@ export const uploadQuestions = async (
   _isPrivate?: boolean
 ) => {
   const newSet: Set = {
-    questions,
+    questions: questions.map((q) => {
+      if (q.type !== QuestionTypes.MULTIPLE_CHOICE) return q;
+
+      (q.answer.numerical as number)--;
+      return q;
+    }),
     setName,
     language,
   };
