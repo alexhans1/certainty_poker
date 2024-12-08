@@ -11,22 +11,10 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
+import { equals } from "ramda";
 import { GeoCoordinate } from "../../../interfaces";
 
 import "./styles.css";
-
-function equals(a: any, b: any): boolean {
-  if (a === b) return true;
-  if (a && b && typeof a === "object" && typeof b === "object") {
-    const keysA = Object.keys(a);
-    const keysB = Object.keys(b);
-    return (
-      keysA.length === keysB.length &&
-      keysA.every((key) => equals(a[key], b[key]))
-    );
-  }
-  return false;
-}
 
 type HandleOnClick = (p: GeoCoordinate) => void;
 export interface MarkerType {

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Drawer from "../../../../shared/Drawer";
-import { BettingRound, Game, Player } from "../../../../../interfaces";
+import { BettingRound, Player } from "../../../../../interfaces";
 import { calculateAmountToCall, PlaceBet, raise } from "../../../helpers";
+import { useGame } from "../../../Context";
 
 interface Props {
   currentBettingRound: BettingRound;
-  game: Game;
   handleRaise: typeof raise;
   placeBet: PlaceBet;
   playerId: Player["id"];
@@ -15,13 +15,17 @@ interface Props {
 
 export default function RaiseInputDrawer({
   currentBettingRound,
-  game,
   handleRaise,
   placeBet,
   playerId,
   showRaiseDrawer,
   setShowRaiseDrawer,
 }: Props) {
+  const { game } = useGame();
+  if (!game) {
+    throw new Error("Game not found");
+  }
+
   const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
   const moneyRemaining = game.players.find(({ id }) => id === playerId)?.money;
   const [amount, setAmount] = useState(amountToCall);

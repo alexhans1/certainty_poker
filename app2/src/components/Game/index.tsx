@@ -23,11 +23,12 @@ import alertSound from "../../assets/turn-alert.wav";
 import "./styles.css";
 import { withErrorBoundary } from "react-error-boundary";
 import { doc, onSnapshot } from "firebase/firestore";
-import db, { addGuess, createPlayer } from "../../db/index.ts";
+import db, { addGuess, createPlayer } from "../../db";
 import {
   startGame as startGameRequest,
   placeBet as placeBetRequest,
 } from "../../api/index.ts";
+import GameProvider, { useGame } from "./Context";
 
 const vibrate = (t: number) => {
   window.navigator.vibrate && window.navigator.vibrate(t);
@@ -35,9 +36,9 @@ const vibrate = (t: number) => {
 let soundInterval: NodeJS.Timeout;
 
 function GameComponent() {
+  const { game, setGame } = useGame();
   const [loading, setLoading] = useState(true);
   const [playerId, setPlayerId] = useState<string | undefined>(undefined);
-  const [game, setGame] = useState<Game | undefined>(undefined);
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
   const [showAnswerDrawer, setShowAnswerDrawer] = useState(false);
@@ -109,7 +110,7 @@ function GameComponent() {
     return () => {
       unsubscribe();
     };
-  }, [gameId, playAlert, playNotification, playerId]);
+  }, [gameId, playAlert, playNotification, playerId, setGame]);
 
   const errorHandler = (err: Error) => {
     console.error("error", err);
@@ -272,7 +273,15 @@ function GameComponent() {
   );
 }
 
-export default withErrorBoundary(GameComponent, {
+const GameWithContext = () => {
+  return (
+    <GameProvider>
+      <GameComponent />
+    </GameProvider>
+  );
+};
+
+export default withErrorBoundary(GameWithContext, {
   onError: (error) => {
     console.error("Uncaught error:", error);
   },

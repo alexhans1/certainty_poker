@@ -88,3 +88,32 @@ export const fetchQuestionSets = async () => {
 
   return newData;
 };
+
+export const revealGuess = async (
+  gameId: string,
+  playerId: string,
+  questionRounds: QuestionRound[]
+) => {
+  const currentQuestionRound = questionRounds[questionRounds.length - 2];
+  if (!currentQuestionRound) {
+    return;
+  }
+
+  if (currentQuestionRound.revealedGuesses.includes(playerId)) {
+    console.log("playerId", playerId);
+    return;
+  }
+
+  const updatedQuestionRound = {
+    ...currentQuestionRound,
+    revealedGuesses: [...currentQuestionRound.revealedGuesses, playerId],
+  };
+
+  const updatedQuestionRounds = [...questionRounds];
+  updatedQuestionRounds[updatedQuestionRounds.length - 2] =
+    updatedQuestionRound;
+
+  await updateDoc(doc(db, "games", gameId), {
+    questionRounds: updatedQuestionRounds,
+  });
+};

@@ -68,7 +68,6 @@ export default function ActionButtons({
       />
       <RaiseInputDrawer
         {...{
-          game,
           placeBet,
           playerId,
           currentBettingRound,
