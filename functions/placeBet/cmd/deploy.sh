@@ -5,7 +5,7 @@ gcloud functions deploy placeBet \
     --entry-point placeBet \
     --trigger-http \
     --allow-unauthenticated \
-    --set-env-vars GOOGLE_PROJECT_ID="certainty-poker",SMALL_BLIND="5",DOUBLE_EVERY_NTH_ROUND="7"
+    --set-env-vars GOOGLE_PROJECT_ID="certainty-poker"
 
 # Check deployment status
 if [ $? -eq 0 ]; then

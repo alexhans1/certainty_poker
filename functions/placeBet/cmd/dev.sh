@@ -1,1 +1,1 @@
-FUNCTION_TARGET=placeBet LOCAL_ONLY=true GOOGLE_PROJECT_ID="certainty-poker" SMALL_BLIND="5" DOUBLE_EVERY_NTH_ROUND="7" GOOGLE_APPLICATION_CREDENTIALS="/Users/alexhans/Desktop/certainty-poker-service-account-key.json" go run cmd/main.go
+FUNCTION_TARGET=placeBet LOCAL_ONLY=true GOOGLE_PROJECT_ID="certainty-poker" GOOGLE_APPLICATION_CREDENTIALS="/Users/alexhans/Desktop/certainty-poker-service-account-key.json" go run cmd/main.go

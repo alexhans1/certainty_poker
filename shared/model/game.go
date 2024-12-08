@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"os"
-	"strconv"
 
 	"cloud.google.com/go/firestore"
 	"github.com/alexhans1/certainty_poker/shared/helpers"
@@ -177,10 +175,10 @@ func (g *Game) PlayerIds() []string {
 
 // SmallBlind returns the amout of the small blind depending on the env variable and the number of question rounds
 func (g *Game) SmallBlind() int {
-	smallBlind, _ := strconv.Atoi(os.Getenv("SMALL_BLIND"))
-	doubleEveryNthRound, _ := strconv.ParseFloat(os.Getenv("DOUBLE_EVERY_NTH_ROUND"), 64)
+	smallBlind := 1
+	doubleEveryNthRound := 4
 	numberOfQuestionRounds := len(g.QuestionRounds)
-	return smallBlind * int(math.Pow(2, math.Floor(float64(numberOfQuestionRounds-1)/doubleEveryNthRound)))
+	return smallBlind * int(math.Pow(2, math.Floor(float64(numberOfQuestionRounds-1)/float64(doubleEveryNthRound))))
 }
 
 // BigBlind returns two times the small blind
