@@ -8,6 +8,7 @@ import countryCodes from "../../../assets/countryCodes";
 
 import "./styles.css";
 import { createGame } from "../../../db";
+import UploadModal from "../UploadModal";
 
 interface Props {
   sets: Set[];
@@ -16,8 +17,9 @@ interface Props {
   handleClose: () => void;
 }
 
-function StartGameModal({ sets, open, handleClose }: Props) {
+function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
   const [loading, setLoading] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedSets, setSelectedSets] = useState<Set[]>([]);
   const [shownLanguage, setShownLanguage] = useState("GB");
   const [languages, setLanguages] = useState<string[]>([]);
@@ -144,7 +146,7 @@ function StartGameModal({ sets, open, handleClose }: Props) {
                   }
                 }}
               >
-                {set.setName} ({set.numberOfQuestions})
+                {set.setName} ({set.questions.length})
               </span>
             ))}
         </div>
@@ -154,6 +156,7 @@ function StartGameModal({ sets, open, handleClose }: Props) {
           <button
             onClick={() => {
               handleClose();
+              setIsUploadModalOpen(true);
             }}
             className="text-blue-600 hover:text-blue-800 focus:outline-none font-bold"
           >
@@ -170,6 +173,14 @@ function StartGameModal({ sets, open, handleClose }: Props) {
           {loading ? "Loading..." : "Play for Free"}
         </button>
       </Modal>
+
+      <UploadModal
+        open={isUploadModalOpen}
+        handleClose={() => {
+          handleOpen();
+          setIsUploadModalOpen(false);
+        }}
+      />
     </>
   );
 }

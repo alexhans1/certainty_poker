@@ -31,7 +31,6 @@ export interface Answer {
 }
 
 export interface Question {
-  id: string;
   type: QuestionTypes;
   question: string;
   answer: Answer;
@@ -99,6 +98,5 @@ export interface Set {
   setName: string;
   questions: Question[];
   language: string;
-  numberOfQuestions: number;
   isPromotedUntil?: number;
 }

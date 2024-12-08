@@ -4,7 +4,6 @@ import {
   arrayUnion,
   collection,
   doc,
-  getDocs,
   getFirestore,
   Timestamp,
   updateDoc,
@@ -19,6 +18,7 @@ import {
   Set,
 } from "../interfaces";
 import { v4 } from "uuid";
+import countryCodes from "../assets/countryCodes";
 
 const db = getFirestore(app, "certainty-poker");
 
@@ -82,11 +82,19 @@ export const addGuess = async (
   });
 };
 
-export const fetchQuestionSets = async () => {
-  const querySnapshot = await getDocs(collection(db, "question-sets"));
-  const newData = querySnapshot.docs.map((doc) => doc.data() as Set);
+export const uploadQuestions = async (
+  questions: Question[],
+  setName: string,
+  language: keyof typeof countryCodes,
+  _isPrivate?: boolean
+) => {
+  const newSet: Set = {
+    questions,
+    setName,
+    language,
+  };
 
-  return newData;
+  await addDoc(collection(db, "question-sets"), newSet);
 };
 
 export const revealGuess = async (
