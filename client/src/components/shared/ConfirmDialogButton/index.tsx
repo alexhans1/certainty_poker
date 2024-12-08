@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogActions, DialogTitle } from "@mui/material";
 
 interface Props {
@@ -18,7 +18,8 @@ export default function ConfirmDialogButton({
   isDisabled,
   btnClassName,
 }: Props) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -27,9 +28,11 @@ export default function ConfirmDialogButton({
     setOpen(false);
   };
 
-  const handleConfirm = () => {
-    onConfirm();
+  const handleConfirm = async () => {
+    setLoading(true);
+    await onConfirm();
     setOpen(false);
+    setLoading(false);
   };
 
   return (
@@ -52,10 +55,11 @@ export default function ConfirmDialogButton({
               Cancel
             </button>
             <button
+              disabled={loading}
               className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
               onClick={handleConfirm}
             >
-              {confirmLabel}
+              {loading ? "Loading..." : confirmLabel}
             </button>
           </DialogActions>
         </div>
