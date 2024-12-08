@@ -109,6 +109,7 @@ function GameComponent() {
     // Cleanup subscription on component unmount
     return () => {
       unsubscribe();
+      clearInterval(soundInterval);
     };
   }, [gameId, playAlert, playNotification, playerId, setGame]);
 
