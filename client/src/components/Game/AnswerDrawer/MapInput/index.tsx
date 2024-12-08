@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { GeoCoordinate } from "../../../../interfaces";
-import Map from "../../../Game/Map";
+import Map from "../../Map";
 
 interface Props {
   handleSubmit: (guess: GeoCoordinate) => void;

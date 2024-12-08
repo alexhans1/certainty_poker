@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Set } from "../../interfaces.ts";
-import PictureHalf from "./PictureHalf";
-import ActionableHalf from "./ActionableHalf";
-import { fetchQuestionSets } from "../../db";
+import PictureHalf from "./PictureHalf/index.tsx";
+import ActionableHalf from "./ActionableHalf/index.tsx";
+import { fetchQuestionSets } from "../../db/index.ts";
 
 import "./styles.css";
 

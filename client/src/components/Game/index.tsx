@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { AiFillFileUnknown } from "react-icons/ai";
-import { Game, Guess } from "../../interfaces";
+import { Game, Guess } from "../../interfaces.ts";
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage.ts";
-import PreGameLobby from "./PreGameLobby";
-import PokerTable from "./PokerTable";
-import AnswerDrawer from "./AnswerDrawer";
-import Footer from "./Footer";
-import LeaveGameButton from "./LeaveGameButton";
-import ErrorFallback from "../ErrorBoundary";
+import PreGameLobby from "./PreGameLobby/index.tsx";
+import PokerTable from "./PokerTable/index.tsx";
+import AnswerDrawer from "./AnswerDrawer/index.tsx";
+import Footer from "./Footer/index.tsx";
+import LeaveGameButton from "./LeaveGameButton/index.tsx";
+import ErrorFallback from "../ErrorBoundary.tsx";
 import {
   getCurrentQuestionRound,
   getCurrentBettingRound,
   getPreviousQuestionRound,
   haveAllPlayersPlacedTheirGuess,
-} from "./helpers";
+} from "./helpers/index.ts";
 // @ts-ignore
 import notificationSound from "../../assets/turn-notification.mp3";
 // @ts-ignore
@@ -23,12 +23,12 @@ import alertSound from "../../assets/turn-alert.wav";
 import "./styles.css";
 import { withErrorBoundary } from "react-error-boundary";
 import { doc, onSnapshot } from "firebase/firestore";
-import db, { addGuess, createPlayer } from "../../db";
+import db, { addGuess, createPlayer } from "../../db/index.ts";
 import {
   startGame as startGameRequest,
   placeBet as placeBetRequest,
 } from "../../api/index.ts";
-import GameProvider, { useGame } from "./Context";
+import GameProvider, { useGame } from "./Context/index.tsx";
 
 const vibrate = (t: number) => {
   window.navigator.vibrate && window.navigator.vibrate(t);
