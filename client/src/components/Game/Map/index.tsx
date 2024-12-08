@@ -11,7 +11,7 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { equals } from "../../../../node_modules/@types/ramda";
+import { equals } from "ramda";
 import { GeoCoordinate } from "../../../interfaces";
 
 import "./styles.css";
