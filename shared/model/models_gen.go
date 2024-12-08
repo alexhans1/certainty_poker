@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type Answer struct {
 	Numerical *float64       `firestore:"numerical"`
 	Geo       *GeoCoordinate `firestore:"geo"`
@@ -24,24 +26,19 @@ type Game struct {
 	Questions      []*Question      `firestore:"questions"`
 	IsOver         bool             `firestore:"isOver"`
 	SetNames       []string         `firestore:"setNames"`
+	TTL            time.Time        `firestore:"ttl,omitempty"`
 }
 
 type GeoCoordinate struct {
 	Longitude       float64  `firestore:"longitude"`
 	Latitude        float64  `firestore:"latitude"`
-	ToleranceRadius *float64 `firestore:"toleranceRadius"`
-}
-
-type GeoCoordinateInput struct {
-	Longitude       float64  `firestore:"longitude"`
-	Latitude        float64  `firestore:"latitude"`
-	ToleranceRadius *float64 `firestore:"toleranceRadius"`
+	ToleranceRadius *float64 `firestore:"toleranceRadius,omitempty"`
 }
 
 type Guess struct {
 	Guess      *Answer  `firestore:"guess"`
 	PlayerID   string   `firestore:"playerId"`
-	Difference *float64 `firestore:"difference"`
+	Difference *float64 `firestore:"difference,omitempty"`
 }
 
 type Player struct {
@@ -54,13 +51,13 @@ type Player struct {
 }
 
 type Question struct {
-	ID                 string        `firestore:"id"`
+	ID                 string        `firestore:"id,omitempty"`
 	Type               QuestionTypes `firestore:"type"`
 	Question           string        `firestore:"question"`
 	Answer             *Answer       `firestore:"answer"`
-	Alternatives       []string      `firestore:"alternatives"`
+	Alternatives       []string      `firestore:"alternatives,omitempty"`
 	HiddenAlternatives []string      `firestore:"hiddenAlternatives,omitempty"`
-	Hints              []string      `firestore:"hints"`
+	Hints              []string      `firestore:"hints,omitempty"`
 	Explanation        *string       `firestore:"explanation,omitempty"`
 }
 
