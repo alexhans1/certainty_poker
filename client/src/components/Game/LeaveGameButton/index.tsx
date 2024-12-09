@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Game, Player } from "../../../interfaces";
 import { deletePlayerIdFromStorage } from "../../../storage";
 import ConfirmDialogButton from "../../shared/ConfirmDialogButton";
 import { IoExit } from "react-icons/io5";
+import { removePlayer as removePlayerRequest } from "../../../api";
 
 interface Props {
   gameId?: Game["id"];
@@ -17,8 +18,10 @@ function LeaveGameButton({
   gameHasStarted,
   setPlayerId,
 }: Props) {
-  const removePlayer = (_playerId: string, gameId: string) => {
-    // todo handle remove player
+  const [loading, setLoading] = useState(false);
+
+  const removePlayer = async (playerId: string, gameId: string) => {
+    await removePlayerRequest({ gameId, playerId });
     deletePlayerIdFromStorage(gameId);
     setPlayerId(undefined);
   };
@@ -27,8 +30,10 @@ function LeaveGameButton({
     return null;
   }
 
-  const handleConfirm = () => {
-    removePlayer(playerId, gameId);
+  const handleConfirm = async () => {
+    setLoading(true);
+    await removePlayer(playerId, gameId);
+    setLoading(false);
   };
 
   return (
@@ -45,6 +50,7 @@ function LeaveGameButton({
       confirmLabel="Leave Game"
       buttonLabel={<IoExit />}
       btnClassName="leave-game btn btn-link btn-lg"
+      isDisabled={loading}
     />
   );
 }
