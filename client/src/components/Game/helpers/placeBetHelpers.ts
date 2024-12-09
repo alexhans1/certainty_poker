@@ -4,7 +4,7 @@ import { calculateAmountToCall } from "./helpers";
 
 export type PlaceBet = (amount: number) => Promise<void>;
 
-export const check = (
+export const check = async (
   placeBet: PlaceBet,
   game: Game,
   playerId: Player["id"]
@@ -24,10 +24,10 @@ export const check = (
     return;
   }
 
-  placeBet(0);
+  await placeBet(0);
 };
 
-export const call = (
+export const call = async (
   placeBet: PlaceBet,
   game: Game,
   playerId: Player["id"]
@@ -45,10 +45,10 @@ export const call = (
   const moneyOfPlayer =
     game.players.find(({ id }) => id === playerId)?.money ?? 0;
 
-  placeBet(Math.min(amountToCall, moneyOfPlayer));
+  await placeBet(Math.min(amountToCall, moneyOfPlayer));
 };
 
-export const raise = (
+export const raise = async (
   amount: number,
   placeBet: PlaceBet,
   game: Game,
@@ -71,10 +71,10 @@ export const raise = (
   const moneyOfPlayer =
     game.players.find(({ id }) => id === playerId)?.money ?? 0;
 
-  placeBet(Math.min(amount, moneyOfPlayer));
+  await placeBet(Math.min(amount, moneyOfPlayer));
 };
 
-export const fold = (
+export const fold = async (
   placeBet: PlaceBet,
   game: Game,
   playerId: Player["id"]
@@ -88,5 +88,5 @@ export const fold = (
     return;
   }
 
-  placeBet(-1);
+  await placeBet(-1);
 };

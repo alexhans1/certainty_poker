@@ -33,6 +33,8 @@ export default function ActionButtons({
   isAppPlayerTurn,
 }: ActionButtonsProps) {
   const [showRaiseDrawer, setShowRaiseDrawer] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   if (!usedQuestionRound || !currentBettingRound) {
     return null;
   }
@@ -45,10 +47,12 @@ export default function ActionButtons({
     <div className="grid md:grid-cols-3 gap-3 md:gap-4">
       <ActionButton
         text={amountToCall > 0 ? `Call for ${amountToCall}` : "Check"}
-        handleOnClick={() => {
-          call(placeBet, game, playerId);
+        handleOnClick={async () => {
+          setLoading(true);
+          await call(placeBet, game, playerId);
+          setLoading(false);
         }}
-        isDisabled={!isAppPlayerTurn}
+        isDisabled={!isAppPlayerTurn || loading}
       />
       <ActionButton
         text="Raise"
@@ -56,15 +60,19 @@ export default function ActionButtons({
           setShowRaiseDrawer(true);
         }}
         isDisabled={
-          (player?.money && amountToCall >= player?.money) || !isAppPlayerTurn
+          (player?.money && amountToCall >= player?.money) ||
+          !isAppPlayerTurn ||
+          loading
         }
       />
       <ActionButton
         text="Fold"
-        handleOnClick={() => {
-          fold(placeBet, game, playerId);
+        handleOnClick={async () => {
+          setLoading(true);
+          await fold(placeBet, game, playerId);
+          setLoading(false);
         }}
-        isDisabled={!isAppPlayerTurn}
+        isDisabled={!isAppPlayerTurn || loading}
       />
       <RaiseInputDrawer
         {...{

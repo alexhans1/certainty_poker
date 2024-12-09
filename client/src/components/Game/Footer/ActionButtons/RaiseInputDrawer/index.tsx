@@ -29,10 +29,13 @@ export default function RaiseInputDrawer({
   const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
   const moneyRemaining = game.players.find(({ id }) => id === playerId)?.money;
   const [amount, setAmount] = useState(amountToCall);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
-    handleRaise(amount, placeBet, game, playerId);
+  const handleSubmit = async () => {
+    setLoading(true);
+    await handleRaise(amount, placeBet, game, playerId);
     setShowRaiseDrawer(false);
+    setLoading(false);
   };
 
   return (
@@ -71,8 +74,9 @@ export default function RaiseInputDrawer({
           />
           <button
             disabled={
-              !!moneyRemaining &&
-              (amount < amountToCall || amount > moneyRemaining)
+              loading ||
+              (!!moneyRemaining &&
+                (amount < amountToCall || amount > moneyRemaining))
             }
             className="bg-blue-500 mr-auto rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
             onClick={handleSubmit}
