@@ -1,0 +1,1 @@
+FUNCTION_TARGET=removePlayer LOCAL_ONLY=true GOOGLE_PROJECT_ID="certainty-poker" GOOGLE_APPLICATION_CREDENTIALS="/Users/alexhans/Desktop/certainty-poker-service-account-key.json" go run cmd/main.go
