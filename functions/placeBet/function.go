@@ -6,7 +6,7 @@ import (
 
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 	"github.com/alexhans1/certainty_poker/functions/placeBet/handler"
-	cors "github.com/alexhans1/certainty_poker/shared/api"
+	"github.com/alexhans1/certainty_poker/shared/api"
 )
 
 type RequestBody struct {
@@ -18,7 +18,7 @@ type RequestBody struct {
 }
 
 func init() {
-	functions.HTTP("placeBet", cors.CorsMiddleware(httpHandler))
+	functions.HTTP("placeBet", api.NewHttpHandler(httpHandler))
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {

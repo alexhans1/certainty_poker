@@ -6,7 +6,7 @@ import (
 
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 	"github.com/alexhans1/certainty_poker/functions/removePlayer/handler"
-	cors "github.com/alexhans1/certainty_poker/shared/api"
+	"github.com/alexhans1/certainty_poker/shared/api"
 )
 
 type RequestBody struct {
@@ -17,7 +17,7 @@ type RequestBody struct {
 }
 
 func init() {
-	functions.HTTP("removePlayer", cors.CorsMiddleware(httpHandler))
+	functions.HTTP("removePlayer", api.NewHttpHandler(httpHandler))
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
