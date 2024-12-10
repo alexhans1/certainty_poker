@@ -114,7 +114,6 @@ export const revealGuess = async (
   }
 
   if (currentQuestionRound.revealedGuesses.includes(playerId)) {
-    console.log("playerId", playerId);
     return;
   }
 
