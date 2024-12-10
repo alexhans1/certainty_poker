@@ -21,8 +21,8 @@ const app = initializeApp(firebaseConfig);
 // Create a ReCaptchaEnterpriseProvider instance using your reCAPTCHA Enterprise
 // site key and pass it to initializeAppCheck().\
 if (import.meta.env.DEV) {
-  (self as any).VITE_FIREBASE_APPCHECK_DEBUG_TOKEN =
-    import.meta.env.APP_CHECK_DEBUG_TOKEN;
+  (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
+    import.meta.env.VITE_APP_CHECK_DEBUG_TOKEN;
 }
 initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider(
