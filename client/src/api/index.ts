@@ -4,6 +4,14 @@ import { BetInput } from "../interfaces";
 
 const functions = getFunctions(app, "europe-west3");
 
+const handleError = (error: Error) => {
+  if ((error as Error).message === "Response is not valid JSON object.") {
+    console.log("error", error);
+    return;
+  }
+  throw error;
+};
+
 const startGameCallable = httpsCallable<{ gameId: string }, void>(
   functions,
   "startGame"
@@ -12,7 +20,7 @@ export const startGame = async (payload: { gameId: string }) => {
   try {
     await startGameCallable(payload);
   } catch (error) {
-    console.log("error", error);
+    handleError(error as Error);
   }
 };
 
@@ -21,7 +29,7 @@ export const placeBet = async (payload: BetInput) => {
   try {
     await placeBetCallable(payload);
   } catch (error) {
-    console.log("error", error);
+    handleError(error as Error);
   }
 };
 
@@ -36,6 +44,6 @@ export const removePlayer = async (payload: {
   try {
     await removePlayerCallable(payload);
   } catch (error) {
-    console.log("error", error);
+    handleError(error as Error);
   }
 };
