@@ -16,8 +16,8 @@ cloud.google.com/go/longrunning v0.6.0/go.mod h1:uHzSZqW89h7/pasCWNYdUpwGz3PcVWh
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/GoogleCloudPlatform/functions-framework-go v1.9.0 h1:Fq0sKuCyyFFVFm1r6fEQJ4TRnbbhXP9Q6MEUX+UAd/0=
 github.com/GoogleCloudPlatform/functions-framework-go v1.9.0/go.mod h1:8Ww7VHPCGKqCfZOCT9INIiakNgGQPGRfL4U4yy5F5Kc=
-github.com/alexhans1/certainty_poker v0.0.5 h1:VHx2sZorOm64ZLyQmrTMpNcZ02bcgA/GDBC7vuI6Es8=
-github.com/alexhans1/certainty_poker v0.0.5/go.mod h1:j+n6wtserepVOaSQ7UVRc4x+O++0lW+tYTE8dd/p9tc=
+github.com/alexhans1/certainty_poker v0.0.6 h1:96kRztbDmtd0WiK/lj/nm7JfeEo2s4QTFGwCxx3EQwY=
+github.com/alexhans1/certainty_poker v0.0.6/go.mod h1:j+n6wtserepVOaSQ7UVRc4x+O++0lW+tYTE8dd/p9tc=
 github.com/alexhans1/poker-chip-allocation v0.0.0-20201019174247-e38068d87cea h1:9gyjL8zB181HhVDkBveFvnTpXB/LH1z0pGxLJa43CJ4=
 github.com/alexhans1/poker-chip-allocation v0.0.0-20201019174247-e38068d87cea/go.mod h1:1FVoHa0D3NtYJ941GEWbQyqA0Gyk60HS5BMg6zsrSjw=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
