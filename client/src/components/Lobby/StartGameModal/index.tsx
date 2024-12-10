@@ -53,9 +53,14 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
   const handleCreateGame = async () => {
     if (selectedSets.length) {
       setLoading(true);
-      await createGame(selectedSets, (gameId: string) => {
-        navigate(`/${gameId}`);
-      });
+      try {
+        await createGame(selectedSets, (gameId: string) => {
+          navigate(`/${gameId}`);
+        });
+      } catch (error) {
+        setLoading(false);
+        throw error;
+      }
       setLoading(false);
     }
   };
@@ -168,7 +173,7 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
         <button
           className="mt-3 bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mr-auto"
           onClick={handleCreateGame}
-          disabled={!selectedSets.length}
+          disabled={!selectedSets.length || loading}
         >
           {loading ? "Loading..." : "Play for Free"}
         </button>
