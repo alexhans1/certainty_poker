@@ -5,8 +5,10 @@ import PictureHalf from "./PictureHalf/index.tsx";
 import ActionableHalf from "./ActionableHalf/index.tsx";
 import db from "../../db/index.ts";
 import { collection, onSnapshot } from "firebase/firestore";
+import ErrorFallback from "../ErrorBoundary.tsx";
 
 import "./styles.css";
+import { withErrorBoundary } from "react-error-boundary";
 
 function Lobby() {
   const { setName } = useParams<{ setName: string }>();
@@ -35,4 +37,9 @@ function Lobby() {
   );
 }
 
-export default Lobby;
+export default withErrorBoundary(Lobby, {
+  onError: (error) => {
+    console.error("Uncaught error:", error);
+  },
+  FallbackComponent: ErrorFallback,
+});
