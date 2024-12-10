@@ -72,6 +72,8 @@ function GameComponent() {
         if (docSnapshot.exists()) {
           clearInterval(soundInterval);
           const updatedGame = { ...docSnapshot.data(), id: gameId } as Game;
+          if (!updatedGame.players) updatedGame.players = [];
+          if (!updatedGame.questionRounds) updatedGame.questionRounds = [];
           setGame(updatedGame);
 
           const cqr = getCurrentQuestionRound(updatedGame);
