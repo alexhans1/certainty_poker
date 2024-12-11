@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { DateInput } from "rsuite";
 
 import { QuestionTypes } from "../../../../interfaces";
 import FormattedGuess from "../../Guess";
-import DatePicker from "./DatePicker";
 
 interface Props {
   handleSubmit: (guess: number) => void;
@@ -16,16 +16,17 @@ function formatDateToNumber(date: Date): number {
   return parseInt(`${year}${month}${day}`, 10);
 }
 
-function DateInput({ handleSubmit }: Props) {
-  const [guess, setGuess] = useState<Date>();
+function DateInputComp({ handleSubmit }: Props) {
+  const [guess, setGuess] = useState(new Date());
 
   return (
     <div className="grid grid-cols-2 gap-4">
-      <DatePicker
+      <DateInput
+        className="pl-2"
+        format="dd/MM/yyyy"
+        value={guess}
         onChange={(dateValue) => {
-          if (dateValue) {
-            setGuess(dateValue as Date);
-          }
+          setGuess(dateValue as Date);
         }}
       />
       <button
@@ -57,4 +58,4 @@ function DateInput({ handleSubmit }: Props) {
   );
 }
 
-export default DateInput;
+export default DateInputComp;
