@@ -1,5 +1,5 @@
-import { Player, Game } from "../../../interfaces";
-import { getCurrentQuestionRound, getCurrentBettingRound } from ".";
+import { getCurrentBettingRound, getCurrentQuestionRound } from ".";
+import { Game, Player } from "../../../interfaces";
 import { calculateAmountToCall } from "./helpers";
 
 export type PlaceBet = (amount: number) => Promise<void>;
@@ -7,7 +7,7 @@ export type PlaceBet = (amount: number) => Promise<void>;
 export const check = async (
   placeBet: PlaceBet,
   game: Game,
-  playerId: Player["id"]
+  playerId: Player["id"],
 ) => {
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
@@ -30,7 +30,7 @@ export const check = async (
 export const call = async (
   placeBet: PlaceBet,
   game: Game,
-  playerId: Player["id"]
+  playerId: Player["id"],
 ) => {
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
@@ -52,7 +52,7 @@ export const raise = async (
   amount: number,
   placeBet: PlaceBet,
   game: Game,
-  playerId: Player["id"]
+  playerId: Player["id"],
 ) => {
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);
@@ -77,7 +77,7 @@ export const raise = async (
 export const fold = async (
   placeBet: PlaceBet,
   game: Game,
-  playerId: Player["id"]
+  playerId: Player["id"],
 ) => {
   const currentQuestionRound = getCurrentQuestionRound(game);
   const currentBettingRound = getCurrentBettingRound(currentQuestionRound);

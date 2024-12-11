@@ -25,7 +25,7 @@ export default React.memo(
     }
 
     const playerGuess = usedQuestionRound.guesses.find(
-      (g) => g.playerId === playerId
+      (g) => g.playerId === playerId,
     );
 
     const mapMarkers: MarkerType[] = playerGuess?.guess.geo
@@ -59,8 +59,8 @@ export default React.memo(
             }
             return acc;
           },
-          []
-        )
+          [],
+        ),
       );
     }
     if (
@@ -77,5 +77,5 @@ export default React.memo(
     }
 
     return <Map className={className} markers={mapMarkers} />;
-  }
+  },
 );

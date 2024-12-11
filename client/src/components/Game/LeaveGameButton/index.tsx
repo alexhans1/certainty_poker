@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { IoExit } from "react-icons/io5";
+import { removePlayer as removePlayerRequest } from "../../../api";
 import { Game, Player } from "../../../interfaces";
 import { deletePlayerIdFromStorage } from "../../../storage";
 import ConfirmDialogButton from "../../shared/ConfirmDialogButton";
-import { IoExit } from "react-icons/io5";
-import { removePlayer as removePlayerRequest } from "../../../api";
 
 interface Props {
   gameId?: Game["id"];

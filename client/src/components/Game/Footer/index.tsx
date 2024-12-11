@@ -2,19 +2,19 @@ import React from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { GrMoney } from "react-icons/gr";
 import {
-  QuestionRound,
   BettingRound,
   Player,
+  QuestionRound,
   QuestionTypes,
 } from "../../../interfaces";
-import ActionButtons, { ActionButtonsProps } from "./ActionButtons";
+import FormattedGuess from "../Guess";
 import {
   calculateBettingRoundSpendingForPlayer,
   hasPlayerFolded,
   haveAllPlayersPlacedTheirGuess,
 } from "../helpers";
-import FormattedGuess from "../Guess";
 import Status from "../PokerTable/Player/Status";
+import ActionButtons, { ActionButtonsProps } from "./ActionButtons";
 
 interface Props
   extends Omit<
@@ -42,7 +42,7 @@ const Footer = ({
     haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
 
   const appPlayerAnswer = usedQuestionRound.guesses.find(
-    (guess) => guess.playerId === player.id
+    (guess) => guess.playerId === player.id,
   );
 
   let appPlayerMoney = game.players.find((p) => p.id === player.id)?.money ?? 0;
@@ -58,7 +58,7 @@ const Footer = ({
 
   const { changeInMoney = 0 } =
     usedQuestionRound?.results?.find(
-      ({ playerId }) => player.id === playerId
+      ({ playerId }) => player.id === playerId,
     ) || {};
 
   const allPlayersPlacedTheirGuess =

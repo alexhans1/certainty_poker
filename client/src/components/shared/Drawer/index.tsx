@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
-import "./styles.css";
 import { Drawer, DrawerProps } from "@mui/material";
+import "./styles.css";
 
 interface Props extends DrawerProps {
   children: ReactNode;

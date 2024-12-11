@@ -1,9 +1,4 @@
 import React from "react";
-import Drawer from "../../shared/Drawer";
-import NumberInput from "./NumberInput";
-import DateInput from "./DateInput";
-import MapInput from "./MapInput";
-import MultipleChoiceInput from "./MultipleChoiceInput";
 import {
   Answer,
   Game,
@@ -13,6 +8,11 @@ import {
   QuestionRound,
   QuestionTypes,
 } from "../../../interfaces";
+import Drawer from "../../shared/Drawer";
+import DateInput from "./DateInput";
+import MapInput from "./MapInput";
+import MultipleChoiceInput from "./MultipleChoiceInput";
+import NumberInput from "./NumberInput";
 
 interface QuestionProps {
   game: Game;
@@ -70,7 +70,7 @@ export default function AnswerDrawer({
         return <MapInput handleSubmit={handleMapInputSubmit} />;
       case QuestionTypes.MULTIPLE_CHOICE: {
         const alternatives = currentQuestionRound.question.alternatives?.map(
-          (alt) => ({ value: alt, active: true })
+          (alt) => ({ value: alt, active: true }),
         );
         return (
           <MultipleChoiceInput

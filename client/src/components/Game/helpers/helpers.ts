@@ -1,18 +1,18 @@
 import {
-  QuestionRound,
-  Player,
-  Game,
   BettingRound,
+  Game,
+  Player,
+  QuestionRound,
   QuestionTypes,
 } from "../../../interfaces";
 
 export const calculateBettingRoundSpendingForPlayer = (
   bettingRound: BettingRound,
-  playerId: Player["id"]
+  playerId: Player["id"],
 ) => {
   return bettingRound.bets.reduce(
     (sum, bet) => sum + (bet.playerId === playerId ? bet.amount : 0),
-    0
+    0,
   );
 };
 
@@ -29,7 +29,7 @@ export const getCurrentBettingRound = (currentQuestionRound?: QuestionRound) =>
 
 export const haveAllPlayersPlacedTheirGuess = (
   currentQuestionRound: QuestionRound,
-  players: Player[]
+  players: Player[],
 ) => {
   const remainingPlayers = players.filter((player) => !player.isDead);
   return currentQuestionRound.guesses.length >= remainingPlayers.length;
@@ -37,7 +37,7 @@ export const haveAllPlayersPlacedTheirGuess = (
 
 export const calculateAmountToCall = (
   bettingRound: BettingRound,
-  playerId: Player["id"]
+  playerId: Player["id"],
 ): number => {
   if (!bettingRound.bets.length) return 0;
   const amountSpentAlreadyInBettingRound =
@@ -48,7 +48,7 @@ export const calculateAmountToCall = (
       acc[bet.playerId] = (acc[bet.playerId] || 0) + bet.amount;
       return acc;
     },
-    {} as { [key: string]: number }
+    {} as { [key: string]: number },
   );
 
   return (
@@ -59,7 +59,7 @@ export const calculateAmountToCall = (
 
 export const hasPlayerFolded = (
   currentQuestionRound: QuestionRound,
-  playerId: Player["id"]
+  playerId: Player["id"],
 ) => currentQuestionRound?.foldedPlayerIds.includes(playerId);
 
 export const getRevealAnswer = (questionRound: QuestionRound) => {

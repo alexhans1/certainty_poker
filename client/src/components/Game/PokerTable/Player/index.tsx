@@ -1,6 +1,5 @@
 import { FaRegLightbulb } from "react-icons/fa";
 import { GrMoney } from "react-icons/gr";
-import Status from "./Status";
 import {
   BettingRound,
   Game,
@@ -9,9 +8,10 @@ import {
   Question,
   QuestionTypes,
 } from "../../../../interfaces";
-import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
 import FormattedGuess from "../../Guess";
+import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
 import RevealGuessButton from "./RevealGuessButton";
+import Status from "./Status";
 
 import "./styles.css";
 

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
-import { Question, QuestionTypes } from "../../../interfaces";
-import countryCodes from "../../../assets/countryCodes";
-import Guess from "../../Game/Guess";
 import { Modal } from "@mui/material";
+import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
+import React, { useState } from "react";
+import countryCodes from "../../../assets/countryCodes";
 import { uploadQuestions as uploadQuestionsRequest } from "../../../db";
+import { Question, QuestionTypes } from "../../../interfaces";
+import Guess from "../../Game/Guess";
 import { validateQuestions } from "./validateQuestions";
 
 interface Props {
@@ -116,7 +116,7 @@ function UploadModal({ open, handleClose }: Props) {
           value={language}
           onChange={(e) => {
             setLanguage(
-              e.target.value as keyof typeof countryCodes | undefined
+              e.target.value as keyof typeof countryCodes | undefined,
             );
           }}
         >

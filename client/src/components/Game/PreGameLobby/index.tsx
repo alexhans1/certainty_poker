@@ -1,8 +1,8 @@
 import { FiCopy } from "react-icons/fi";
-import PlayerSpot from "./PlayerSpot";
 import { Game, Player } from "../../../interfaces";
-import StartGameButton, { StartGame } from "./StartGameButton";
 import NameInputDrawer, { CreatePlayer } from "../NameInputDrawer";
+import PlayerSpot from "./PlayerSpot";
+import StartGameButton, { StartGame } from "./StartGameButton";
 
 interface Props {
   players: Player[];

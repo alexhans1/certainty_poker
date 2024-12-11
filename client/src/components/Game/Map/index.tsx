@@ -1,17 +1,17 @@
-import React, { ReactNode, useState } from "react";
 import { LatLng, latLngBounds, LatLngExpression } from "leaflet";
+import { equals } from "ramda";
+import React, { ReactNode, useState } from "react";
 import {
+  Circle,
   FeatureGroup,
   MapContainer,
   Marker,
   Polyline,
   TileLayer,
-  Circle,
   Tooltip,
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { equals } from "ramda";
 import { GeoCoordinate } from "../../../interfaces";
 
 import "./styles.css";
@@ -91,11 +91,11 @@ export default React.memo(
             new LatLng(m.position.latitude, m.position.longitude),
             new LatLng(
               answerMarker.position.latitude,
-              answerMarker.position.longitude
+              answerMarker.position.longitude,
             ),
           ],
           label: m.distanceToAnswer?.toFixed(
-            getNumberOfDecimals(m.distanceToAnswer)
+            getNumberOfDecimals(m.distanceToAnswer),
           ),
         }));
 
@@ -172,5 +172,5 @@ export default React.memo(
       </MapContainer>
     );
   },
-  (prevProps, nextProps) => equals(prevProps.markers, nextProps.markers)
+  (prevProps, nextProps) => equals(prevProps.markers, nextProps.markers),
 );

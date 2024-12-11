@@ -14,7 +14,7 @@ const handleError = (error: Error) => {
 
 const startGameCallable = httpsCallable<{ gameId: string }, void>(
   functions,
-  "startGame"
+  "startGame",
 );
 export const startGame = async (payload: { gameId: string }) => {
   try {

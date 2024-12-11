@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
+import { useEffect, useState } from "react";
 import { FiCopy } from "react-icons/fi";
+import { useNavigate } from "react-router";
+import countryCodes from "../../../assets/countryCodes";
 import { Set } from "../../../interfaces";
 import Modal from "../../shared/Modal";
-import countryCodes from "../../../assets/countryCodes";
 
-import "./styles.css";
 import { createGame } from "../../../db";
 import UploadModal from "../UploadModal";
+import "./styles.css";
 
 interface Props {
   sets: Set[];
@@ -128,7 +128,7 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
                 }`}
                 style={{
                   gridColumn: `span ${Math.round(
-                    Math.pow(set.setName.length, 0.35)
+                    Math.pow(set.setName.length, 0.35),
                   )}`,
                 }}
                 onClick={(e) => {
@@ -140,8 +140,8 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
                     ) {
                       setSelectedSets(
                         selectedSets.filter(
-                          ({ setName }) => set.setName !== setName
-                        )
+                          ({ setName }) => set.setName !== setName,
+                        ),
                       );
                     } else {
                       setSelectedSets([set, ...selectedSets]);

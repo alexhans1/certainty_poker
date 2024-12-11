@@ -1,34 +1,34 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import { AiFillFileUnknown } from "react-icons/ai";
+import { useParams } from "react-router";
 import { Game, Guess } from "../../interfaces.ts";
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage.ts";
-import PreGameLobby from "./PreGameLobby/index.tsx";
-import PokerTable from "./PokerTable/index.tsx";
+import ErrorFallback from "../ErrorBoundary.tsx";
 import AnswerDrawer from "./AnswerDrawer/index.tsx";
 import Footer from "./Footer/index.tsx";
-import LeaveGameButton from "./LeaveGameButton/index.tsx";
-import ErrorFallback from "../ErrorBoundary.tsx";
 import {
-  getCurrentQuestionRound,
   getCurrentBettingRound,
+  getCurrentQuestionRound,
   getPreviousQuestionRound,
   haveAllPlayersPlacedTheirGuess,
 } from "./helpers/index.ts";
+import LeaveGameButton from "./LeaveGameButton/index.tsx";
+import PokerTable from "./PokerTable/index.tsx";
+import PreGameLobby from "./PreGameLobby/index.tsx";
 // @ts-ignore
 import notificationSound from "../../assets/turn-notification.mp3";
 // @ts-ignore
 import alertSound from "../../assets/turn-alert.wav";
 
-import "./styles.css";
-import { withErrorBoundary } from "react-error-boundary";
 import { doc, onSnapshot } from "firebase/firestore";
-import db, { addGuess, createPlayer } from "../../db/index.ts";
+import { withErrorBoundary } from "react-error-boundary";
 import {
-  startGame as startGameRequest,
   placeBet as placeBetRequest,
+  startGame as startGameRequest,
 } from "../../api/index.ts";
+import db, { addGuess, createPlayer } from "../../db/index.ts";
 import GameProvider, { useGame } from "./Context/index.tsx";
+import "./styles.css";
 
 const vibrate = (t: number) => {
   window.navigator.vibrate && window.navigator.vibrate(t);
@@ -105,7 +105,7 @@ function GameComponent() {
       (error) => {
         errorHandler(error);
         setLoading(false);
-      }
+      },
     );
 
     // Cleanup subscription on component unmount
@@ -182,7 +182,7 @@ function GameComponent() {
 
   const player = game.players.find((p) => p.id === playerId);
   const playerGuessInCurrentQuestionRound = currentQuestionRound?.guesses.find(
-    (guess) => guess.playerId === playerId
+    (guess) => guess.playerId === playerId,
   );
   const hasPlayerPlacedGuessInCurrentQuestionRound =
     !!playerGuessInCurrentQuestionRound;

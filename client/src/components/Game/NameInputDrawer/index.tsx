@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Drawer from "../../shared/Drawer";
 import { Game, Player } from "../../../interfaces";
+import Drawer from "../../shared/Drawer";
 
 export type CreatePlayer = (gameId: string, playerName: string) => void;
 

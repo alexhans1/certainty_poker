@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Drawer from "../../../../shared/Drawer";
 import { BettingRound, Player } from "../../../../../interfaces";
-import { calculateAmountToCall, PlaceBet, raise } from "../../../helpers";
+import Drawer from "../../../../shared/Drawer";
 import { useGame } from "../../../Context";
+import { calculateAmountToCall, PlaceBet, raise } from "../../../helpers";
 
 interface Props {
   currentBettingRound: BettingRound;

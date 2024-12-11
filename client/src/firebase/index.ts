@@ -21,12 +21,13 @@ const app = initializeApp(firebaseConfig);
 // Create a ReCaptchaEnterpriseProvider instance using your reCAPTCHA Enterprise
 // site key and pass it to initializeAppCheck().\
 if (import.meta.env.DEV) {
-  (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
-    import.meta.env.VITE_APP_CHECK_DEBUG_TOKEN;
+  (
+    self as unknown as { FIREBASE_APPCHECK_DEBUG_TOKEN: string }
+  ).FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_APP_CHECK_DEBUG_TOKEN;
 }
 initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider(
-    import.meta.env.VITE_RECAPTCHA_SITE_KEY
+    import.meta.env.VITE_RECAPTCHA_SITE_KEY,
   ),
   isTokenAutoRefreshEnabled: true, // Set to true to allow auto-refresh.
 });

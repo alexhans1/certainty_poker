@@ -14,7 +14,7 @@ export function validateQuestions(questions: Question[]): void {
       throw new Error(
         `Error with question ${
           i + 1
-        } in your file: "answer" cannot be null for numerical, multiple choice and date questions`
+        } in your file: "answer" cannot be null for numerical, multiple choice and date questions`,
       );
     }
 
@@ -27,7 +27,7 @@ export function validateQuestions(questions: Question[]): void {
       throw new Error(
         `Error with question ${
           i + 1
-        } in your file: "latitude" or "longitude" cannot be null for geo questions`
+        } in your file: "latitude" or "longitude" cannot be null for geo questions`,
       );
     }
 
@@ -36,14 +36,14 @@ export function validateQuestions(questions: Question[]): void {
         throw new Error(
           `Error with question ${
             i + 1
-          } in your file: "answer" must be 1, 2, 3 or 4 for multiple choice questions`
+          } in your file: "answer" must be 1, 2, 3 or 4 for multiple choice questions`,
         );
       }
       if (!q.alternatives || q.alternatives.length < 4) {
         throw new Error(
           `Error with question ${
             i + 1
-          } in your file: All "alternatives" must be set for multiple choice questions`
+          } in your file: All "alternatives" must be set for multiple choice questions`,
         );
       }
     }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import FormattedGuess from "../../Guess";
 import { QuestionTypes } from "../../../../interfaces";
+import FormattedGuess from "../../Guess";
 import DatePicker from "./DatePicker";
 
 interface Props {

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-import { Set } from "../../../interfaces";
 import image from "../../../assets/2021.png";
 import { createGame } from "../../../db";
+import { Set } from "../../../interfaces";
 
 interface Props {
   set: Set;

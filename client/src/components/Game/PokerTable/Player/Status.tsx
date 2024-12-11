@@ -1,6 +1,7 @@
+import { Tooltip } from "@mui/material";
 import React from "react";
 import { AiOutlineQuestion } from "react-icons/ai";
-import { GiLaurelsTrophy, GiPartyPopper } from "react-icons/gi";
+import { CgMore } from "react-icons/cg";
 import {
   FaBell,
   FaRegLightbulb,
@@ -8,10 +9,9 @@ import {
   FaSkullCrossbones,
 } from "react-icons/fa";
 import { FiArrowUp, FiMinus } from "react-icons/fi";
-import { CgMore } from "react-icons/cg";
+import { GiLaurelsTrophy, GiPartyPopper } from "react-icons/gi";
 import { GrClose, GrMoney } from "react-icons/gr";
 import { BettingStates, Player } from "../../../../interfaces";
-import { Tooltip } from "@mui/material";
 
 const StatusWithTooltip = ({
   tooltipTitle,

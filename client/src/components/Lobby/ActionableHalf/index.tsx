@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Set } from "../../../interfaces";
-import StartGameModal from "../StartGameModal";
 import NewSetBanner from "../NewSetBanner";
+import StartGameModal from "../StartGameModal";
 
 interface Props {
   sets?: Set[];

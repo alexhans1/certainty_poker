@@ -1,6 +1,3 @@
-import PlayerComp from "./Player";
-import Pot from "./Pot";
-import Question from "../Question";
 import {
   BettingRound,
   Game,
@@ -8,13 +5,16 @@ import {
   QuestionRound,
   QuestionTypes,
 } from "../../../interfaces";
-import { hasPlayerFolded, haveAllPlayersPlacedTheirGuess } from "../helpers";
 import GuessMap from "../GuessMap";
+import { hasPlayerFolded, haveAllPlayersPlacedTheirGuess } from "../helpers";
 import MultipleChoiceOptions from "../MultipleChoiceOptions";
+import Question from "../Question";
+import PlayerComp from "./Player";
+import Pot from "./Pot";
 
-import "./styles.css";
-import { getWinningPlayerArray } from "./helpers";
 import { maxNumberOfPlayers } from "../PreGameLobby";
+import { getWinningPlayerArray } from "./helpers";
+import "./styles.css";
 interface Props {
   game: Game;
   usedQuestionRound: QuestionRound;
@@ -59,14 +59,14 @@ const PokerTable = ({
             {game.players.map((player, index) => {
               const { changeInMoney } =
                 usedQuestionRound.results?.find(
-                  ({ playerId }) => player.id === playerId
+                  ({ playerId }) => player.id === playerId,
                 ) || {};
               const hasFolded = !!(
                 usedQuestionRound &&
                 hasPlayerFolded(usedQuestionRound, player.id)
               );
               const guess = usedQuestionRound.guesses.find(
-                (g) => g.playerId === player.id
+                (g) => g.playerId === player.id,
               );
               return (
                 <PlayerComp
@@ -138,11 +138,11 @@ const PokerTable = ({
                       value: alt,
                       active:
                         !usedQuestionRound.question.hiddenAlternatives?.includes(
-                          alt
+                          alt,
                         ),
                     })) || [],
                   guess: usedQuestionRound?.guesses.find(
-                    (g) => g.playerId === playerId
+                    (g) => g.playerId === playerId,
                   )?.guess.numerical,
                 }}
               />

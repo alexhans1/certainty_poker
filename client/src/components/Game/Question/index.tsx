@@ -37,7 +37,7 @@ export default function Question({ game, usedQuestionRound }: QuestionProps) {
         }}
       />
       {[QuestionTypes.NUMERICAL, QuestionTypes.DATE].includes(
-        usedQuestionRound.question.type
+        usedQuestionRound.question.type,
       ) &&
         getRevealAnswer(usedQuestionRound) && (
           <>

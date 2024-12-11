@@ -1,6 +1,6 @@
 import { Link, Route, Routes } from "react-router";
-import Lobby from "../Lobby";
 import Game from "../Game";
+import Lobby from "../Lobby";
 
 function PageNotFound() {
   return <p>Page not found.</p>;

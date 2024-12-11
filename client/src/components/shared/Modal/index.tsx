@@ -1,5 +1,5 @@
-import React from "react";
 import { Modal } from "@mui/material";
+import React from "react";
 import { FaTimes } from "react-icons/fa";
 
 interface Props {

@@ -14,7 +14,7 @@ export const getWinningPlayerArray = (game: Game) => {
           }
           return winners;
         },
-        [game.players[0]]
+        [game.players[0]],
       )
       .map((p) => p.id);
   }

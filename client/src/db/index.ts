@@ -8,6 +8,8 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
+import { v4 } from "uuid";
+import countryCodes from "../assets/countryCodes";
 import app from "../firebase";
 import {
   Game,
@@ -18,8 +20,6 @@ import {
   QuestionTypes,
   Set,
 } from "../interfaces";
-import { v4 } from "uuid";
-import countryCodes from "../assets/countryCodes";
 
 const db = getFirestore(app, "certainty-poker");
 
@@ -27,7 +27,7 @@ export default db;
 
 export const createGame = async (
   selectedSets: Set[],
-  onComplete: (gameId: string) => void
+  onComplete: (gameId: string) => void,
 ) => {
   const newGame: Omit<Game, "id"> & { ttl: Timestamp } = {
     questionRounds: [],
@@ -47,7 +47,7 @@ export const createGame = async (
 export const createPlayer = async (
   gameId: string,
   playerName: string,
-  onComplete: (playerId: string) => void
+  onComplete: (playerId: string) => void,
 ) => {
   const player: Player = {
     id: v4(),
@@ -67,7 +67,7 @@ export const addGuess = async (
   gameId: string,
   questionRounds: QuestionRound[],
   currentQuestionRound: QuestionRound,
-  guess: Guess
+  guess: Guess,
 ) => {
   const updatedQuestionRound = {
     ...currentQuestionRound,
@@ -87,7 +87,7 @@ export const uploadQuestions = async (
   questions: Question[],
   setName: string,
   language: keyof typeof countryCodes,
-  _isPrivate?: boolean
+  _isPrivate?: boolean,
 ) => {
   const newSet: Set = {
     questions: questions.map((q) => {
@@ -106,7 +106,7 @@ export const uploadQuestions = async (
 export const revealGuess = async (
   gameId: string,
   playerId: string,
-  questionRounds: QuestionRound[]
+  questionRounds: QuestionRound[],
 ) => {
   const currentQuestionRound = questionRounds[questionRounds.length - 2];
   if (!currentQuestionRound) {

@@ -1,14 +1,14 @@
+import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Set } from "../../interfaces.ts";
-import PictureHalf from "./PictureHalf/index.tsx";
-import ActionableHalf from "./ActionableHalf/index.tsx";
 import db from "../../db/index.ts";
-import { collection, onSnapshot } from "firebase/firestore";
+import { Set } from "../../interfaces.ts";
 import ErrorFallback from "../ErrorBoundary.tsx";
+import ActionableHalf from "./ActionableHalf/index.tsx";
+import PictureHalf from "./PictureHalf/index.tsx";
 
-import "./styles.css";
 import { withErrorBoundary } from "react-error-boundary";
+import "./styles.css";
 
 function Lobby() {
   const { setName } = useParams<{ setName: string }>();
@@ -20,7 +20,7 @@ function Lobby() {
       (querySnapshot) => {
         const newData = querySnapshot.docs.map<Set>((doc) => doc.data() as Set);
         setQuestionSets(newData);
-      }
+      },
     );
 
     // Cleanup subscription on component unmount
