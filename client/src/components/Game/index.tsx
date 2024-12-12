@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 import { AiFillFileUnknown } from "react-icons/ai"
 import { useParams } from "react-router"
 import { Game, Guess } from "../../interfaces.ts"
 import { getPlayerIdFromStorage, setPlayerIdToStorage } from "../../storage.ts"
 import ErrorFallback from "../ErrorBoundary.tsx"
-import AnswerDrawer from "./AnswerDrawer/index.tsx"
-import Footer from "./Footer/index.tsx"
 import {
   getCurrentBettingRound,
   getCurrentQuestionRound,
@@ -13,8 +11,6 @@ import {
   haveAllPlayersPlacedTheirGuess,
 } from "./helpers/index.ts"
 import LeaveGameButton from "./LeaveGameButton/index.tsx"
-import PokerTable from "./PokerTable/index.tsx"
-import PreGameLobby from "./PreGameLobby/index.tsx"
 // @ts-ignore
 import notificationSound from "../../assets/turn-notification.mp3"
 // @ts-ignore
@@ -29,6 +25,11 @@ import {
 import db, { addGuess, createPlayer } from "../../db/index.ts"
 import GameProvider, { useGame } from "./Context/index.tsx"
 import "./styles.css"
+
+const PreGameLobby = lazy(() => import("./PreGameLobby/index.tsx"))
+const PokerTable = lazy(() => import("./PokerTable/index.tsx"))
+const AnswerDrawer = lazy(() => import("./AnswerDrawer/index.tsx"))
+const Footer = lazy(() => import("./Footer/index.tsx"))
 
 const vibrate = (t: number) => {
   window.navigator.vibrate && window.navigator.vibrate(t)
@@ -200,6 +201,7 @@ function GameComponent() {
   const usedQuestionRound = showPreviousQuestionRoundResults
     ? previousQuestionRound
     : currentQuestionRound
+  const fallback = <div>Loading...</div>
 
   return (
     <div
@@ -211,26 +213,30 @@ function GameComponent() {
     >
       <div className="flex flex-col md:my-auto">
         {!gameHasStarted && (
-          <PreGameLobby
-            players={game.players}
-            gameLink={window.location.href}
-            startGame={startGame}
-            gameId={game.id}
-            createPlayer={handleCreatePlayer}
-            playerId={playerId}
-            setNames={game.setNames}
-          />
+          <Suspense fallback={fallback}>
+            <PreGameLobby
+              players={game.players}
+              gameLink={window.location.href}
+              startGame={startGame}
+              gameId={game.id}
+              createPlayer={handleCreatePlayer}
+              playerId={playerId}
+              setNames={game.setNames}
+            />
+          </Suspense>
         )}
         {gameHasStarted && usedQuestionRound && (
-          <PokerTable
-            {...{
-              game,
-              usedQuestionRound,
-              currentBettingRound,
-              playerId,
-              isSpectator,
-            }}
-          />
+          <Suspense fallback={fallback}>
+            <PokerTable
+              {...{
+                game,
+                usedQuestionRound,
+                currentBettingRound,
+                playerId,
+                isSpectator,
+              }}
+            />
+          </Suspense>
         )}
         {isSpectator && usedQuestionRound?.isOver && !game.isOver && (
           <button
@@ -244,31 +250,35 @@ function GameComponent() {
         )}
       </div>
       {currentQuestionRound && playerId && (
-        <AnswerDrawer
-          {...{
-            game,
-            addGuess: handleAddGuess,
-            currentQuestionRound,
-            player,
-            showAnswerDrawer,
-            setShowAnswerDrawer,
-            hasPlayerPlacedGuessInCurrentQuestionRound,
-          }}
-        />
+        <Suspense fallback={fallback}>
+          <AnswerDrawer
+            {...{
+              game,
+              addGuess: handleAddGuess,
+              currentQuestionRound,
+              player,
+              showAnswerDrawer,
+              setShowAnswerDrawer,
+              hasPlayerPlacedGuessInCurrentQuestionRound,
+            }}
+          />
+        </Suspense>
       )}
       {!game.isOver && player && !isSpectator && usedQuestionRound && (
-        <Footer
-          {...{
-            game,
-            usedQuestionRound,
-            placeBet,
-            player,
-            startGame,
-            hasPlayerPlacedGuessInCurrentQuestionRound,
-            setShowAnswerDrawer,
-            currentBettingRound,
-          }}
-        />
+        <Suspense fallback={fallback}>
+          <Footer
+            {...{
+              game,
+              usedQuestionRound,
+              placeBet,
+              player,
+              startGame,
+              hasPlayerPlacedGuessInCurrentQuestionRound,
+              setShowAnswerDrawer,
+              currentBettingRound,
+            }}
+          />
+        </Suspense>
       )}
 
       <LeaveGameButton {...{ gameId, playerId, gameHasStarted, setPlayerId }} />

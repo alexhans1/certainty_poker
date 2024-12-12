@@ -1,6 +1,8 @@
+import { lazy, Suspense } from "react"
 import { Link, Route, Routes } from "react-router"
-import Game from "../Game"
-import Lobby from "../Lobby"
+
+const Game = lazy(() => import("../Game"))
+const Lobby = lazy(() => import("../Lobby"))
 
 function PageNotFound() {
   return <p>Page not found.</p>
@@ -12,12 +14,14 @@ function App() {
       <Link to="/" className="mt-4 text-3xl font-bold">
         Certainty Poker
       </Link>
-      <Routes>
-        <Route path="/" element={<Lobby />} />
-        <Route path="/:gameId" element={<Game />} />
-        <Route path="/questions/:setName" element={<Lobby />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Lobby />} />
+          <Route path="/:gameId" element={<Game />} />
+          <Route path="/questions/:setName" element={<Lobby />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </Suspense>
     </div>
   )
 }

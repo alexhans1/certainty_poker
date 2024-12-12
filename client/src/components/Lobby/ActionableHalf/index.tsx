@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { lazy, Suspense, useState } from "react"
 import { Set } from "../../../interfaces"
-import NewSetBanner from "../NewSetBanner"
 import StartGameModal from "../StartGameModal"
+
+const NewSetBanner = lazy(() => import("../NewSetBanner"))
 
 interface Props {
   sets?: Set[]
@@ -16,7 +17,12 @@ export default function ActionableHalf({ sets = [] }: Props) {
     <>
       <div className="flex flex-col justify-end h-full py-8 lg:pb-32 lg:pt-0">
         {promotedSet && (
-          <NewSetBanner set={promotedSet} className="mb-8 lg:mb-auto lg:mt-5" />
+          <Suspense fallback={<div>Loading...</div>}>
+            <NewSetBanner
+              set={promotedSet}
+              className="mb-8 lg:mb-auto lg:mt-5"
+            />
+          </Suspense>
         )}
         <h1 className="text-5xl">
           <span className="font-light italic">Think you know it all?</span>

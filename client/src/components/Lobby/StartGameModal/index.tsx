@@ -47,8 +47,7 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
     }
   }, [sets])
 
-  // const { pathname } = history.location;
-  const isPrivateSetRoute = false // pathname !== "/";
+  const isPrivateSetRoute = false
 
   const handleCreateGame = async () => {
     if (selectedSets.length) {

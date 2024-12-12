@@ -9,10 +9,11 @@ import {
   QuestionTypes,
 } from "../../../interfaces"
 import Drawer from "../../shared/Drawer"
-import DateInput from "./DateInput"
-import MapInput from "./MapInput"
-import MultipleChoiceInput from "./MultipleChoiceInput"
-import NumberInput from "./NumberInput"
+
+const NumberInput = React.lazy(() => import("./NumberInput"))
+const DateInput = React.lazy(() => import("./DateInput"))
+const MapInput = React.lazy(() => import("./MapInput"))
+const MultipleChoiceInput = React.lazy(() => import("./MultipleChoiceInput"))
 
 interface QuestionProps {
   game: Game
@@ -60,24 +61,40 @@ export default function AnswerDrawer({
     setShowAnswerDrawer(false)
   }
 
+  const fallback = <div>Loading...</div>
+
   const getInput = () => {
     switch (currentQuestionRound.question.type) {
       case QuestionTypes.NUMERICAL:
-        return <NumberInput handleSubmit={handleNumberInputSubmit} />
+        return (
+          <React.Suspense fallback={fallback}>
+            <NumberInput handleSubmit={handleNumberInputSubmit} />
+          </React.Suspense>
+        )
       case QuestionTypes.DATE:
-        return <DateInput handleSubmit={handleNumberInputSubmit} />
+        return (
+          <React.Suspense fallback={fallback}>
+            <DateInput handleSubmit={handleNumberInputSubmit} />
+          </React.Suspense>
+        )
       case QuestionTypes.GEO:
-        return <MapInput handleSubmit={handleMapInputSubmit} />
+        return (
+          <React.Suspense fallback={fallback}>
+            <MapInput handleSubmit={handleMapInputSubmit} />
+          </React.Suspense>
+        )
       case QuestionTypes.MULTIPLE_CHOICE: {
         const alternatives = currentQuestionRound.question.alternatives?.map(
           (alt) => ({ value: alt, active: true }),
         )
         return (
-          <MultipleChoiceInput
-            usedQuestionRound={currentQuestionRound}
-            alternatives={alternatives}
-            handleSubmit={handleNumberInputSubmit}
-          />
+          <React.Suspense fallback={fallback}>
+            <MultipleChoiceInput
+              usedQuestionRound={currentQuestionRound}
+              alternatives={alternatives}
+              handleSubmit={handleNumberInputSubmit}
+            />
+          </React.Suspense>
         )
       }
       default:

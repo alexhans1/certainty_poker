@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 .firebase
 .vite
-
+bundle-visualization.html
