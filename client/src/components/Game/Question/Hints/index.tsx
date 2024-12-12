@@ -1,5 +1,5 @@
-import { QuestionRound } from "../../../../interfaces";
-import { getRevealAnswer } from "../../helpers";
+import { QuestionRound } from "../../../../interfaces"
+import { getRevealAnswer } from "../../helpers"
 
 const styles = {
   title: {
@@ -14,25 +14,25 @@ const styles = {
   oldHint: {
     fontSize: "0.7em",
   },
-};
+}
 
 interface Props {
-  usedQuestionRound: QuestionRound;
+  usedQuestionRound: QuestionRound
 }
 
 export default function Hints({ usedQuestionRound }: Props) {
-  const hints = usedQuestionRound.question.hints;
+  const hints = usedQuestionRound.question.hints
 
-  if (!hints?.length) return null;
+  if (!hints?.length) return null
 
   const numberOfHints = usedQuestionRound.isOver
     ? hints.length
-    : Math.min(usedQuestionRound.bettingRounds.length - 1, hints.length);
+    : Math.min(usedQuestionRound.bettingRounds.length - 1, hints.length)
   if (numberOfHints < 1) {
-    return null;
+    return null
   }
   if (!hints?.length) {
-    return null;
+    return null
   }
   return (
     <div className="flex flex-col">
@@ -54,5 +54,5 @@ export default function Hints({ usedQuestionRound }: Props) {
         ))}
       </ol>
     </div>
-  );
+  )
 }

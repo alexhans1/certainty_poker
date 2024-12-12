@@ -1,22 +1,22 @@
-import { GrMoney } from "react-icons/gr";
-import { QuestionRound } from "../../../../interfaces";
+import { GrMoney } from "react-icons/gr"
+import { QuestionRound } from "../../../../interfaces"
 
 interface Props {
-  usedQuestionRound: QuestionRound;
-  isGameFull: boolean;
+  usedQuestionRound: QuestionRound
+  isGameFull: boolean
 }
 
 export default function Pot({ usedQuestionRound, isGameFull }: Props) {
   const totalPot = usedQuestionRound?.bettingRounds.reduce((sum, br) => {
     br.bets.forEach((bet) => {
-      sum += bet.amount;
-    });
-    return sum;
-  }, 0);
+      sum += bet.amount
+    })
+    return sum
+  }, 0)
 
   const positioning = isGameFull
     ? "md:-right-5 md:-top-10"
-    : "md:left-24 md:bottom-20";
+    : "md:left-24 md:bottom-20"
 
   return (
     <div
@@ -30,5 +30,5 @@ export default function Pot({ usedQuestionRound, isGameFull }: Props) {
       </div>
       <span className="text-xs md:text-sm">In Pot</span>
     </div>
-  );
+  )
 }

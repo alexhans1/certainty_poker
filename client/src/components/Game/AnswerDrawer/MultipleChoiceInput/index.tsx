@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { QuestionRound } from "../../../../interfaces";
-import MultipleChoiceOptions from "../../MultipleChoiceOptions";
+import { useState } from "react"
+import { QuestionRound } from "../../../../interfaces"
+import MultipleChoiceOptions from "../../MultipleChoiceOptions"
 
 interface Props {
-  usedQuestionRound: QuestionRound;
+  usedQuestionRound: QuestionRound
   alternatives?: {
-    value: string;
-    active: boolean;
-  }[];
-  handleSubmit: (guess: number) => void;
+    value: string
+    active: boolean
+  }[]
+  handleSubmit: (guess: number) => void
 }
 
 export default function MultipleChoiceInput({
@@ -16,9 +16,9 @@ export default function MultipleChoiceInput({
   handleSubmit,
   alternatives,
 }: Props) {
-  const [guess, setGuess] = useState<number>();
+  const [guess, setGuess] = useState<number>()
   if (alternatives?.length !== 4) {
-    throw new Error("missing alternatives for multiple choice question");
+    throw new Error("missing alternatives for multiple choice question")
   }
 
   return (
@@ -32,8 +32,8 @@ export default function MultipleChoiceInput({
         className="bg-blue-500 mr-auto rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
         onClick={() => {
           if (guess || guess === 0) {
-            handleSubmit(guess);
-            setGuess(undefined);
+            handleSubmit(guess)
+            setGuess(undefined)
           }
         }}
         disabled={!guess && guess !== 0}
@@ -41,5 +41,5 @@ export default function MultipleChoiceInput({
         Submit
       </button>
     </>
-  );
+  )
 }

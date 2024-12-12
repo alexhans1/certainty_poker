@@ -1,13 +1,13 @@
-import { Dialog, DialogActions, DialogTitle } from "@mui/material";
-import React, { useState } from "react";
+import { Dialog, DialogActions, DialogTitle } from "@mui/material"
+import React, { useState } from "react"
 
 interface Props {
-  buttonLabel: string | React.ReactNode;
-  dialogTitle: string | React.ReactNode;
-  confirmLabel: string;
-  onConfirm: () => void;
-  isDisabled?: boolean;
-  btnClassName?: string;
+  buttonLabel: string | React.ReactNode
+  dialogTitle: string | React.ReactNode
+  confirmLabel: string
+  onConfirm: () => void
+  isDisabled?: boolean
+  btnClassName?: string
 }
 
 export default function ConfirmDialogButton({
@@ -18,22 +18,22 @@ export default function ConfirmDialogButton({
   isDisabled,
   btnClassName,
 }: Props) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   const handleClickOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleConfirm = async () => {
-    setLoading(true);
-    await onConfirm();
-    setOpen(false);
-    setLoading(false);
-  };
+    setLoading(true)
+    await onConfirm()
+    setOpen(false)
+    setLoading(false)
+  }
 
   return (
     <>
@@ -65,5 +65,5 @@ export default function ConfirmDialogButton({
         </div>
       </Dialog>
     </>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { FaRegLightbulb } from "react-icons/fa";
-import { GrMoney } from "react-icons/gr";
+import { FaRegLightbulb } from "react-icons/fa"
+import { GrMoney } from "react-icons/gr"
 import {
   BettingRound,
   Game,
@@ -7,35 +7,35 @@ import {
   Player,
   Question,
   QuestionTypes,
-} from "../../../../interfaces";
-import FormattedGuess from "../../Guess";
-import { calculateBettingRoundSpendingForPlayer } from "../../helpers";
-import RevealGuessButton from "./RevealGuessButton";
-import Status from "./Status";
+} from "../../../../interfaces"
+import FormattedGuess from "../../Guess"
+import { calculateBettingRoundSpendingForPlayer } from "../../helpers"
+import RevealGuessButton from "./RevealGuessButton"
+import Status from "./Status"
 
-import "./styles.css";
+import "./styles.css"
 
-const playerSeatingOrder = [1, 9, 5, 2, 11, 4, 8, 10, 6, 3, 12, 7];
+const playerSeatingOrder = [1, 9, 5, 2, 11, 4, 8, 10, 6, 3, 12, 7]
 
 interface Props {
-  gameId: Game["id"];
-  player: Player;
-  numberOfPlayers: number;
-  currentBettingRound?: BettingRound;
-  changeInMoney?: number;
-  index: number;
-  isTurnPlayer: boolean;
-  isGameOver: boolean;
-  isAppPlayer: boolean;
-  isWinningPlayer?: boolean;
-  isQuestionRoundOver: boolean;
-  isShowdown: boolean;
-  hasFolded: boolean;
-  isSpectator: boolean;
-  isRevealingGuess: boolean;
-  allPlayersPlacedTheirGuess?: boolean;
-  guess?: Guess;
-  question?: Question;
+  gameId: Game["id"]
+  player: Player
+  numberOfPlayers: number
+  currentBettingRound?: BettingRound
+  changeInMoney?: number
+  index: number
+  isTurnPlayer: boolean
+  isGameOver: boolean
+  isAppPlayer: boolean
+  isWinningPlayer?: boolean
+  isQuestionRoundOver: boolean
+  isShowdown: boolean
+  hasFolded: boolean
+  isSpectator: boolean
+  isRevealingGuess: boolean
+  allPlayersPlacedTheirGuess?: boolean
+  guess?: Guess
+  question?: Question
 }
 
 const PlayerComp = ({
@@ -59,29 +59,29 @@ const PlayerComp = ({
   isRevealingGuess,
 }: Props) => {
   const isTurnPlayerClass =
-    isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : "";
-  const isAppPlayerClass = isAppPlayer ? "bg-blue-200" : "bg-gray-200";
-  const isDeadClass = player.isDead ? "is-dead" : "";
+    isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : ""
+  const isAppPlayerClass = isAppPlayer ? "bg-blue-200" : "bg-gray-200"
+  const isDeadClass = player.isDead ? "is-dead" : ""
 
   const bettingRoundSpending = currentBettingRound
     ? calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id)
-    : 0;
+    : 0
 
-  const isGeoQuestion = question?.type === QuestionTypes.GEO;
+  const isGeoQuestion = question?.type === QuestionTypes.GEO
   const showGuess =
     isSpectator ||
     isRevealingGuess ||
-    (isQuestionRoundOver && isShowdown && !hasFolded);
-  const shouldRevealGuess = !isGeoQuestion && showGuess;
-  const canRevealGuess = !showGuess && isQuestionRoundOver && isAppPlayer;
+    (isQuestionRoundOver && isShowdown && !hasFolded)
+  const shouldRevealGuess = !isGeoQuestion && showGuess
+  const canRevealGuess = !showGuess && isQuestionRoundOver && isAppPlayer
 
   const positionIndex = playerSeatingOrder.filter((i) => i <= numberOfPlayers)[
     index
-  ];
+  ]
 
-  let playerMoney = player.money;
+  let playerMoney = player.money
   if (isQuestionRoundOver && !isGameOver) {
-    playerMoney += bettingRoundSpending;
+    playerMoney += bettingRoundSpending
   }
 
   return (
@@ -157,7 +157,7 @@ const PlayerComp = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PlayerComp;
+export default PlayerComp

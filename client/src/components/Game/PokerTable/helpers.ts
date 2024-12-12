@@ -1,21 +1,21 @@
-import { Game } from "../../../interfaces";
+import { Game } from "../../../interfaces"
 
 export const getWinningPlayerArray = (game: Game) => {
   if (game.isOver) {
     return game.players
       .reduce(
         (winners, player, i) => {
-          if (i === 0) return winners;
+          if (i === 0) return winners
           if (winners[0].money < player.money) {
-            return [player];
+            return [player]
           }
           if (winners[0].money === player.money) {
-            return [...winners, player];
+            return [...winners, player]
           }
-          return winners;
+          return winners
         },
         [game.players[0]],
       )
-      .map((p) => p.id);
+      .map((p) => p.id)
   }
-};
+}

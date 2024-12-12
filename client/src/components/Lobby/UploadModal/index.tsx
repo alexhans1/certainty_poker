@@ -1,76 +1,76 @@
-import { Modal } from "@mui/material";
-import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
-import React, { useState } from "react";
-import countryCodes from "../../../assets/countryCodes";
-import { uploadQuestions as uploadQuestionsRequest } from "../../../db";
-import { Question, QuestionTypes } from "../../../interfaces";
-import Guess from "../../Game/Guess";
-import { validateQuestions } from "./validateQuestions";
+import { Modal } from "@mui/material"
+import countryCodeToFlagEmoji from "country-code-to-flag-emoji"
+import React, { useState } from "react"
+import countryCodes from "../../../assets/countryCodes"
+import { uploadQuestions as uploadQuestionsRequest } from "../../../db"
+import { Question, QuestionTypes } from "../../../interfaces"
+import Guess from "../../Game/Guess"
+import { validateQuestions } from "./validateQuestions"
 
 interface Props {
-  open: boolean;
-  handleClose: () => void;
+  open: boolean
+  handleClose: () => void
 }
 
 function UploadModal({ open, handleClose }: Props) {
-  const [data, setData] = useState<Question[]>();
-  const [setName, setSetName] = useState("");
-  const [isPrivate, setIsPrivate] = useState<0 | 1>(0);
-  const [language, setLanguage] = useState<keyof typeof countryCodes>();
-  const [error, setError] = useState<Error>();
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<Question[]>()
+  const [setName, setSetName] = useState("")
+  const [isPrivate, setIsPrivate] = useState<0 | 1>(0)
+  const [language, setLanguage] = useState<keyof typeof countryCodes>()
+  const [error, setError] = useState<Error>()
+  const [loading, setLoading] = useState(false)
 
   const uploadQuestions = async () => {
     try {
       if (!data || !setName || !language) {
-        return;
+        return
       }
 
-      setLoading(true);
-      await uploadQuestionsRequest(data, setName, language, !!isPrivate);
+      setLoading(true)
+      await uploadQuestionsRequest(data, setName, language, !!isPrivate)
 
-      handleClose();
-      setSetName("");
-      setData(undefined);
-      setLoading(false);
+      handleClose()
+      setSetName("")
+      setData(undefined)
+      setLoading(false)
     } catch (error) {
-      setLoading(false);
-      setError(error as Error);
+      setLoading(false)
+      setError(error as Error)
     }
-  };
+  }
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
 
     if (!file) {
-      return;
+      return
     }
 
     if (file.type !== "application/json") {
-      setError(new Error("Invalid file type. Please upload a JSON file."));
-      return;
+      setError(new Error("Invalid file type. Please upload a JSON file."))
+      return
     }
 
-    const reader = new FileReader();
+    const reader = new FileReader()
 
     reader.onload = (e) => {
-      if (!e.target?.result) return;
+      if (!e.target?.result) return
       try {
-        const jsonData = JSON.parse(e.target.result as string);
+        const jsonData = JSON.parse(e.target.result as string)
 
-        validateQuestions(jsonData);
-        setData(jsonData);
+        validateQuestions(jsonData)
+        setData(jsonData)
       } catch (err) {
-        setError(err as Error);
+        setError(err as Error)
       }
-    };
+    }
 
     reader.onerror = () => {
-      setError(new Error("Error reading the file."));
-    };
+      setError(new Error("Error reading the file."))
+    }
 
-    reader.readAsText(file);
-  };
+    reader.readAsText(file)
+  }
 
   const content = !data ? (
     <div
@@ -101,7 +101,7 @@ function UploadModal({ open, handleClose }: Props) {
         <input
           value={setName}
           onChange={(e) => {
-            setSetName(e.target.value);
+            setSetName(e.target.value)
           }}
           type="text"
           className="rounded-md bg-white border border-gray-400 px-4 py-2 mr-4"
@@ -115,9 +115,7 @@ function UploadModal({ open, handleClose }: Props) {
           required
           value={language}
           onChange={(e) => {
-            setLanguage(
-              e.target.value as keyof typeof countryCodes | undefined,
-            );
+            setLanguage(e.target.value as keyof typeof countryCodes | undefined)
           }}
         >
           <option selected>Language...</option>
@@ -209,7 +207,7 @@ function UploadModal({ open, handleClose }: Props) {
           id="isPrivateCheckbox"
           value={isPrivate}
           onChange={() => {
-            setIsPrivate(isPrivate ? 0 : 1);
+            setIsPrivate(isPrivate ? 0 : 1)
           }}
         />
         <label className="ml-2" htmlFor="isPrivateCheckbox">
@@ -226,7 +224,7 @@ function UploadModal({ open, handleClose }: Props) {
           className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600"
           disabled={!setName || !language}
           onClick={() => {
-            uploadQuestions();
+            uploadQuestions()
           }}
         >
           Upload
@@ -234,16 +232,16 @@ function UploadModal({ open, handleClose }: Props) {
         <button
           className="border-2 boder-gray-800 rounded-lg font-bold hover:text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-800 ml-3"
           onClick={() => {
-            setData(undefined);
-            setSetName("");
-            setLanguage(undefined);
+            setData(undefined)
+            setSetName("")
+            setLanguage(undefined)
           }}
         >
           {loading ? "Loading..." : "Upload new file"}
         </button>
       </div>
     </>
-  );
+  )
 
   return (
     <Modal
@@ -265,7 +263,7 @@ function UploadModal({ open, handleClose }: Props) {
         </div>
       </div>
     </Modal>
-  );
+  )
 }
 
-export default UploadModal;
+export default UploadModal

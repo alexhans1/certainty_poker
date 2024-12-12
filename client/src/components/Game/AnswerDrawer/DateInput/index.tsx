@@ -1,23 +1,23 @@
-import { useState } from "react";
-import { DateInput } from "rsuite";
+import { useState } from "react"
+import { DateInput } from "rsuite"
 
-import { QuestionTypes } from "../../../../interfaces";
-import FormattedGuess from "../../Guess";
+import { QuestionTypes } from "../../../../interfaces"
+import FormattedGuess from "../../Guess"
 
 interface Props {
-  handleSubmit: (guess: number) => void;
+  handleSubmit: (guess: number) => void
 }
 
 function formatDateToNumber(date: Date): number {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, "0")
+  const day = date.getDate().toString().padStart(2, "0")
 
-  return parseInt(`${year}${month}${day}`, 10);
+  return parseInt(`${year}${month}${day}`, 10)
 }
 
 function DateInputComp({ handleSubmit }: Props) {
-  const [guess, setGuess] = useState(new Date());
+  const [guess, setGuess] = useState(new Date())
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -26,7 +26,7 @@ function DateInputComp({ handleSubmit }: Props) {
         format="dd/MM/yyyy"
         value={guess}
         onChange={(dateValue) => {
-          setGuess(dateValue as Date);
+          setGuess(dateValue as Date)
         }}
       />
       <button
@@ -35,7 +35,7 @@ function DateInputComp({ handleSubmit }: Props) {
         disabled={!guess}
         onClick={() => {
           if (guess) {
-            handleSubmit(formatDateToNumber(guess));
+            handleSubmit(formatDateToNumber(guess))
           }
         }}
       >
@@ -55,7 +55,7 @@ function DateInputComp({ handleSubmit }: Props) {
         </p>
       )}
     </div>
-  );
+  )
 }
 
-export default DateInputComp;
+export default DateInputComp

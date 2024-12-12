@@ -1,8 +1,8 @@
-import { FallbackProps } from "react-error-boundary";
-import { BiError } from "react-icons/bi";
+import { FallbackProps } from "react-error-boundary"
+import { BiError } from "react-icons/bi"
 
 const Fallback = ({ error }: FallbackProps) => {
-  const errorMessage = error?.message.replace("GraphQL error: ", "");
+  const errorMessage = error?.message.replace("GraphQL error: ", "")
   return (
     <p className="text-lg mt-6 flex items-center font-semibold">
       <BiError className="text-4xl text-red-600 mr-3" />
@@ -15,7 +15,7 @@ const Fallback = ({ error }: FallbackProps) => {
         </>
       )}
     </p>
-  );
-};
+  )
+}
 
-export default Fallback;
+export default Fallback

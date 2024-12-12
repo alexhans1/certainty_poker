@@ -1,11 +1,11 @@
-import { ReactNode } from "react";
+import { ReactNode } from "react"
 
-import { Drawer, DrawerProps } from "@mui/material";
-import "./styles.css";
+import { Drawer, DrawerProps } from "@mui/material"
+import "./styles.css"
 
 interface Props extends DrawerProps {
-  children: ReactNode;
-  onClose?: () => void;
+  children: ReactNode
+  onClose?: () => void
 }
 
 export default function DrawerComp({
@@ -35,5 +35,5 @@ export default function DrawerComp({
         </div>
       </div>
     </Drawer>
-  );
+  )
 }

@@ -1,20 +1,20 @@
-import { FiCopy } from "react-icons/fi";
-import { Game, Player } from "../../../interfaces";
-import NameInputDrawer, { CreatePlayer } from "../NameInputDrawer";
-import PlayerSpot from "./PlayerSpot";
-import StartGameButton, { StartGame } from "./StartGameButton";
+import { FiCopy } from "react-icons/fi"
+import { Game, Player } from "../../../interfaces"
+import NameInputDrawer, { CreatePlayer } from "../NameInputDrawer"
+import PlayerSpot from "./PlayerSpot"
+import StartGameButton, { StartGame } from "./StartGameButton"
 
 interface Props {
-  players: Player[];
-  gameLink: string;
-  startGame: StartGame;
-  gameId: Game["id"];
-  createPlayer: CreatePlayer;
-  playerId?: Player["id"];
-  setNames: Game["setNames"];
+  players: Player[]
+  gameLink: string
+  startGame: StartGame
+  gameId: Game["id"]
+  createPlayer: CreatePlayer
+  playerId?: Player["id"]
+  setNames: Game["setNames"]
 }
 
-export const maxNumberOfPlayers = 12;
+export const maxNumberOfPlayers = 12
 
 function PreGameLobby({
   players,
@@ -34,7 +34,7 @@ function PreGameLobby({
           <button
             className="text-blue-500 hover:text-blue-600 p-2 ripple focus:outline-none text-2xl"
             onClick={async () => {
-              await navigator.clipboard.writeText(window.location.href);
+              await navigator.clipboard.writeText(window.location.href)
             }}
           >
             <FiCopy />
@@ -65,7 +65,7 @@ function PreGameLobby({
       </div>
       <NameInputDrawer {...{ gameId, createPlayer, playerId }} />
     </>
-  );
+  )
 }
 
-export default PreGameLobby;
+export default PreGameLobby

@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { BettingRound, Player } from "../../../../../interfaces";
-import Drawer from "../../../../shared/Drawer";
-import { useGame } from "../../../Context";
-import { calculateAmountToCall, PlaceBet, raise } from "../../../helpers";
+import React, { useState } from "react"
+import { BettingRound, Player } from "../../../../../interfaces"
+import Drawer from "../../../../shared/Drawer"
+import { useGame } from "../../../Context"
+import { calculateAmountToCall, PlaceBet, raise } from "../../../helpers"
 
 interface Props {
-  currentBettingRound: BettingRound;
-  handleRaise: typeof raise;
-  placeBet: PlaceBet;
-  playerId: Player["id"];
-  showRaiseDrawer: boolean;
-  setShowRaiseDrawer: React.Dispatch<React.SetStateAction<boolean>>;
+  currentBettingRound: BettingRound
+  handleRaise: typeof raise
+  placeBet: PlaceBet
+  playerId: Player["id"]
+  showRaiseDrawer: boolean
+  setShowRaiseDrawer: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function RaiseInputDrawer({
@@ -21,22 +21,22 @@ export default function RaiseInputDrawer({
   showRaiseDrawer,
   setShowRaiseDrawer,
 }: Props) {
-  const { game } = useGame();
+  const { game } = useGame()
   if (!game) {
-    throw new Error("Game not found");
+    throw new Error("Game not found")
   }
 
-  const amountToCall = calculateAmountToCall(currentBettingRound, playerId);
-  const moneyRemaining = game.players.find(({ id }) => id === playerId)?.money;
-  const [amount, setAmount] = useState(amountToCall);
-  const [loading, setLoading] = useState(false);
+  const amountToCall = calculateAmountToCall(currentBettingRound, playerId)
+  const moneyRemaining = game.players.find(({ id }) => id === playerId)?.money
+  const [amount, setAmount] = useState(amountToCall)
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async () => {
-    setLoading(true);
-    await handleRaise(amount, placeBet, game, playerId);
-    setShowRaiseDrawer(false);
-    setLoading(false);
-  };
+    setLoading(true)
+    await handleRaise(amount, placeBet, game, playerId)
+    setShowRaiseDrawer(false)
+    setLoading(false)
+  }
 
   return (
     <Drawer
@@ -44,7 +44,7 @@ export default function RaiseInputDrawer({
       anchor={"bottom"}
       open={showRaiseDrawer}
       onClose={() => {
-        setShowRaiseDrawer(false);
+        setShowRaiseDrawer(false)
       }}
       variant="temporary"
       className="drawer"
@@ -55,11 +55,11 @@ export default function RaiseInputDrawer({
           <input
             value={amount}
             onChange={(e) => {
-              setAmount(Math.round(parseFloat(e.target.value)));
+              setAmount(Math.round(parseFloat(e.target.value)))
             }}
             onKeyUp={(e) => {
               if (e.which === 13) {
-                handleSubmit();
+                handleSubmit()
               }
             }}
             type="number"
@@ -111,5 +111,5 @@ export default function RaiseInputDrawer({
         </div>
       </>
     </Drawer>
-  );
+  )
 }

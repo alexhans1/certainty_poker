@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Game, Player } from "../../../interfaces";
-import Drawer from "../../shared/Drawer";
+import { useState } from "react"
+import { Game, Player } from "../../../interfaces"
+import Drawer from "../../shared/Drawer"
 
-export type CreatePlayer = (gameId: string, playerName: string) => void;
+export type CreatePlayer = (gameId: string, playerName: string) => void
 
 interface Props {
-  createPlayer: CreatePlayer;
-  gameId: Game["id"];
-  playerId?: Player["id"];
+  createPlayer: CreatePlayer
+  gameId: Game["id"]
+  playerId?: Player["id"]
 }
 
 export default function NameInputDrawer({
@@ -15,13 +15,13 @@ export default function NameInputDrawer({
   gameId,
   playerId,
 }: Props) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState("")
 
   const handleSubmit = () => {
     if (!playerId) {
-      createPlayer(gameId, name);
+      createPlayer(gameId, name)
     }
-  };
+  }
 
   return (
     <Drawer
@@ -38,11 +38,11 @@ export default function NameInputDrawer({
           <input
             value={name}
             onChange={(e) => {
-              setName(e.target.value);
+              setName(e.target.value)
             }}
             onKeyUp={(e) => {
               if (e.which === 13) {
-                handleSubmit();
+                handleSubmit()
               }
             }}
             type="text"
@@ -63,5 +63,5 @@ export default function NameInputDrawer({
         </div>
       </>
     </Drawer>
-  );
+  )
 }

@@ -1,29 +1,29 @@
-import { Tooltip } from "@mui/material";
-import React from "react";
-import { AiOutlineQuestion } from "react-icons/ai";
-import { CgMore } from "react-icons/cg";
+import { Tooltip } from "@mui/material"
+import React from "react"
+import { AiOutlineQuestion } from "react-icons/ai"
+import { CgMore } from "react-icons/cg"
 import {
   FaBell,
   FaRegLightbulb,
   FaSadCry,
   FaSkullCrossbones,
-} from "react-icons/fa";
-import { FiArrowUp, FiMinus } from "react-icons/fi";
-import { GiLaurelsTrophy, GiPartyPopper } from "react-icons/gi";
-import { GrClose, GrMoney } from "react-icons/gr";
-import { BettingStates, Player } from "../../../../interfaces";
+} from "react-icons/fa"
+import { FiArrowUp, FiMinus } from "react-icons/fi"
+import { GiLaurelsTrophy, GiPartyPopper } from "react-icons/gi"
+import { GrClose, GrMoney } from "react-icons/gr"
+import { BettingStates, Player } from "../../../../interfaces"
 
 const StatusWithTooltip = ({
   tooltipTitle,
   children,
 }: {
-  tooltipTitle: string;
-  children: React.ReactNode;
+  tooltipTitle: string
+  children: React.ReactNode
 }) => (
   <Tooltip title={tooltipTitle}>
     <span>{children}</span>
   </Tooltip>
-);
+)
 
 const actionIcons = {
   [BettingStates.RAISED]: (
@@ -41,19 +41,19 @@ const actionIcons = {
       <FiMinus />
     </StatusWithTooltip>
   ),
-};
+}
 
 interface Props {
-  player: Player;
-  isQuestionRoundOver: boolean;
-  isWinningPlayer?: boolean;
-  changeInMoney?: number;
-  hasFolded: boolean;
-  isDead?: boolean;
-  isTurnPlayer: boolean;
-  playerHasPlacedTheirGuess?: boolean;
-  allPlayersPlacedTheirGuess?: boolean;
-  playerIsAllIn?: boolean;
+  player: Player
+  isQuestionRoundOver: boolean
+  isWinningPlayer?: boolean
+  changeInMoney?: number
+  hasFolded: boolean
+  isDead?: boolean
+  isTurnPlayer: boolean
+  playerHasPlacedTheirGuess?: boolean
+  allPlayersPlacedTheirGuess?: boolean
+  playerIsAllIn?: boolean
 }
 
 function Status({
@@ -73,33 +73,33 @@ function Status({
       <StatusWithTooltip tooltipTitle="Out">
         <FaSkullCrossbones />
       </StatusWithTooltip>
-    );
+    )
   }
   if (hasFolded) {
     return (
       <StatusWithTooltip tooltipTitle="Folded">
         <GrClose />
       </StatusWithTooltip>
-    );
+    )
   }
   if (playerIsAllIn) {
     return (
       <StatusWithTooltip tooltipTitle="All in">
         <GrMoney />
       </StatusWithTooltip>
-    );
+    )
   }
   if (isQuestionRoundOver) {
     if (isWinningPlayer) {
-      return <GiLaurelsTrophy />;
+      return <GiLaurelsTrophy />
     }
     if (changeInMoney && changeInMoney > 0) {
-      return <GiPartyPopper />;
+      return <GiPartyPopper />
     }
     if (changeInMoney && changeInMoney < 0) {
-      return <FaSadCry />;
+      return <FaSadCry />
     }
-    return null;
+    return null
   }
   if (!allPlayersPlacedTheirGuess) {
     if (playerHasPlacedTheirGuess) {
@@ -107,13 +107,13 @@ function Status({
         <StatusWithTooltip tooltipTitle="Already submitted guess">
           <FaRegLightbulb />
         </StatusWithTooltip>
-      );
+      )
     } else {
       return (
         <StatusWithTooltip tooltipTitle="Not yet submitted guess">
           <AiOutlineQuestion />
         </StatusWithTooltip>
-      );
+      )
     }
   }
   if (isTurnPlayer) {
@@ -121,17 +121,17 @@ function Status({
       <StatusWithTooltip tooltipTitle="Player's turn">
         <FaBell className="text-red-600" />
       </StatusWithTooltip>
-    );
+    )
   }
-  const playerAction = player.bettingState;
+  const playerAction = player.bettingState
   if (playerAction && actionIcons[playerAction]) {
-    return actionIcons[playerAction];
+    return actionIcons[playerAction]
   }
   return (
     <StatusWithTooltip tooltipTitle="Waiting for turn">
       <CgMore />
     </StatusWithTooltip>
-  );
+  )
 }
 
-export default Status;
+export default Status

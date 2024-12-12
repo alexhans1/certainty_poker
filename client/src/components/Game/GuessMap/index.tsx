@@ -1,32 +1,27 @@
-import React from "react";
-import { AiFillCheckCircle } from "react-icons/ai";
-import {
-  Game,
-  Player,
-  QuestionRound,
-  QuestionTypes,
-} from "../../../interfaces";
-import { getRevealAnswer, hasPlayerFolded } from "../helpers";
-import Map, { MarkerType } from "../Map";
+import React from "react"
+import { AiFillCheckCircle } from "react-icons/ai"
+import { Game, Player, QuestionRound, QuestionTypes } from "../../../interfaces"
+import { getRevealAnswer, hasPlayerFolded } from "../helpers"
+import Map, { MarkerType } from "../Map"
 
 interface Props {
-  playerId?: Player["id"];
-  players: Game["players"];
-  usedQuestionRound: QuestionRound;
-  isSpectator: boolean;
-  className?: string;
+  playerId?: Player["id"]
+  players: Game["players"]
+  usedQuestionRound: QuestionRound
+  isSpectator: boolean
+  className?: string
 }
 
 export default React.memo(
   ({ usedQuestionRound, isSpectator, playerId, players, className }: Props) => {
-    const questionType = usedQuestionRound.question.type;
+    const questionType = usedQuestionRound.question.type
     if (!usedQuestionRound || questionType !== QuestionTypes.GEO) {
-      return null;
+      return null
     }
 
     const playerGuess = usedQuestionRound.guesses.find(
       (g) => g.playerId === playerId,
-    );
+    )
 
     const mapMarkers: MarkerType[] = playerGuess?.guess.geo
       ? [
@@ -36,7 +31,7 @@ export default React.memo(
             distanceToAnswer: playerGuess.difference,
           },
         ]
-      : [];
+      : []
 
     if (isSpectator || usedQuestionRound.isOver) {
       mapMarkers.push(
@@ -50,18 +45,18 @@ export default React.memo(
                   usedQuestionRound.isShowdown) ||
                 usedQuestionRound.revealedGuesses.includes(pId))
             ) {
-              const label = players.find((p) => p.id === pId)?.name || "";
+              const label = players.find((p) => p.id === pId)?.name || ""
               acc.push({
                 position: guess.geo,
                 label,
                 distanceToAnswer: difference,
-              });
+              })
             }
-            return acc;
+            return acc
           },
           [],
         ),
-      );
+      )
     }
     if (
       getRevealAnswer(usedQuestionRound) &&
@@ -73,9 +68,9 @@ export default React.memo(
         isAnswer: true,
         radiusInKilometres:
           usedQuestionRound.question.answer.geo.toleranceRadius,
-      });
+      })
     }
 
-    return <Map className={className} markers={mapMarkers} />;
+    return <Map className={className} markers={mapMarkers} />
   },
-);
+)

@@ -1,8 +1,8 @@
-import backgroundImage1 from "../../../assets/landing-page-image-1.webp";
-import backgroundImage2 from "../../../assets/landing-page-image-2.webp";
-import backgroundImage3 from "../../../assets/landing-page-image-3.webp";
-import backgroundImage4 from "../../../assets/landing-page-image-4.webp";
-import backgroundImagePhone from "../../../assets/landing-page-image-phone.webp";
+import backgroundImage1 from "../../../assets/landing-page-image-1.webp"
+import backgroundImage2 from "../../../assets/landing-page-image-2.webp"
+import backgroundImage3 from "../../../assets/landing-page-image-3.webp"
+import backgroundImage4 from "../../../assets/landing-page-image-4.webp"
+import backgroundImagePhone from "../../../assets/landing-page-image-phone.webp"
 
 export default function PictureHalf() {
   return (
@@ -29,5 +29,5 @@ export default function PictureHalf() {
         />
       </div>
     </div>
-  );
+  )
 }

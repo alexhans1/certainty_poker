@@ -41,6 +41,6 @@ const countryListAlpha2 = {
   TH: "Thai",
   TR: "Turkish",
   VN: "Vietnamese",
-};
+}
 
-export default countryListAlpha2;
+export default countryListAlpha2

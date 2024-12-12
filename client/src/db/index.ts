@@ -7,10 +7,10 @@ import {
   getFirestore,
   Timestamp,
   updateDoc,
-} from "firebase/firestore";
-import { v4 } from "uuid";
-import countryCodes from "../assets/countryCodes";
-import app from "../firebase";
+} from "firebase/firestore"
+import { v4 } from "uuid"
+import countryCodes from "../assets/countryCodes"
+import app from "../firebase"
 import {
   Game,
   Guess,
@@ -19,11 +19,11 @@ import {
   QuestionRound,
   QuestionTypes,
   Set,
-} from "../interfaces";
+} from "../interfaces"
 
-const db = getFirestore(app, "certainty-poker");
+const db = getFirestore(app, "certainty-poker")
 
-export default db;
+export default db
 
 export const createGame = async (
   selectedSets: Set[],
@@ -32,17 +32,17 @@ export const createGame = async (
   const newGame: Omit<Game, "id"> & { ttl: Timestamp } = {
     questionRounds: [],
     questions: selectedSets.reduce<Question[]>((acc, set) => {
-      return [...acc, ...set.questions];
+      return [...acc, ...set.questions]
     }, []),
     isOver: false,
     players: [],
     dealerId: "unassigned",
     setNames: selectedSets.map(({ setName }) => setName),
     ttl: Timestamp.fromMillis(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
-  };
-  const docRef = await addDoc(collection(db, "games"), newGame);
-  onComplete(docRef.id);
-};
+  }
+  const docRef = await addDoc(collection(db, "games"), newGame)
+  onComplete(docRef.id)
+}
 
 export const createPlayer = async (
   gameId: string,
@@ -54,14 +54,14 @@ export const createPlayer = async (
     name: playerName,
     money: 100,
     isDead: false,
-  };
+  }
 
   // Add the player to the players array
   await updateDoc(doc(db, "games", gameId), {
     players: arrayUnion(player),
-  });
-  onComplete(player.id);
-};
+  })
+  onComplete(player.id)
+}
 
 export const addGuess = async (
   gameId: string,
@@ -72,16 +72,15 @@ export const addGuess = async (
   const updatedQuestionRound = {
     ...currentQuestionRound,
     guesses: [...currentQuestionRound.guesses, guess],
-  };
+  }
 
-  const updatedQuestionRounds = [...questionRounds];
-  updatedQuestionRounds[updatedQuestionRounds.length - 1] =
-    updatedQuestionRound;
+  const updatedQuestionRounds = [...questionRounds]
+  updatedQuestionRounds[updatedQuestionRounds.length - 1] = updatedQuestionRound
 
   await updateDoc(doc(db, "games", gameId), {
     questionRounds: updatedQuestionRounds,
-  });
-};
+  })
+}
 
 export const uploadQuestions = async (
   questions: Question[],
@@ -91,42 +90,41 @@ export const uploadQuestions = async (
 ) => {
   const newSet: Set = {
     questions: questions.map((q) => {
-      if (q.type !== QuestionTypes.MULTIPLE_CHOICE) return q;
+      if (q.type !== QuestionTypes.MULTIPLE_CHOICE) return q
 
-      (q.answer.numerical as number)--;
-      return q;
+      ;(q.answer.numerical as number)--
+      return q
     }),
     setName,
     language,
-  };
+  }
 
-  await addDoc(collection(db, "question-sets"), newSet);
-};
+  await addDoc(collection(db, "question-sets"), newSet)
+}
 
 export const revealGuess = async (
   gameId: string,
   playerId: string,
   questionRounds: QuestionRound[],
 ) => {
-  const currentQuestionRound = questionRounds[questionRounds.length - 2];
+  const currentQuestionRound = questionRounds[questionRounds.length - 2]
   if (!currentQuestionRound) {
-    return;
+    return
   }
 
   if (currentQuestionRound.revealedGuesses.includes(playerId)) {
-    return;
+    return
   }
 
   const updatedQuestionRound = {
     ...currentQuestionRound,
     revealedGuesses: [...currentQuestionRound.revealedGuesses, playerId],
-  };
+  }
 
-  const updatedQuestionRounds = [...questionRounds];
-  updatedQuestionRounds[updatedQuestionRounds.length - 2] =
-    updatedQuestionRound;
+  const updatedQuestionRounds = [...questionRounds]
+  updatedQuestionRounds[updatedQuestionRounds.length - 2] = updatedQuestionRound
 
   await updateDoc(doc(db, "games", gameId), {
     questionRounds: updatedQuestionRounds,
-  });
-};
+  })
+}

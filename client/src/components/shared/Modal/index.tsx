@@ -1,11 +1,11 @@
-import { Modal } from "@mui/material";
-import React from "react";
-import { FaTimes } from "react-icons/fa";
+import { Modal } from "@mui/material"
+import React from "react"
+import { FaTimes } from "react-icons/fa"
 
 interface Props {
-  open: boolean;
-  handleClose: () => void;
-  children: React.ReactNode;
+  open: boolean
+  handleClose: () => void
+  children: React.ReactNode
 }
 
 function ModalComponent({ open, handleClose, children }: Props) {
@@ -26,7 +26,7 @@ function ModalComponent({ open, handleClose, children }: Props) {
         {children}
       </div>
     </Modal>
-  );
+  )
 }
 
-export default ModalComponent;
+export default ModalComponent

@@ -1,16 +1,16 @@
-import ConformDialogButton from "../../../shared/ConfirmDialogButton";
+import ConformDialogButton from "../../../shared/ConfirmDialogButton"
 
-export type StartGame = () => Promise<void>;
+export type StartGame = () => Promise<void>
 
 interface Props {
-  startGame: StartGame;
-  isDisabled: boolean;
+  startGame: StartGame
+  isDisabled: boolean
 }
 
 function StartGameButton({ startGame, isDisabled }: Props) {
   const onConfirm = async () => {
-    await startGame();
-  };
+    await startGame()
+  }
   return (
     <ConformDialogButton
       onConfirm={onConfirm}
@@ -19,7 +19,7 @@ function StartGameButton({ startGame, isDisabled }: Props) {
       buttonLabel="Start Game"
       isDisabled={isDisabled}
     />
-  );
+  )
 }
 
-export default StartGameButton;
+export default StartGameButton

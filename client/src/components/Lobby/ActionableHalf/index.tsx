@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { Set } from "../../../interfaces";
-import NewSetBanner from "../NewSetBanner";
-import StartGameModal from "../StartGameModal";
+import { useState } from "react"
+import { Set } from "../../../interfaces"
+import NewSetBanner from "../NewSetBanner"
+import StartGameModal from "../StartGameModal"
 
 interface Props {
-  sets?: Set[];
-  setName?: string;
+  sets?: Set[]
+  setName?: string
 }
 
 export default function ActionableHalf({ sets = [] }: Props) {
-  const [isCreateGameModalOpen, setIsCreateGameModalOpen] = useState(false);
-  const promotedSet = sets.find((set) => set.isPromotedUntil || 0 > Date.now());
+  const [isCreateGameModalOpen, setIsCreateGameModalOpen] = useState(false)
+  const promotedSet = sets.find((set) => set.isPromotedUntil || 0 > Date.now())
 
   return (
     <>
@@ -28,7 +28,7 @@ export default function ActionableHalf({ sets = [] }: Props) {
         </p>
         <button
           onClick={() => {
-            setIsCreateGameModalOpen(true);
+            setIsCreateGameModalOpen(true)
           }}
           className="border border-blue-600 rounded-full font-bold text-3xl text-blue-600 hover:text-white text-center px-8 py-4 transition duration-300 ease-in-out hover:bg-blue-600 mt-8 mr-auto focus:outline-none"
         >
@@ -51,12 +51,12 @@ export default function ActionableHalf({ sets = [] }: Props) {
         sets={sets}
         open={isCreateGameModalOpen}
         handleOpen={() => {
-          setIsCreateGameModalOpen(true);
+          setIsCreateGameModalOpen(true)
         }}
         handleClose={() => {
-          setIsCreateGameModalOpen(false);
+          setIsCreateGameModalOpen(false)
         }}
       />
     </>
-  );
+  )
 }

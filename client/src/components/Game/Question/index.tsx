@@ -1,11 +1,11 @@
-import { Game, QuestionRound, QuestionTypes } from "../../../interfaces";
-import Guess from "../Guess";
-import { getRevealAnswer } from "../helpers";
-import Hints from "./Hints";
+import { Game, QuestionRound, QuestionTypes } from "../../../interfaces"
+import Guess from "../Guess"
+import { getRevealAnswer } from "../helpers"
+import Hints from "./Hints"
 
 interface QuestionProps {
-  game: Game;
-  usedQuestionRound: QuestionRound;
+  game: Game
+  usedQuestionRound: QuestionRound
 }
 
 const styles = {
@@ -15,14 +15,14 @@ const styles = {
   answer: {
     fontSize: "1.6em",
   },
-};
+}
 
 export default function Question({ game, usedQuestionRound }: QuestionProps) {
   const noHints =
     usedQuestionRound.question.type !== QuestionTypes.MULTIPLE_CHOICE &&
     usedQuestionRound.bettingRounds.length <= 1 &&
-    !usedQuestionRound.isOver;
-  const totalQuestions = game.questionRounds.length + game.questions.length;
+    !usedQuestionRound.isOver
+  const totalQuestions = game.questionRounds.length + game.questions.length
   return (
     <div>
       <p className="mb-0" style={(!noHints && { fontSize: "0.7em" }) || {}}>
@@ -56,5 +56,5 @@ export default function Question({ game, usedQuestionRound }: QuestionProps) {
           </>
         )}
     </div>
-  );
+  )
 }

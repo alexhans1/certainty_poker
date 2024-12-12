@@ -1,9 +1,9 @@
-import { Link, Route, Routes } from "react-router";
-import Game from "../Game";
-import Lobby from "../Lobby";
+import { Link, Route, Routes } from "react-router"
+import Game from "../Game"
+import Lobby from "../Lobby"
 
 function PageNotFound() {
-  return <p>Page not found.</p>;
+  return <p>Page not found.</p>
 }
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

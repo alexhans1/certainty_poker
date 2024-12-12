@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { IoExit } from "react-icons/io5";
-import { removePlayer as removePlayerRequest } from "../../../api";
-import { Game, Player } from "../../../interfaces";
-import { deletePlayerIdFromStorage } from "../../../storage";
-import ConfirmDialogButton from "../../shared/ConfirmDialogButton";
+import React, { useState } from "react"
+import { IoExit } from "react-icons/io5"
+import { removePlayer as removePlayerRequest } from "../../../api"
+import { Game, Player } from "../../../interfaces"
+import { deletePlayerIdFromStorage } from "../../../storage"
+import ConfirmDialogButton from "../../shared/ConfirmDialogButton"
 
 interface Props {
-  gameId?: Game["id"];
-  playerId?: Player["id"];
-  gameHasStarted: boolean;
-  setPlayerId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  gameId?: Game["id"]
+  playerId?: Player["id"]
+  gameHasStarted: boolean
+  setPlayerId: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 function LeaveGameButton({
@@ -18,23 +18,23 @@ function LeaveGameButton({
   gameHasStarted,
   setPlayerId,
 }: Props) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const removePlayer = async (playerId: string, gameId: string) => {
-    await removePlayerRequest({ gameId, playerId });
-    deletePlayerIdFromStorage(gameId);
-    setPlayerId(undefined);
-  };
+    await removePlayerRequest({ gameId, playerId })
+    deletePlayerIdFromStorage(gameId)
+    setPlayerId(undefined)
+  }
 
   if (!gameId || !playerId) {
-    return null;
+    return null
   }
 
   const handleConfirm = async () => {
-    setLoading(true);
-    await removePlayer(playerId, gameId);
-    setLoading(false);
-  };
+    setLoading(true)
+    await removePlayer(playerId, gameId)
+    setLoading(false)
+  }
 
   return (
     <ConfirmDialogButton
@@ -52,7 +52,7 @@ function LeaveGameButton({
       btnClassName="leave-game btn btn-link btn-lg"
       isDisabled={loading}
     />
-  );
+  )
 }
 
-export default LeaveGameButton;
+export default LeaveGameButton

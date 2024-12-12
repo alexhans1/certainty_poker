@@ -1,31 +1,31 @@
-import React from "react";
-import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { GrMoney } from "react-icons/gr";
+import React from "react"
+import { CountdownCircleTimer } from "react-countdown-circle-timer"
+import { GrMoney } from "react-icons/gr"
 import {
   BettingRound,
   Player,
   QuestionRound,
   QuestionTypes,
-} from "../../../interfaces";
-import FormattedGuess from "../Guess";
+} from "../../../interfaces"
+import FormattedGuess from "../Guess"
 import {
   calculateBettingRoundSpendingForPlayer,
   hasPlayerFolded,
   haveAllPlayersPlacedTheirGuess,
-} from "../helpers";
-import Status from "../PokerTable/Player/Status";
-import ActionButtons, { ActionButtonsProps } from "./ActionButtons";
+} from "../helpers"
+import Status from "../PokerTable/Player/Status"
+import ActionButtons, { ActionButtonsProps } from "./ActionButtons"
 
 interface Props
   extends Omit<
     ActionButtonsProps,
     "currentQuestionRound" | "playerId" | "isAppPlayerTurn"
   > {
-  player: Player;
-  usedQuestionRound: QuestionRound;
-  hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
-  setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>;
-  currentBettingRound?: BettingRound;
+  player: Player
+  usedQuestionRound: QuestionRound
+  hasPlayerPlacedGuessInCurrentQuestionRound: boolean
+  setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>
+  currentBettingRound?: BettingRound
 }
 
 const Footer = ({
@@ -39,32 +39,32 @@ const Footer = ({
 }: Props) => {
   const isAppPlayerTurn =
     currentBettingRound?.currentPlayer.id === player.id &&
-    haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
+    haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players)
 
   const appPlayerAnswer = usedQuestionRound.guesses.find(
     (guess) => guess.playerId === player.id,
-  );
+  )
 
-  let appPlayerMoney = game.players.find((p) => p.id === player.id)?.money ?? 0;
+  let appPlayerMoney = game.players.find((p) => p.id === player.id)?.money ?? 0
   const bettingRoundSpending =
     (currentBettingRound &&
       calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id)) ||
-    0;
+    0
   if (usedQuestionRound.isOver && player.id && currentBettingRound) {
-    appPlayerMoney += bettingRoundSpending;
+    appPlayerMoney += bettingRoundSpending
   }
 
-  const questionType = usedQuestionRound.question.type;
+  const questionType = usedQuestionRound.question.type
 
   const { changeInMoney = 0 } =
     usedQuestionRound?.results?.find(
       ({ playerId }) => player.id === playerId,
-    ) || {};
+    ) || {}
 
   const allPlayersPlacedTheirGuess =
     usedQuestionRound &&
     game.players &&
-    haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
+    haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players)
 
   return (
     <footer className="fixed shadow-top-md bottom-0 left-0 w-full h-44 bg-gray-200 px-4 flex flex-col items-center justify-end z-1003">
@@ -154,7 +154,7 @@ const Footer = ({
               <button
                 className="new-question-button bg-blue-500 rounded-lg font-bold text-white text-center px-3 py-2 md:px-4 md:py-3 text-xs md:text-base transition duration-300 ease-in-out hover:bg-blue-600 mx-auto"
                 onClick={() => {
-                  setShowAnswerDrawer(true);
+                  setShowAnswerDrawer(true)
                 }}
               >
                 Answer New Question
@@ -175,7 +175,7 @@ const Footer = ({
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

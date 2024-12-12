@@ -1,24 +1,24 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState } from "react"
+import { useNavigate } from "react-router"
 
-import image from "../../../assets/2021.png";
-import { createGame } from "../../../db";
-import { Set } from "../../../interfaces";
+import image from "../../../assets/2021.png"
+import { createGame } from "../../../db"
+import { Set } from "../../../interfaces"
 
 interface Props {
-  set: Set;
-  className?: string;
+  set: Set
+  className?: string
 }
 function NewSetBanner({ className = "", set }: Props) {
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   const handleCreateGame = async () => {
-    setLoading(true);
+    setLoading(true)
     await createGame([set], (gameId: string) => {
-      navigate(`/${gameId}`);
-    });
-    setLoading(false);
-  };
+      navigate(`/${gameId}`)
+    })
+    setLoading(false)
+  }
 
   return (
     <div
@@ -36,7 +36,7 @@ function NewSetBanner({ className = "", set }: Props) {
       <button
         className="mt-6 bg-black rounded-full font-semi-bold text-white text-center px-6 py-3 transition duration-300 ease-in-out hover:text-black hover:bg-white border border-black focus:outline-none mr-auto"
         onClick={() => {
-          handleCreateGame();
+          handleCreateGame()
         }}
       >
         {loading ? "Loading..." : "Start 2021 Quiz"}
@@ -48,7 +48,7 @@ function NewSetBanner({ className = "", set }: Props) {
         alt="2021"
       />
     </div>
-  );
+  )
 }
 
-export default NewSetBanner;
+export default NewSetBanner

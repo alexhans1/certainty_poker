@@ -1,7 +1,7 @@
 interface ActionButtonProps {
-  text: string;
-  handleOnClick: () => void;
-  isDisabled?: boolean;
+  text: string
+  handleOnClick: () => void
+  isDisabled?: boolean
 }
 
 export default function ActionButton({
@@ -17,5 +17,5 @@ export default function ActionButton({
     >
       {text}
     </button>
-  );
+  )
 }

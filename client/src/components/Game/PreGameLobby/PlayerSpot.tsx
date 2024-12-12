@@ -1,5 +1,5 @@
 interface Props {
-  playerName?: string;
+  playerName?: string
 }
 
 function PlayerSpot({ playerName }: Props) {
@@ -9,7 +9,7 @@ function PlayerSpot({ playerName }: Props) {
         {playerName}
       </span>
     </div>
-  );
+  )
 }
 
-export default PlayerSpot;
+export default PlayerSpot

@@ -1,6 +1,6 @@
-import { LatLng, latLngBounds, LatLngExpression } from "leaflet";
-import { equals } from "ramda";
-import React, { ReactNode, useState } from "react";
+import { LatLng, latLngBounds, LatLngExpression } from "leaflet"
+import { equals } from "ramda"
+import React, { ReactNode, useState } from "react"
 import {
   Circle,
   FeatureGroup,
@@ -11,77 +11,77 @@ import {
   Tooltip,
   useMap,
   useMapEvents,
-} from "react-leaflet";
-import { GeoCoordinate } from "../../../interfaces";
+} from "react-leaflet"
+import { GeoCoordinate } from "../../../interfaces"
 
-import "./styles.css";
+import "./styles.css"
 
-type HandleOnClick = (p: GeoCoordinate) => void;
+type HandleOnClick = (p: GeoCoordinate) => void
 export interface MarkerType {
-  label?: JSX.Element | string;
-  position: GeoCoordinate;
-  isAnswer?: boolean;
-  distanceToAnswer?: number;
-  radiusInKilometres?: number;
+  label?: JSX.Element | string
+  position: GeoCoordinate
+  isAnswer?: boolean
+  distanceToAnswer?: number
+  radiusInKilometres?: number
 }
 
 interface Props {
-  markers?: MarkerType[];
-  handleOnClick?: HandleOnClick;
-  className?: string;
+  markers?: MarkerType[]
+  handleOnClick?: HandleOnClick
+  className?: string
 }
 
 const getNumberOfDecimals = (val: number = 0) => {
   if (val > 1000) {
-    return 0;
+    return 0
   }
   if (val > 100) {
-    return 1;
+    return 1
   }
   if (val > 1) {
-    return 2;
+    return 2
   }
-  return 4;
-};
+  return 4
+}
 
 function LocationMarker({ handleUpdate }: { handleUpdate: HandleOnClick }) {
-  const [position, setPosition] = useState<LatLngExpression | null>(null);
+  const [position, setPosition] = useState<LatLngExpression | null>(null)
   useMapEvents({
     click(e) {
-      setPosition(e.latlng);
-      handleUpdate({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+      setPosition(e.latlng)
+      handleUpdate({ latitude: e.latlng.lat, longitude: e.latlng.lng })
     },
-  });
+  })
 
-  return position && <Marker position={position} />;
+  return position && <Marker position={position} />
 }
 
 function MarkerContainer({
   children,
   markers,
 }: {
-  children: ReactNode;
-  markers: MarkerType[];
+  children: ReactNode
+  markers: MarkerType[]
 }) {
-  const map = useMap();
-  const bounds = latLngBounds([]);
+  const map = useMap()
+  const bounds = latLngBounds([])
   markers?.forEach((data) => {
-    bounds.extend([data.position.latitude, data.position.longitude]);
-  });
+    bounds.extend([data.position.latitude, data.position.longitude])
+  })
   if (bounds.isValid()) {
     map.flyToBounds(bounds, {
       // todo: make padding dependend on zoom level
       padding: [10, 10],
       maxZoom: markers.length > 1 ? 15 : 5,
-    });
+    })
   }
 
-  return <FeatureGroup>{children}</FeatureGroup>;
+  return <FeatureGroup>{children}</FeatureGroup>
 }
 
 export default React.memo(
   ({ markers = [], handleOnClick, className }: Props) => {
-    const answerMarker = markers.find((m) => m.isAnswer);
+    const answerMarker = markers.find((m) => m.isAnswer)
     const distanceLines =
       !!answerMarker &&
       markers
@@ -97,7 +97,7 @@ export default React.memo(
           label: m.distanceToAnswer?.toFixed(
             getNumberOfDecimals(m.distanceToAnswer),
           ),
-        }));
+        }))
 
     return (
       <MapContainer
@@ -151,7 +151,7 @@ export default React.memo(
                       </Tooltip>
                     )}
                   </Circle>
-                );
+                )
               }
               return (
                 <Marker
@@ -165,12 +165,12 @@ export default React.memo(
                     </Tooltip>
                   )}
                 </Marker>
-              );
+              )
             })}
           </MarkerContainer>
         )}
       </MapContainer>
-    );
+    )
   },
   (prevProps, nextProps) => equals(prevProps.markers, nextProps.markers),
-);
+)

@@ -4,23 +4,23 @@ import {
   Player,
   QuestionRound,
   QuestionTypes,
-} from "../../../interfaces";
-import GuessMap from "../GuessMap";
-import { hasPlayerFolded, haveAllPlayersPlacedTheirGuess } from "../helpers";
-import MultipleChoiceOptions from "../MultipleChoiceOptions";
-import Question from "../Question";
-import PlayerComp from "./Player";
-import Pot from "./Pot";
+} from "../../../interfaces"
+import GuessMap from "../GuessMap"
+import { hasPlayerFolded, haveAllPlayersPlacedTheirGuess } from "../helpers"
+import MultipleChoiceOptions from "../MultipleChoiceOptions"
+import Question from "../Question"
+import PlayerComp from "./Player"
+import Pot from "./Pot"
 
-import { maxNumberOfPlayers } from "../PreGameLobby";
-import { getWinningPlayerArray } from "./helpers";
-import "./styles.css";
+import { maxNumberOfPlayers } from "../PreGameLobby"
+import { getWinningPlayerArray } from "./helpers"
+import "./styles.css"
 interface Props {
-  game: Game;
-  usedQuestionRound: QuestionRound;
-  currentBettingRound?: BettingRound;
-  playerId?: Player["id"];
-  isSpectator: boolean;
+  game: Game
+  usedQuestionRound: QuestionRound
+  currentBettingRound?: BettingRound
+  playerId?: Player["id"]
+  isSpectator: boolean
 }
 
 const PokerTable = ({
@@ -30,14 +30,14 @@ const PokerTable = ({
   playerId,
   isSpectator,
 }: Props) => {
-  const isGeoQuestion = usedQuestionRound?.question.type === QuestionTypes.GEO;
+  const isGeoQuestion = usedQuestionRound?.question.type === QuestionTypes.GEO
   const isMultipleChoiceQuestion =
-    usedQuestionRound?.question.type === QuestionTypes.MULTIPLE_CHOICE;
+    usedQuestionRound?.question.type === QuestionTypes.MULTIPLE_CHOICE
   const allPlayersPlacedTheirGuess =
     usedQuestionRound &&
     game.players &&
-    haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players);
-  const winningPlayerIds = getWinningPlayerArray(game) || [];
+    haveAllPlayersPlacedTheirGuess(usedQuestionRound, game.players)
+  const winningPlayerIds = getWinningPlayerArray(game) || []
 
   return (
     <div className="flex flex-col items-center">
@@ -60,14 +60,14 @@ const PokerTable = ({
               const { changeInMoney } =
                 usedQuestionRound.results?.find(
                   ({ playerId }) => player.id === playerId,
-                ) || {};
+                ) || {}
               const hasFolded = !!(
                 usedQuestionRound &&
                 hasPlayerFolded(usedQuestionRound, player.id)
-              );
+              )
               const guess = usedQuestionRound.guesses.find(
                 (g) => g.playerId === player.id,
-              );
+              )
               return (
                 <PlayerComp
                   key={player.id}
@@ -94,7 +94,7 @@ const PokerTable = ({
                       usedQuestionRound.revealedGuesses.includes(player.id),
                   }}
                 />
-              );
+              )
             })}
           </div>
           <div className="flex flex-col gap-2 justify-center items-center w-full h-full">
@@ -151,7 +151,7 @@ const PokerTable = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PokerTable;
+export default PokerTable

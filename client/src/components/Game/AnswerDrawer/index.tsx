@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import {
   Answer,
   Game,
@@ -7,21 +7,21 @@ import {
   Player,
   QuestionRound,
   QuestionTypes,
-} from "../../../interfaces";
-import Drawer from "../../shared/Drawer";
-import DateInput from "./DateInput";
-import MapInput from "./MapInput";
-import MultipleChoiceInput from "./MultipleChoiceInput";
-import NumberInput from "./NumberInput";
+} from "../../../interfaces"
+import Drawer from "../../shared/Drawer"
+import DateInput from "./DateInput"
+import MapInput from "./MapInput"
+import MultipleChoiceInput from "./MultipleChoiceInput"
+import NumberInput from "./NumberInput"
 
 interface QuestionProps {
-  game: Game;
-  currentQuestionRound: QuestionRound;
-  player?: Player;
-  addGuess: (guess: Guess) => Promise<void>;
-  showAnswerDrawer: boolean;
-  setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>;
-  hasPlayerPlacedGuessInCurrentQuestionRound: boolean;
+  game: Game
+  currentQuestionRound: QuestionRound
+  player?: Player
+  addGuess: (guess: Guess) => Promise<void>
+  showAnswerDrawer: boolean
+  setShowAnswerDrawer: React.Dispatch<React.SetStateAction<boolean>>
+  hasPlayerPlacedGuessInCurrentQuestionRound: boolean
 }
 
 export default function AnswerDrawer({
@@ -34,7 +34,7 @@ export default function AnswerDrawer({
   hasPlayerPlacedGuessInCurrentQuestionRound,
 }: QuestionProps) {
   if (!player || player.isDead) {
-    return null;
+    return null
   }
 
   const handleNumberInputSubmit = (guess: number | string) => {
@@ -44,51 +44,51 @@ export default function AnswerDrawer({
         guess: {
           numerical: guess,
         },
-      });
-      setShowAnswerDrawer(false);
+      })
+      setShowAnswerDrawer(false)
     }
-  };
+  }
 
   const handleMapInputSubmit = (geoCoordinate: GeoCoordinate) => {
     const guess: Answer = {
       geo: geoCoordinate,
-    };
+    }
     addGuess({
       playerId: player.id,
       guess,
-    });
-    setShowAnswerDrawer(false);
-  };
+    })
+    setShowAnswerDrawer(false)
+  }
 
   const getInput = () => {
     switch (currentQuestionRound.question.type) {
       case QuestionTypes.NUMERICAL:
-        return <NumberInput handleSubmit={handleNumberInputSubmit} />;
+        return <NumberInput handleSubmit={handleNumberInputSubmit} />
       case QuestionTypes.DATE:
-        return <DateInput handleSubmit={handleNumberInputSubmit} />;
+        return <DateInput handleSubmit={handleNumberInputSubmit} />
       case QuestionTypes.GEO:
-        return <MapInput handleSubmit={handleMapInputSubmit} />;
+        return <MapInput handleSubmit={handleMapInputSubmit} />
       case QuestionTypes.MULTIPLE_CHOICE: {
         const alternatives = currentQuestionRound.question.alternatives?.map(
           (alt) => ({ value: alt, active: true }),
-        );
+        )
         return (
           <MultipleChoiceInput
             usedQuestionRound={currentQuestionRound}
             alternatives={alternatives}
             handleSubmit={handleNumberInputSubmit}
           />
-        );
+        )
       }
       default:
-        throw new Error("Unknown Question Type");
+        throw new Error("Unknown Question Type")
     }
-  };
+  }
 
   return (
     <Drawer
       onClose={() => {
-        setShowAnswerDrawer(false);
+        setShowAnswerDrawer(false)
       }}
       anchor={"bottom"}
       open={
@@ -103,5 +103,5 @@ export default function AnswerDrawer({
         {getInput()}
       </>
     </Drawer>
-  );
+  )
 }

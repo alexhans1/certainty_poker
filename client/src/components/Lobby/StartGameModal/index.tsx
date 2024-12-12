@@ -1,69 +1,69 @@
-import countryCodeToFlagEmoji from "country-code-to-flag-emoji";
-import { useEffect, useState } from "react";
-import { FiCopy } from "react-icons/fi";
-import { useNavigate } from "react-router";
-import countryCodes from "../../../assets/countryCodes";
-import { Set } from "../../../interfaces";
-import Modal from "../../shared/Modal";
+import countryCodeToFlagEmoji from "country-code-to-flag-emoji"
+import { useEffect, useState } from "react"
+import { FiCopy } from "react-icons/fi"
+import { useNavigate } from "react-router"
+import countryCodes from "../../../assets/countryCodes"
+import { Set } from "../../../interfaces"
+import Modal from "../../shared/Modal"
 
-import { createGame } from "../../../db";
-import UploadModal from "../UploadModal";
-import "./styles.css";
+import { createGame } from "../../../db"
+import UploadModal from "../UploadModal"
+import "./styles.css"
 
 interface Props {
-  sets: Set[];
-  open: boolean;
-  handleOpen: () => void;
-  handleClose: () => void;
+  sets: Set[]
+  open: boolean
+  handleOpen: () => void
+  handleClose: () => void
 }
 
 function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
-  const [loading, setLoading] = useState(false);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [selectedSets, setSelectedSets] = useState<Set[]>([]);
-  const [shownLanguage, setShownLanguage] = useState("GB");
-  const [languages, setLanguages] = useState<string[]>([]);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const [selectedSets, setSelectedSets] = useState<Set[]>([])
+  const [shownLanguage, setShownLanguage] = useState("GB")
+  const [languages, setLanguages] = useState<string[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const languages =
       sets
         .reduce<string[]>((uniqueLanguages, s) => {
           if (!uniqueLanguages.includes(s.language)) {
-            uniqueLanguages.push(s.language);
+            uniqueLanguages.push(s.language)
           }
-          return uniqueLanguages;
+          return uniqueLanguages
         }, [])
         .sort((a, b) => {
           if (a === "GB") {
-            return -1;
+            return -1
           }
-          return parseInt(a) - parseInt(b);
-        }) || [];
-    setLanguages(languages);
-    setShownLanguage(languages.includes("GB") ? "GB" : languages[0]);
+          return parseInt(a) - parseInt(b)
+        }) || []
+    setLanguages(languages)
+    setShownLanguage(languages.includes("GB") ? "GB" : languages[0])
     if (sets.length === 1) {
-      setSelectedSets([sets[0]]);
+      setSelectedSets([sets[0]])
     }
-  }, [sets]);
+  }, [sets])
 
   // const { pathname } = history.location;
-  const isPrivateSetRoute = false; // pathname !== "/";
+  const isPrivateSetRoute = false // pathname !== "/";
 
   const handleCreateGame = async () => {
     if (selectedSets.length) {
-      setLoading(true);
+      setLoading(true)
       try {
         await createGame(selectedSets, (gameId: string) => {
-          navigate(`/${gameId}`);
-        });
+          navigate(`/${gameId}`)
+        })
       } catch (error) {
-        setLoading(false);
-        throw error;
+        setLoading(false)
+        throw error
       }
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -78,7 +78,7 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
             <br />
             <button
               onClick={async () => {
-                await navigator.clipboard.writeText(window.location.href);
+                await navigator.clipboard.writeText(window.location.href)
               }}
               className="flex items-center text-blue-600 hover:text-blue-800 focus:outline-none font-bold"
             >
@@ -97,7 +97,7 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
                   : "opacity-50 hover:opacity-100"
               }`}
               onClick={() => {
-                setShownLanguage(language);
+                setShownLanguage(language)
               }}
               style={{
                 cursor: language === shownLanguage ? "default" : "pointer",
@@ -142,12 +142,12 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
                         selectedSets.filter(
                           ({ setName }) => set.setName !== setName,
                         ),
-                      );
+                      )
                     } else {
-                      setSelectedSets([set, ...selectedSets]);
+                      setSelectedSets([set, ...selectedSets])
                     }
                   } else {
-                    setSelectedSets([set]);
+                    setSelectedSets([set])
                   }
                 }}
               >
@@ -160,8 +160,8 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
           You can also upload your own set of questions{" "}
           <button
             onClick={() => {
-              handleClose();
-              setIsUploadModalOpen(true);
+              handleClose()
+              setIsUploadModalOpen(true)
             }}
             className="text-blue-600 hover:text-blue-800 focus:outline-none font-bold"
           >
@@ -182,12 +182,12 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
       <UploadModal
         open={isUploadModalOpen}
         handleClose={() => {
-          handleOpen();
-          setIsUploadModalOpen(false);
+          handleOpen()
+          setIsUploadModalOpen(false)
         }}
       />
     </>
-  );
+  )
 }
 
-export default StartGameModal;
+export default StartGameModal
