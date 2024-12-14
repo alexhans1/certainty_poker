@@ -210,7 +210,7 @@ function UploadModal({ open, handleClose }: Props) {
             setIsPrivate(isPrivate ? 0 : 1)
           }}
         />
-        <label className="ml-2" htmlFor="isPrivateCheckbox">
+        <label className="ml-2 hidden" htmlFor="isPrivateCheckbox">
           Questions are private
           <br />
           <span>
