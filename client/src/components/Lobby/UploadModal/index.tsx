@@ -227,7 +227,7 @@ function UploadModal({ open, handleClose }: Props) {
             uploadQuestions()
           }}
         >
-          Upload
+          {loading ? "Loading..." : "Upload"}
         </button>
         <button
           className="border-2 boder-gray-800 rounded-lg font-bold hover:text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-800 ml-3"
@@ -237,7 +237,7 @@ function UploadModal({ open, handleClose }: Props) {
             setLanguage(undefined)
           }}
         >
-          {loading ? "Loading..." : "Upload new file"}
+          Cancel
         </button>
       </div>
     </>

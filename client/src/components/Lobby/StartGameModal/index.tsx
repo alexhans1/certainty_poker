@@ -150,7 +150,7 @@ function StartGameModal({ sets, open, handleOpen, handleClose }: Props) {
                   }
                 }}
               >
-                {set.setName} ({set.questions.length})
+                {set.setName} ({set.questions.length} Questions)
               </span>
             ))}
         </div>
