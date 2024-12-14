@@ -200,7 +200,7 @@ function UploadModal({ open, handleClose }: Props) {
           </div>
         </div>
       ))}
-      <div className="flex">
+      <div className="hidden">
         <input
           type="checkbox"
           className="mt-2"
@@ -210,7 +210,7 @@ function UploadModal({ open, handleClose }: Props) {
             setIsPrivate(isPrivate ? 0 : 1)
           }}
         />
-        <label className="ml-2 hidden" htmlFor="isPrivateCheckbox">
+        <label className="ml-2" htmlFor="isPrivateCheckbox">
           Questions are private
           <br />
           <span>
