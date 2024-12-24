@@ -22,11 +22,10 @@ export default function Question({ game, usedQuestionRound }: QuestionProps) {
     usedQuestionRound.question.type !== QuestionTypes.MULTIPLE_CHOICE &&
     usedQuestionRound.bettingRounds.length <= 1 &&
     !usedQuestionRound.isOver
-  const totalQuestions = game.questionRounds.length + game.questions.length
   return (
     <div>
       <p className="mb-0" style={(!noHints && { fontSize: "0.7em" }) || {}}>
-        Question ({game.questionRounds.length}/{totalQuestions}):
+        Question ({game.questionRounds.length}/{game.questions.length}):
       </p>
       <p style={(noHints && styles.question) || {}}>
         {usedQuestionRound.question.question}
