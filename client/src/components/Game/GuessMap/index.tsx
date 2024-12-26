@@ -1,7 +1,11 @@
 import React from "react"
 import { AiFillCheckCircle } from "react-icons/ai"
 import { Game, Player, QuestionRound, QuestionTypes } from "../../../interfaces"
-import { getRevealAnswer, hasPlayerFolded } from "../helpers"
+import {
+  calculateBettingRoundSpendingForPlayer,
+  getRevealAnswer,
+  hasPlayerFolded,
+} from "../helpers"
 import Map, { MarkerType } from "../Map"
 
 interface Props {
@@ -19,9 +23,10 @@ export default React.memo(
       return null
     }
 
-    const playerGuess = usedQuestionRound.guesses.find(
-      (g) => g.playerId === playerId,
-    )
+    const playerGuess = [
+      ...usedQuestionRound.guesses,
+      ...usedQuestionRound.deadPlayerGuesses,
+    ].find((g) => g.playerId === playerId)
 
     const mapMarkers: MarkerType[] = playerGuess?.guess.geo
       ? [
@@ -35,27 +40,38 @@ export default React.memo(
 
     if (isSpectator || usedQuestionRound.isOver) {
       mapMarkers.push(
-        ...usedQuestionRound.guesses.reduce<MarkerType[]>(
-          (acc, { guess, playerId: pId, difference }) => {
-            if (
-              guess.geo &&
-              playerId !== pId &&
-              (isSpectator ||
-                (!hasPlayerFolded(usedQuestionRound, pId) &&
-                  usedQuestionRound.isShowdown) ||
-                usedQuestionRound.revealedGuesses.includes(pId))
-            ) {
-              const label = players.find((p) => p.id === pId)?.name || ""
-              acc.push({
-                position: guess.geo,
-                label,
-                distanceToAnswer: difference,
-              })
-            }
-            return acc
-          },
-          [],
-        ),
+        ...[
+          ...usedQuestionRound.guesses,
+          ...usedQuestionRound.deadPlayerGuesses,
+        ].reduce<MarkerType[]>((acc, { guess, playerId: pId, difference }) => {
+          if (!guess.geo) return acc
+          if (playerId === pId) return acc
+
+          const moneyInQuestionRound = usedQuestionRound.bettingRounds.reduce(
+            (sum, br) => sum + calculateBettingRoundSpendingForPlayer(br, pId),
+            0,
+          )
+          const hasFolded = hasPlayerFolded(usedQuestionRound, pId)
+          const isPartOfShowdown =
+            usedQuestionRound.isOver &&
+            usedQuestionRound.isShowdown &&
+            !hasFolded &&
+            moneyInQuestionRound > 0
+
+          if (
+            isSpectator ||
+            isPartOfShowdown ||
+            usedQuestionRound.revealedGuesses.includes(pId)
+          ) {
+            const label = players.find((p) => p.id === pId)?.name || ""
+            acc.push({
+              position: guess.geo,
+              label,
+              distanceToAnswer: difference,
+            })
+          }
+          return acc
+        }, []),
       )
     }
     if (

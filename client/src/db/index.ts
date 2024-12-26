@@ -69,10 +69,17 @@ export const addGuess = async (
   questionRounds: QuestionRound[],
   currentQuestionRound: QuestionRound,
   guess: Guess,
+  isDeadPlayer: boolean = false,
 ) => {
-  const updatedQuestionRound = {
-    ...currentQuestionRound,
-    guesses: [...currentQuestionRound.guesses, guess],
+  const updatedQuestionRound = { ...currentQuestionRound }
+
+  if (isDeadPlayer) {
+    updatedQuestionRound.deadPlayerGuesses = [
+      ...(currentQuestionRound.deadPlayerGuesses || []),
+      guess,
+    ]
+  } else {
+    updatedQuestionRound.guesses = [...currentQuestionRound.guesses, guess]
   }
 
   const updatedQuestionRounds = [...questionRounds]

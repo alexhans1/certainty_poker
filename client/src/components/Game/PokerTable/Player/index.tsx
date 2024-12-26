@@ -2,7 +2,6 @@ import { FaRegLightbulb } from "react-icons/fa"
 import { GrMoney } from "react-icons/gr"
 import {
   BettingRound,
-  Game,
   Guess,
   Player,
   Question,
@@ -35,6 +34,7 @@ interface Props {
   allPlayersPlacedTheirGuess?: boolean
   guess?: Guess
   question?: Question
+  moneyInQuestionRound: number
 }
 
 const PlayerComp = ({
@@ -55,23 +55,28 @@ const PlayerComp = ({
   question,
   isGameOver,
   isRevealingGuess,
+  moneyInQuestionRound,
 }: Props) => {
   const isTurnPlayerClass =
     isTurnPlayer && !isQuestionRoundOver ? "isTurnPlayer" : ""
   const isAppPlayerClass = isAppPlayer ? "bg-blue-200" : "bg-gray-200"
-  const isDeadClass = player.isDead ? "is-dead" : ""
+  const isDeadClass = player.isDead ? "bg-gray-500" : ""
 
   const bettingRoundSpending = currentBettingRound
     ? calculateBettingRoundSpendingForPlayer(currentBettingRound, player.id)
     : 0
 
   const isGeoQuestion = question?.type === QuestionTypes.GEO
-  const showGuess =
-    isSpectator ||
-    isRevealingGuess ||
-    (isQuestionRoundOver && isShowdown && !hasFolded)
+  const isPartOfShowdown =
+    isQuestionRoundOver && isShowdown && !hasFolded && moneyInQuestionRound > 0
+  const isRevealingGuessToAll = isRevealingGuess || isPartOfShowdown
+  const showGuess = isSpectator || isRevealingGuessToAll
+
   const shouldRevealGuess = !isGeoQuestion && showGuess
-  const canRevealGuess = !showGuess && isQuestionRoundOver && isAppPlayer
+  const canRevealGuess =
+    isQuestionRoundOver &&
+    isAppPlayer &&
+    (!showGuess || (player.isDead && !!guess && !isRevealingGuessToAll))
 
   const positionIndex = playerSeatingOrder.filter((i) => i <= numberOfPlayers)[
     index
@@ -90,7 +95,9 @@ const PlayerComp = ({
         className={`status text-gray-900 shadow-lg ${
           isQuestionRoundOver && changeInMoney && changeInMoney > 0
             ? "bg-green-500"
-            : "bg-gray-400"
+            : player.isDead
+              ? "bg-gray-600"
+              : "bg-gray-400"
         }`}
       >
         <Status

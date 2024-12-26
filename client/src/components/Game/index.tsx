@@ -163,7 +163,13 @@ function GameComponent() {
     if (!currentQuestionRound) throw new Error("No current question round")
 
     try {
-      await addGuess(game.id, game.questionRounds, currentQuestionRound, guess)
+      await addGuess(
+        game.id,
+        game.questionRounds,
+        currentQuestionRound,
+        guess,
+        player?.isDead,
+      )
     } catch (error) {
       errorHandler(error as unknown as Error)
     }
@@ -243,6 +249,15 @@ function GameComponent() {
             className="bg-blue-500 rounded-lg font-bold text-white text-center px-4 py-3 transition duration-300 ease-in-out hover:bg-blue-600 mx-auto mt-5"
             onClick={() => {
               setShowNewQuestionRoundForSpectator(true)
+              if (
+                player &&
+                player.isDead &&
+                !currentQuestionRound?.deadPlayerGuesses.some(
+                  (g) => g.playerId === player.id,
+                )
+              ) {
+                setShowAnswerDrawer(true)
+              }
             }}
           >
             Show Next Question

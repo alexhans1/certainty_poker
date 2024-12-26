@@ -64,6 +64,7 @@ interface QuestionRoundResult {
 export interface QuestionRound {
   question: Question
   guesses: Guess[]
+  deadPlayerGuesses: Guess[]
   bettingRounds: BettingRound[]
   foldedPlayerIds: Player["id"][]
   results?: QuestionRoundResult[]

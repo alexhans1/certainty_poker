@@ -29,9 +29,6 @@
 .player.isAppPlayer .status {
   border: 4px solid #444;
 }
-.player.is-dead {
-  filter: brightness(0.6);
-}
 .player .name {
   width: 100%;
   white-space: nowrap;

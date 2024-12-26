@@ -6,7 +6,7 @@ const functions = getFunctions(app, "europe-west3")
 
 const handleError = (error: Error) => {
   if ((error as Error).message === "Response is not valid JSON object.") {
-    console.log("error", error)
+    console.error("error", error)
     return
   }
   throw error

@@ -1,4 +1,5 @@
 import React from "react"
+import { FaSkullCrossbones } from "react-icons/fa"
 import {
   Answer,
   Game,
@@ -34,7 +35,7 @@ export default function AnswerDrawer({
   setShowAnswerDrawer,
   hasPlayerPlacedGuessInCurrentQuestionRound,
 }: QuestionProps) {
-  if (!player || player.isDead) {
+  if (!player) {
     return null
   }
 
@@ -115,6 +116,20 @@ export default function AnswerDrawer({
       variant="temporary"
     >
       <>
+        {player.isDead && (
+          <div
+            className="p-4 text-sm text-gray-800 rounded-lg bg-gray-50 mb-3"
+            role="alert"
+          >
+            <p className="flex">
+              You are dead. <FaSkullCrossbones className="ml-2" />
+            </p>
+            <p>
+              Tough luck. But you can keep answering questions just for fun. You
+              can choose to reveal your guess after the round ends.
+            </p>
+          </div>
+        )}
         <p className="font-bold">{currentQuestionRound.question.question}</p>
         <p className="mt-4 text-sm">Your answer</p>
         {getInput()}

@@ -6,7 +6,11 @@ import {
   QuestionTypes,
 } from "../../../interfaces"
 import GuessMap from "../GuessMap"
-import { hasPlayerFolded, haveAllPlayersPlacedTheirGuess } from "../helpers"
+import {
+  calculateBettingRoundSpendingForPlayer,
+  hasPlayerFolded,
+  haveAllPlayersPlacedTheirGuess,
+} from "../helpers"
 import MultipleChoiceOptions from "../MultipleChoiceOptions"
 import Question from "../Question"
 import PlayerComp from "./Player"
@@ -65,9 +69,10 @@ const PokerTable = ({
                 usedQuestionRound &&
                 hasPlayerFolded(usedQuestionRound, player.id)
               )
-              const guess = usedQuestionRound.guesses.find(
-                (g) => g.playerId === player.id,
-              )
+              const guess = [
+                ...usedQuestionRound.guesses,
+                ...usedQuestionRound.deadPlayerGuesses,
+              ].find((g) => g.playerId === player.id)
               return (
                 <PlayerComp
                   key={player.id}
@@ -91,6 +96,13 @@ const PokerTable = ({
                     isGameOver: game.isOver,
                     isRevealingGuess:
                       usedQuestionRound.revealedGuesses.includes(player.id),
+                    moneyInQuestionRound:
+                      usedQuestionRound.bettingRounds.reduce(
+                        (sum, br) =>
+                          sum +
+                          calculateBettingRoundSpendingForPlayer(br, player.id),
+                        0,
+                      ),
                   }}
                 />
               )
