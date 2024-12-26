@@ -70,14 +70,15 @@ func (g *Game) AddNewQuestionRound() {
 	question := DrawQuestion(g)
 
 	newQuestionRound := &QuestionRound{
-		Question:        question,
-		Guesses:         make([]*Guess, 0),
-		BettingRounds:   make([]*BettingRound, 0),
-		FoldedPlayerIds: make([]string, 0),
-		Game:            g,
-		IsOver:          false,
-		IsShowdown:      false,
-		RevealedGuesses: make([]string, 0),
+		Question:          question,
+		Guesses:           make([]*Guess, 0),
+		DeadPlayerGuesses: make([]*Guess, 0),
+		BettingRounds:     make([]*BettingRound, 0),
+		FoldedPlayerIds:   make([]string, 0),
+		Game:              g,
+		IsOver:            false,
+		IsShowdown:        false,
+		RevealedGuesses:   make([]string, 0),
 	}
 	newQuestionRound.IsOver = false
 	g.QuestionRounds = append(g.QuestionRounds, newQuestionRound)
@@ -281,6 +282,9 @@ func (game *Game) postProcessFromFirestore() {
 			if qr.Guesses == nil {
 				qr.Guesses = []*Guess{}
 			}
+			if qr.DeadPlayerGuesses == nil {
+				qr.DeadPlayerGuesses = []*Guess{}
+			}
 			if qr.BettingRounds == nil {
 				qr.BettingRounds = []*BettingRound{}
 			} else {
@@ -319,7 +323,7 @@ func (g *Game) Save(ctx context.Context, client *firestore.Client) error {
 	// Clean the game object to remove circular references
 	cleanedGame := g.clean()
 
-	_, err := ref.Set(ctx, cleanedGame, firestore.MergeAll)
+	_, err := ref.Set(ctx, cleanedGame)
 	return err
 }
 

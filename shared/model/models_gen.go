@@ -62,15 +62,16 @@ type Question struct {
 }
 
 type QuestionRound struct {
-	Game            *Game                  `firestore:"game,omitempty"`
-	Question        *Question              `firestore:"question"`
-	Guesses         []*Guess               `firestore:"guesses"`
-	BettingRounds   []*BettingRound        `firestore:"bettingRounds"`
-	FoldedPlayerIds []string               `firestore:"foldedPlayerIds"`
-	IsOver          bool                   `firestore:"isOver"`
-	IsShowdown      bool                   `firestore:"isShowdown"`
-	Results         []*QuestionRoundResult `firestore:"results"`
-	RevealedGuesses []string               `firestore:"revealedGuesses"`
+	Game              *Game                  `firestore:"game,omitempty"`
+	Question          *Question              `firestore:"question"`
+	Guesses           []*Guess               `firestore:"guesses"`
+	DeadPlayerGuesses []*Guess               `firestore:"deadPlayerGuesses"`
+	BettingRounds     []*BettingRound        `firestore:"bettingRounds"`
+	FoldedPlayerIds   []string               `firestore:"foldedPlayerIds"`
+	IsOver            bool                   `firestore:"isOver"`
+	IsShowdown        bool                   `firestore:"isShowdown"`
+	Results           []*QuestionRoundResult `firestore:"results"`
+	RevealedGuesses   []string               `firestore:"revealedGuesses"`
 }
 
 type QuestionRoundResult struct {
