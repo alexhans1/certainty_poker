@@ -319,7 +319,7 @@ func (g *Game) Save(ctx context.Context, client *firestore.Client) error {
 	// Clean the game object to remove circular references
 	cleanedGame := g.clean()
 
-	_, err := ref.Set(ctx, cleanedGame)
+	_, err := ref.Set(ctx, cleanedGame, firestore.MergeAll)
 	return err
 }
 
