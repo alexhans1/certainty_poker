@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore"
 import { v4 } from "uuid"
 import countryCodes from "../assets/countryCodes"
+import { getPreviousQuestionRound } from "../components/Game/helpers"
 import app from "../firebase"
 import {
   Game,
@@ -91,7 +92,6 @@ export const uploadQuestions = async (
   const newSet: Set = {
     questions: questions.map((q) => {
       if (q.type !== QuestionTypes.MULTIPLE_CHOICE) return q
-
       ;(q.answer.numerical as number)--
       return q
     }),
@@ -102,29 +102,26 @@ export const uploadQuestions = async (
   await addDoc(collection(db, "question-sets"), newSet)
 }
 
-export const revealGuess = async (
-  gameId: string,
-  playerId: string,
-  questionRounds: QuestionRound[],
-) => {
-  const currentQuestionRound = questionRounds[questionRounds.length - 2]
-  if (!currentQuestionRound) {
+export const revealGuess = async (game: Game, playerId: string) => {
+  const questionRound = getPreviousQuestionRound(game)
+  if (!questionRound) {
     return
   }
 
-  if (currentQuestionRound.revealedGuesses.includes(playerId)) {
+  if (questionRound.revealedGuesses.includes(playerId)) {
     return
   }
 
   const updatedQuestionRound = {
-    ...currentQuestionRound,
-    revealedGuesses: [...currentQuestionRound.revealedGuesses, playerId],
+    ...questionRound,
+    revealedGuesses: [...questionRound.revealedGuesses, playerId],
   }
 
-  const updatedQuestionRounds = [...questionRounds]
-  updatedQuestionRounds[updatedQuestionRounds.length - 2] = updatedQuestionRound
+  const updatedQuestionRounds = [...game.questionRounds]
+  const currentQuestionRoundIndex = game.questionRounds.indexOf(questionRound)
+  updatedQuestionRounds[currentQuestionRoundIndex] = updatedQuestionRound
 
-  await updateDoc(doc(db, "games", gameId), {
+  await updateDoc(doc(db, "games", game.id), {
     questionRounds: updatedQuestionRounds,
   })
 }

@@ -18,7 +18,6 @@ import "./styles.css"
 const playerSeatingOrder = [1, 9, 5, 2, 11, 4, 8, 10, 6, 3, 12, 7]
 
 interface Props {
-  gameId: Game["id"]
   player: Player
   numberOfPlayers: number
   currentBettingRound?: BettingRound
@@ -39,7 +38,6 @@ interface Props {
 }
 
 const PlayerComp = ({
-  gameId,
   player,
   index,
   numberOfPlayers,
@@ -151,7 +149,7 @@ const PlayerComp = ({
           )}
           {canRevealGuess && (
             <div>
-              <RevealGuessButton gameId={gameId} playerId={player.id} />
+              <RevealGuessButton playerId={player.id} />
             </div>
           )}
         </div>

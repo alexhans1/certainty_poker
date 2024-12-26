@@ -72,7 +72,6 @@ const PokerTable = ({
                 <PlayerComp
                   key={player.id}
                   {...{
-                    gameId: game.id,
                     player,
                     index,
                     numberOfPlayers: game.players.length,
