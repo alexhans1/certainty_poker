@@ -5,7 +5,7 @@ go 1.23
 require (
 	cloud.google.com/go/firestore v1.17.0
 	github.com/GoogleCloudPlatform/functions-framework-go v1.9.0
-	github.com/alexhans1/certainty_poker v0.0.8
+	github.com/alexhans1/certainty_poker v0.1.1
 	github.com/sirupsen/logrus v1.9.3
 )
 
